@@ -1,123 +1,189 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// REAL 2026 DATA
+// STATIC BASELINE DATA — overridden by live API on load
+// Skill/chaos/aero are scout judgments that don't change race-to-race
+// pts/wins/mom are fetched live from /api/standings
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// ── CUP SERIES — after Race 6 Darlington, Mar 22 ─────────────────────────────
-// chaosAvoid: 1–10. How well the driver avoids/survives incidents.
-// High = clean racer who threads the needle; Low = wreck magnet or aggressive
-const CUP_DRIVERS = [
-  { pos:1,  name:"Tyler Reddick",      num:"45", team:"23XI Racing",           pts:325, wins:4, mom:97, skill:94, spd:169.2, aero:9, chaosAvoid:8 },
-  { pos:2,  name:"Ryan Blaney",        num:"12", team:"Team Penske",           pts:230, wins:1, mom:86, skill:87, spd:166.8, aero:8, chaosAvoid:9 },
-  { pos:3,  name:"Bubba Wallace",      num:"23", team:"23XI Racing",           pts:205, wins:0, mom:78, skill:80, spd:165.1, aero:7, chaosAvoid:6 },
-  { pos:4,  name:"Denny Hamlin",       num:"11", team:"Joe Gibbs Racing",      pts:203, wins:1, mom:84, skill:89, spd:166.5, aero:8, chaosAvoid:8 },
-  { pos:5,  name:"Chase Elliott",      num:"9",  team:"Hendrick Motorsports",  pts:194, wins:0, mom:82, skill:91, spd:166.2, aero:8, chaosAvoid:9 },
-  { pos:6,  name:"William Byron",      num:"24", team:"Hendrick Motorsports",  pts:191, wins:0, mom:81, skill:88, spd:165.9, aero:8, chaosAvoid:8 },
-  { pos:7,  name:"Chris Buescher",     num:"17", team:"RFK Racing",            pts:188, wins:0, mom:77, skill:79, spd:165.0, aero:7, chaosAvoid:7 },
-  { pos:8,  name:"Brad Keselowski",    num:"6",  team:"RFK Racing",            pts:182, wins:0, mom:79, skill:83, spd:165.4, aero:7, chaosAvoid:7 },
-  { pos:9,  name:"Christopher Bell",   num:"20", team:"Joe Gibbs Racing",      pts:182, wins:0, mom:80, skill:86, spd:165.7, aero:7, chaosAvoid:8 },
-  { pos:10, name:"Kyle Larson",        num:"5",  team:"Hendrick Motorsports",  pts:176, wins:0, mom:83, skill:93, spd:167.1, aero:9, chaosAvoid:7 },
-  { pos:11, name:"Ty Gibbs",           num:"54", team:"Joe Gibbs Racing",      pts:173, wins:0, mom:74, skill:81, spd:164.8, aero:7, chaosAvoid:7 },
-  { pos:12, name:"Ryan Preece",        num:"60", team:"RFK Racing",            pts:154, wins:0, mom:68, skill:75, spd:163.5, aero:6, chaosAvoid:6 },
-  { pos:13, name:"Carson Hocevar",     num:"77", team:"Spire Motorsports",     pts:151, wins:0, mom:67, skill:74, spd:163.2, aero:6, chaosAvoid:5 },
-  { pos:14, name:"Daniel Suárez",      num:"7",  team:"Trackhouse Racing",     pts:150, wins:0, mom:66, skill:76, spd:163.4, aero:6, chaosAvoid:6 },
-  { pos:15, name:"Ross Chastain",      num:"1",  team:"Trackhouse Racing",     pts:148, wins:0, mom:72, skill:82, spd:164.5, aero:7, chaosAvoid:4 },
-  { pos:16, name:"Joey Logano",        num:"22", team:"Team Penske",           pts:147, wins:0, mom:70, skill:82, spd:164.3, aero:7, chaosAvoid:7 },
-  { pos:17, name:"Michael McDowell",   num:"34", team:"Front Row Motorsports", pts:138, wins:0, mom:62, skill:73, spd:162.1, aero:5, chaosAvoid:6 },
-  { pos:18, name:"Austin Cindric",     num:"2",  team:"Team Penske",           pts:136, wins:0, mom:63, skill:77, spd:163.8, aero:7, chaosAvoid:7 },
-  { pos:19, name:"Connor Zilisch",     num:"88", team:"Trackhouse Racing",     pts:130, wins:0, mom:71, skill:79, spd:163.6, aero:7, chaosAvoid:6, rookie:true },
-  { pos:20, name:"Kyle Busch",         num:"8",  team:"RCR",                   pts:128, wins:0, mom:68, skill:84, spd:164.0, aero:7, chaosAvoid:6 },
-  { pos:21, name:"Austin Dillon",      num:"3",  team:"RCR",                   pts:122, wins:0, mom:60, skill:72, spd:162.0, aero:5, chaosAvoid:5 },
-  { pos:22, name:"Noah Gragson",       num:"4",  team:"Stewart-Haas Rcg",      pts:118, wins:0, mom:61, skill:71, spd:161.8, aero:5, chaosAvoid:5 },
-  { pos:23, name:"Justin Allgaier",    num:"48", team:"Hendrick (sub)",        pts:0,   wins:0, mom:73, skill:77, spd:163.0, aero:6, chaosAvoid:8, sub:true },
-  { pos:24, name:"Austin Hill",        num:"33", team:"RCR (open)",            pts:0,   wins:0, mom:55, skill:65, spd:160.5, aero:5, chaosAvoid:6, open:true },
-];
-
-// ── O'REILLY SERIES — after Race 6 Darlington, Mar 21 ────────────────────────
-const OREILLY_DRIVERS = [
-  { pos:1,  name:"Justin Allgaier",    num:"7",  team:"JR Motorsports",    pts:282, wins:2, mom:93, skill:90, spd:163.5, aero:8, chaosAvoid:9 },
-  { pos:2,  name:"Sam Mayer",          num:"1",  team:"JR Motorsports",    pts:261, wins:1, mom:85, skill:84, spd:162.1, aero:7, chaosAvoid:8 },
-  { pos:3,  name:"Brandon Jones",      num:"20", team:"Joe Gibbs Racing",  pts:248, wins:0, mom:82, skill:83, spd:161.8, aero:7, chaosAvoid:8 },
-  { pos:4,  name:"Taylor Gray",        num:"18", team:"Joe Gibbs Racing",  pts:239, wins:0, mom:80, skill:81, spd:161.5, aero:7, chaosAvoid:7 },
-  { pos:5,  name:"William Sawalich",   num:"54", team:"Joe Gibbs Racing",  pts:228, wins:0, mom:77, skill:79, spd:161.0, aero:7, chaosAvoid:7 },
-  { pos:6,  name:"Riley Herbst",       num:"35", team:"Stewart-Haas",      pts:214, wins:0, mom:74, skill:77, spd:160.5, aero:6, chaosAvoid:6 },
-  { pos:7,  name:"Rajah Caruth",       num:"9",  team:"JR Motorsports",    pts:206, wins:0, mom:72, skill:76, spd:160.2, aero:6, chaosAvoid:7 },
-  { pos:8,  name:"Harrison Burton",    num:"8",  team:"Sam Hunt Racing",   pts:198, wins:0, mom:71, skill:78, spd:160.0, aero:6, chaosAvoid:7 },
-  { pos:9,  name:"Parker Kligerman",   num:"48", team:"Big Machine Rcg",   pts:190, wins:0, mom:69, skill:72, spd:159.5, aero:5, chaosAvoid:6 },
-  { pos:10, name:"Ryan Sieg",          num:"39", team:"RSS Racing",        pts:178, wins:0, mom:65, skill:70, spd:158.8, aero:5, chaosAvoid:6 },
-  { pos:11, name:"Austin Hill",        num:"21", team:"RCR Xfinity",       pts:171, wins:0, mom:68, skill:74, spd:159.8, aero:6, chaosAvoid:7 },
-  { pos:12, name:"Sheldon Creed",      num:"2",  team:"RCR Xfinity",       pts:164, wins:0, mom:67, skill:73, spd:159.2, aero:6, chaosAvoid:6 },
-  { pos:13, name:"Jesse Love",         num:"11", team:"RCR Xfinity",       pts:158, wins:0, mom:66, skill:71, spd:158.5, aero:5, chaosAvoid:6, rookie:true },
-  { pos:14, name:"Brent Crews",        num:"19", team:"Joe Gibbs Racing",  pts:142, wins:0, mom:60, skill:67, spd:157.8, aero:5, chaosAvoid:5, rookie:true },
-  { pos:15, name:"Lee Pulliam",        num:"9",  team:"JR Motorsports",    pts:0,   wins:0, mom:52, skill:62, spd:156.5, aero:4, chaosAvoid:5, parttime:true },
-  { pos:16, name:"Ross Chastain",      num:"91", team:"Cup (pts inelig.)", pts:0,   wins:0, mom:75, skill:83, spd:161.0, aero:7, chaosAvoid:4, parttime:true },
-];
-
-// ── TRUCK SERIES — after Race 4 Darlington, Mar 20 ───────────────────────────
-const TRUCK_DRIVERS = [
-  { pos:1,  name:"Chandler Smith",     num:"38", team:"McAnally-Hilbert",  pts:172, wins:1, mom:92, skill:89, spd:158.2, aero:8, chaosAvoid:8 },
-  { pos:2,  name:"Kaden Honeycutt",    num:"11", team:"Kyle Busch Mspts",  pts:139, wins:0, mom:85, skill:85, spd:170.5, aero:8, chaosAvoid:7 },
-  { pos:3,  name:"Layne Riggs",        num:"34", team:"Front Row",         pts:131, wins:1, mom:82, skill:82, spd:157.5, aero:7, chaosAvoid:7 },
-  { pos:4,  name:"Gio Ruggiero",       num:"17", team:"ThorSport",         pts:127, wins:1, mom:80, skill:80, spd:157.0, aero:7, chaosAvoid:7 },
-  { pos:5,  name:"Ty Majeski",         num:"88", team:"ThorSport",         pts:121, wins:0, mom:79, skill:82, spd:157.3, aero:7, chaosAvoid:8 },
-  { pos:6,  name:"Christian Eckes",    num:"91", team:"McAnally-Hilbert",  pts:119, wins:0, mom:78, skill:80, spd:156.8, aero:7, chaosAvoid:7 },
-  { pos:7,  name:"Ben Rhodes",         num:"99", team:"ThorSport",         pts:119, wins:0, mom:77, skill:80, spd:156.5, aero:7, chaosAvoid:8 },
-  { pos:8,  name:"Andres Perez de Lara",num:"44",team:"GMS Racing",        pts:90,  wins:0, mom:68, skill:72, spd:154.5, aero:6, chaosAvoid:6 },
-  { pos:9,  name:"Justin Haley",       num:"16", team:"TRICON Garage",     pts:89,  wins:0, mom:67, skill:75, spd:155.2, aero:6, chaosAvoid:7 },
-  { pos:10, name:"Brenden Queen",      num:"12", team:"McAnally-Hilbert",  pts:83,  wins:0, mom:64, skill:71, spd:154.0, aero:5, chaosAvoid:6, rookie:true },
-  { pos:11, name:"Tyler Ankrum",       num:"18", team:"Roper Racing",      pts:82,  wins:0, mom:63, skill:70, spd:153.8, aero:5, chaosAvoid:6 },
-  { pos:12, name:"Stewart Friesen",    num:"52", team:"Halmar-Friesen",    pts:82,  wins:0, mom:66, skill:72, spd:154.2, aero:6, chaosAvoid:7 },
-  { pos:13, name:"Daniel Hemric",      num:"19", team:"TRICON Garage",     pts:75,  wins:0, mom:62, skill:73, spd:154.5, aero:6, chaosAvoid:7 },
-  { pos:14, name:"Tanner Gray",        num:"15", team:"GMS Racing",        pts:74,  wins:0, mom:60, skill:69, spd:153.5, aero:5, chaosAvoid:5 },
-  { pos:15, name:"Corey Heim",         num:"5",  team:"TRICON (part-time)",pts:114, wins:1, mom:90, skill:91, spd:159.1, aero:9, chaosAvoid:9, parttime:true },
-];
-
-const SERIES_CONFIG = {
-  cup:   { label:"Cup Series",         short:"CUP", drivers:CUP_DRIVERS,    chase:"Top 16 after R26",  ptWin:55,  color:"#FF4E00" },
-  xfin:  { label:"O'Reilly Series",    short:"XFI", drivers:OREILLY_DRIVERS, chase:"Top 12 after R24", ptWin:55,  color:"#3b82f6" },
-  truck: { label:"Truck Series",       short:"TRK", drivers:TRUCK_DRIVERS,   chase:"Top 10 after R18", ptWin:55,  color:"#22c55e" },
+const STATIC_DRIVER_RATINGS = {
+  "Tyler Reddick":       { skill:94, spd:169.2, aero:9,  chaosAvoid:8 },
+  "Ryan Blaney":         { skill:87, spd:166.8, aero:8,  chaosAvoid:9 },
+  "Bubba Wallace":       { skill:80, spd:165.1, aero:7,  chaosAvoid:6 },
+  "Denny Hamlin":        { skill:89, spd:166.5, aero:8,  chaosAvoid:8 },
+  "Chase Elliott":       { skill:91, spd:166.2, aero:8,  chaosAvoid:9 },
+  "William Byron":       { skill:88, spd:165.9, aero:8,  chaosAvoid:8 },
+  "Chris Buescher":      { skill:79, spd:165.0, aero:7,  chaosAvoid:7 },
+  "Brad Keselowski":     { skill:83, spd:165.4, aero:7,  chaosAvoid:7 },
+  "Christopher Bell":    { skill:86, spd:165.7, aero:7,  chaosAvoid:8 },
+  "Kyle Larson":         { skill:93, spd:167.1, aero:9,  chaosAvoid:7 },
+  "Ty Gibbs":            { skill:81, spd:164.8, aero:7,  chaosAvoid:7 },
+  "Ryan Preece":         { skill:75, spd:163.5, aero:6,  chaosAvoid:6 },
+  "Carson Hocevar":      { skill:74, spd:163.2, aero:6,  chaosAvoid:5 },
+  "Daniel Suárez":       { skill:76, spd:163.4, aero:6,  chaosAvoid:6 },
+  "Ross Chastain":       { skill:82, spd:164.5, aero:7,  chaosAvoid:4 },
+  "Joey Logano":         { skill:82, spd:164.3, aero:7,  chaosAvoid:7 },
+  "Michael McDowell":    { skill:73, spd:162.1, aero:5,  chaosAvoid:6 },
+  "Austin Cindric":      { skill:77, spd:163.8, aero:7,  chaosAvoid:7 },
+  "Connor Zilisch":      { skill:79, spd:163.6, aero:7,  chaosAvoid:6 },
+  "Kyle Busch":          { skill:84, spd:164.0, aero:7,  chaosAvoid:6 },
+  "Austin Dillon":       { skill:72, spd:162.0, aero:5,  chaosAvoid:5 },
+  "Noah Gragson":        { skill:71, spd:161.8, aero:5,  chaosAvoid:5 },
+  "Justin Allgaier":     { skill:90, spd:163.5, aero:8,  chaosAvoid:9 },
+  "Sam Mayer":           { skill:84, spd:162.1, aero:7,  chaosAvoid:8 },
+  "Brandon Jones":       { skill:83, spd:161.8, aero:7,  chaosAvoid:8 },
+  "Taylor Gray":         { skill:81, spd:161.5, aero:7,  chaosAvoid:7 },
+  "William Sawalich":    { skill:79, spd:161.0, aero:7,  chaosAvoid:7 },
+  "Riley Herbst":        { skill:77, spd:160.5, aero:6,  chaosAvoid:6 },
+  "Rajah Caruth":        { skill:76, spd:160.2, aero:6,  chaosAvoid:7 },
+  "Harrison Burton":     { skill:78, spd:160.0, aero:6,  chaosAvoid:7 },
+  "Parker Kligerman":    { skill:72, spd:159.5, aero:5,  chaosAvoid:6 },
+  "Ryan Sieg":           { skill:70, spd:158.8, aero:5,  chaosAvoid:6 },
+  "Austin Hill":         { skill:74, spd:159.8, aero:6,  chaosAvoid:7 },
+  "Sheldon Creed":       { skill:73, spd:159.2, aero:6,  chaosAvoid:6 },
+  "Jesse Love":          { skill:71, spd:158.5, aero:5,  chaosAvoid:6 },
+  "Brent Crews":         { skill:67, spd:157.8, aero:5,  chaosAvoid:5 },
+  "Chandler Smith":      { skill:89, spd:158.2, aero:8,  chaosAvoid:8 },
+  "Kaden Honeycutt":     { skill:85, spd:170.5, aero:8,  chaosAvoid:7 },
+  "Layne Riggs":         { skill:82, spd:157.5, aero:7,  chaosAvoid:7 },
+  "Gio Ruggiero":        { skill:80, spd:157.0, aero:7,  chaosAvoid:7 },
+  "Ty Majeski":          { skill:82, spd:157.3, aero:7,  chaosAvoid:8 },
+  "Christian Eckes":     { skill:80, spd:156.8, aero:7,  chaosAvoid:7 },
+  "Ben Rhodes":          { skill:80, spd:156.5, aero:7,  chaosAvoid:8 },
+  "Corey Heim":          { skill:91, spd:159.1, aero:9,  chaosAvoid:9 },
+  "Brenden Queen":       { skill:71, spd:154.0, aero:5,  chaosAvoid:6 },
+  "Tyler Ankrum":        { skill:70, spd:153.8, aero:5,  chaosAvoid:6 },
+  "Stewart Friesen":     { skill:72, spd:154.2, aero:6,  chaosAvoid:7 },
+  "Daniel Hemric":       { skill:73, spd:154.5, aero:6,  chaosAvoid:7 },
+  "Tanner Gray":         { skill:69, spd:153.5, aero:5,  chaosAvoid:5 },
 };
 
-// ── CALENDARS ─────────────────────────────────────────────────────────────────
-const CALENDARS = {
+// Fallback drivers if API fails — will be overridden
+const FALLBACK_DRIVERS = {
   cup: [
-    { id:"daytona",      name:"Daytona 500",              date:"2026-02-15", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.91, done:true,  winner:"Tyler Reddick"  },
-    { id:"atlanta",      name:"Ambetter Health 400",      date:"2026-02-22", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.88, done:true,  winner:"Tyler Reddick"  },
-    { id:"cota",         name:"EchoPark Automotive GP",   date:"2026-03-02", type:"Road Course",   miles:3.41, geo:"Road Course",   chaos:.72, done:true,  winner:"Tyler Reddick"  },
-    { id:"phoenix",      name:"Straight Talk 500",        date:"2026-03-08", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.67, done:true,  winner:"Ryan Blaney"    },
-    { id:"las_vegas",    name:"Pennzoil 400",             date:"2026-03-15", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.62, done:true,  winner:"Denny Hamlin"   },
-    { id:"darlington",   name:"Goodyear 400",             date:"2026-03-22", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.65, done:true,  winner:"Tyler Reddick"  },
-    { id:"martinsville", name:"Cook Out 400",             date:"2026-03-30", type:"Short Track",   miles:0.53, geo:"Paperclip",     chaos:.75, done:false, next:true               },
-    { id:"bristol",      name:"Food City 500",            date:"2026-04-05", type:"Short Track",   miles:0.53, geo:"Bowl",          chaos:.79, done:false  },
-    { id:"richmond",     name:"Toyota Owners 400",        date:"2026-04-12", type:"Short Track",   miles:0.75, geo:"D-Shape",       chaos:.68, done:false  },
-    { id:"talladega",    name:"GEICO 500",                date:"2026-04-26", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.94, done:false  },
-    { id:"dover",        name:"Würth 400",                date:"2026-05-03", type:"Short Track",   miles:1.00, geo:"Concrete Bowl", chaos:.69, done:false  },
-    { id:"charlotte",    name:"Coca-Cola 600",            date:"2026-05-24", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.58, done:false  },
+    { pos:1,  name:"Tyler Reddick",   num:"45", team:"23XI Racing",          pts:325, wins:4, mom:97 },
+    { pos:2,  name:"Ryan Blaney",     num:"12", team:"Team Penske",          pts:230, wins:1, mom:86 },
+    { pos:3,  name:"Bubba Wallace",   num:"23", team:"23XI Racing",          pts:205, wins:0, mom:78 },
+    { pos:4,  name:"Denny Hamlin",    num:"11", team:"Joe Gibbs Racing",     pts:203, wins:1, mom:84 },
+    { pos:5,  name:"Chase Elliott",   num:"9",  team:"Hendrick Motorsports", pts:194, wins:0, mom:82 },
+    { pos:6,  name:"William Byron",   num:"24", team:"Hendrick Motorsports", pts:191, wins:0, mom:81 },
+    { pos:7,  name:"Chris Buescher",  num:"17", team:"RFK Racing",           pts:188, wins:0, mom:77 },
+    { pos:8,  name:"Brad Keselowski", num:"6",  team:"RFK Racing",           pts:182, wins:0, mom:79 },
+    { pos:9,  name:"Christopher Bell",num:"20", team:"Joe Gibbs Racing",     pts:182, wins:0, mom:80 },
+    { pos:10, name:"Kyle Larson",     num:"5",  team:"Hendrick Motorsports", pts:176, wins:0, mom:83 },
+    { pos:11, name:"Ty Gibbs",        num:"54", team:"Joe Gibbs Racing",     pts:173, wins:0, mom:74 },
+    { pos:12, name:"Ryan Preece",     num:"60", team:"RFK Racing",           pts:154, wins:0, mom:68 },
+    { pos:13, name:"Carson Hocevar",  num:"77", team:"Spire Motorsports",    pts:151, wins:0, mom:67 },
+    { pos:14, name:"Daniel Suárez",   num:"7",  team:"Trackhouse Racing",    pts:150, wins:0, mom:66 },
+    { pos:15, name:"Ross Chastain",   num:"1",  team:"Trackhouse Racing",    pts:148, wins:0, mom:72 },
+    { pos:16, name:"Joey Logano",     num:"22", team:"Team Penske",          pts:147, wins:0, mom:70 },
+    { pos:17, name:"Michael McDowell",num:"34", team:"Front Row Motorsports",pts:138, wins:0, mom:62 },
+    { pos:18, name:"Austin Cindric",  num:"2",  team:"Team Penske",          pts:136, wins:0, mom:63 },
+    { pos:19, name:"Connor Zilisch",  num:"88", team:"Trackhouse Racing",    pts:130, wins:0, mom:71, rookie:true },
+    { pos:20, name:"Kyle Busch",      num:"8",  team:"RCR",                  pts:128, wins:0, mom:68 },
   ],
   xfin: [
-    { id:"daytona_x",   name:"United Rentals 300",       date:"2026-02-14", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.90, done:true,  winner:"Sam Mayer"      },
-    { id:"atlanta_x",   name:"General Tire 200",         date:"2026-02-21", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.87, done:true,  winner:"Justin Allgaier"},
-    { id:"phoenix_x",   name:"Nikola Truck Challenge",   date:"2026-03-07", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.66, done:true,  winner:"Justin Allgaier"},
-    { id:"lv_x",        name:"Boyd Gaming 300",          date:"2026-03-14", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.61, done:true,  winner:"Taylor Gray"    },
-    { id:"home_x",      name:"Baptist Health 200",       date:"2026-03-21", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.60, done:true,  winner:"Brandon Jones"  },
-    { id:"darlington_x",name:"Sport Clips VFW 200",      date:"2026-03-21", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.64, done:true,  winner:"Justin Allgaier"},
-    { id:"martin_x",    name:"NFPA 250",                 date:"2026-03-28", type:"Short Track",   miles:0.53, geo:"Paperclip",     chaos:.74, done:false, next:true               },
-    { id:"bristol_x",   name:"Hooters 250",              date:"2026-04-04", type:"Short Track",   miles:0.53, geo:"Bowl",          chaos:.78, done:false  },
-    { id:"talladega_x", name:"AG-Pro 300",               date:"2026-04-25", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.93, done:false  },
-    { id:"dover_x",     name:"A-1 Solar 200",            date:"2026-05-02", type:"Short Track",   miles:1.00, geo:"Concrete Bowl", chaos:.68, done:false  },
+    { pos:1, name:"Justin Allgaier",  num:"7",  team:"JR Motorsports",   pts:282, wins:2, mom:93 },
+    { pos:2, name:"Sam Mayer",        num:"1",  team:"JR Motorsports",   pts:261, wins:1, mom:85 },
+    { pos:3, name:"Brandon Jones",    num:"20", team:"Joe Gibbs Racing", pts:248, wins:0, mom:82 },
+    { pos:4, name:"Taylor Gray",      num:"18", team:"Joe Gibbs Racing", pts:239, wins:0, mom:80 },
+    { pos:5, name:"William Sawalich", num:"54", team:"Joe Gibbs Racing", pts:228, wins:0, mom:77 },
+    { pos:6, name:"Riley Herbst",     num:"35", team:"Stewart-Haas",     pts:214, wins:0, mom:74 },
+    { pos:7, name:"Rajah Caruth",     num:"9",  team:"JR Motorsports",   pts:206, wins:0, mom:72 },
+    { pos:8, name:"Harrison Burton",  num:"8",  team:"Sam Hunt Racing",  pts:198, wins:0, mom:71 },
   ],
   truck: [
-    { id:"daytona_t",   name:"NextEra 250",              date:"2026-02-13", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.91, done:true,  winner:"Layne Riggs"    },
-    { id:"atlanta_t",   name:"Fr8 208",                  date:"2026-02-20", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.88, done:true,  winner:"Gio Ruggiero"   },
-    { id:"phoenix_t",   name:"Victoria's Voice 200",     date:"2026-03-06", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.65, done:true,  winner:"Chandler Smith" },
-    { id:"darlington_t",name:"Buckle Up SC 200",         date:"2026-03-20", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.65, done:true,  winner:"Corey Heim"     },
-    { id:"rock_t",      name:"Rockingham 200",           date:"2026-04-03", type:"Short Track",   miles:1.02, geo:"Oval",          chaos:.70, done:false, next:true               },
-    { id:"talladega_t", name:"Chevy Silverado 250",      date:"2026-04-24", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.93, done:false  },
-    { id:"dover_t",     name:"Town Fair Tire 200",       date:"2026-05-01", type:"Short Track",   miles:1.00, geo:"Concrete Bowl", chaos:.68, done:false  },
-    { id:"nc500_t",     name:"North Wilkesboro 200",     date:"2026-05-16", type:"Short Track",   miles:0.63, geo:"Oval",          chaos:.72, done:false  },
+    { pos:1, name:"Chandler Smith",   num:"38", team:"McAnally-Hilbert", pts:172, wins:1, mom:92 },
+    { pos:2, name:"Kaden Honeycutt",  num:"11", team:"KBM",              pts:139, wins:0, mom:85 },
+    { pos:3, name:"Layne Riggs",      num:"34", team:"Front Row",        pts:131, wins:1, mom:82 },
+    { pos:4, name:"Gio Ruggiero",     num:"17", team:"ThorSport",        pts:127, wins:1, mom:80 },
+    { pos:5, name:"Ty Majeski",       num:"88", team:"ThorSport",        pts:121, wins:0, mom:79 },
+    { pos:6, name:"Christian Eckes",  num:"91", team:"McAnally-Hilbert", pts:119, wins:0, mom:78 },
+    { pos:7, name:"Ben Rhodes",       num:"99", team:"ThorSport",        pts:119, wins:0, mom:77 },
+    { pos:8, name:"Corey Heim",       num:"5",  team:"TRICON",           pts:114, wins:1, mom:90, parttime:true },
   ],
+};
+
+// Merge live standings with static ratings
+function mergeDriverData(liveDrivers) {
+  return liveDrivers.map(d => ({
+    ...d,
+    ...(STATIC_DRIVER_RATINGS[d.name] || { skill:70, spd:162.0, aero:6, chaosAvoid:6 }),
+  }));
+}
+
+const SERIES_CONFIG = {
+  cup:   { label:"Cup Series",      short:"CUP", chase:"Top 16 after R26", ptWin:55, color:"#FF4E00" },
+  xfin:  { label:"O'Reilly Series", short:"XFI", chase:"Top 12 after R24", ptWin:55, color:"#3b82f6" },
+  truck: { label:"Truck Series",    short:"TRK", chase:"Top 10 after R18", ptWin:55, color:"#22c55e" },
+};
+
+// ── SCHEDULE — fetched live from /api/schedule, falls back to computed dates ──
+// done/next are computed at runtime by the API based on today's date
+// This static version is only used if the API is unreachable
+function computeSchedule(races) {
+  const today = new Date().toISOString().substring(0, 10);
+  let nextSet = false;
+  return races.map(r => {
+    const isPast = r.date < today;
+    const isNext = !isPast && !nextSet;
+    if (isNext) nextSet = true;
+    return { ...r, done: isPast, next: isNext };
+  });
+}
+
+const STATIC_SCHEDULES = {
+  cup: computeSchedule([
+    { id:"daytona",      name:"Daytona 500",           date:"2026-02-15", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.91, winner:"Tyler Reddick"  },
+    { id:"atlanta",      name:"Ambetter Health 400",   date:"2026-02-22", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.88, winner:"Tyler Reddick"  },
+    { id:"cota",         name:"EchoPark Automotive GP",date:"2026-03-02", type:"Road Course",   miles:3.41, geo:"Road Course",   chaos:.72, winner:"Tyler Reddick"  },
+    { id:"phoenix",      name:"Straight Talk 500",     date:"2026-03-08", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.67, winner:"Ryan Blaney"    },
+    { id:"las_vegas",    name:"Pennzoil 400",           date:"2026-03-15", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.62, winner:"Denny Hamlin"   },
+    { id:"darlington",   name:"Goodyear 400",           date:"2026-03-22", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.65, winner:"Tyler Reddick"  },
+    { id:"martinsville", name:"Cook Out 400",           date:"2026-03-30", type:"Short Track",   miles:0.53, geo:"Paperclip",     chaos:.75 },
+    { id:"bristol",      name:"Food City 500",          date:"2026-04-05", type:"Short Track",   miles:0.53, geo:"Bowl",          chaos:.79 },
+    { id:"richmond",     name:"Toyota Owners 400",      date:"2026-04-12", type:"Short Track",   miles:0.75, geo:"D-Shape",       chaos:.68 },
+    { id:"talladega",    name:"GEICO 500",              date:"2026-04-26", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.94 },
+    { id:"dover",        name:"Würth 400",              date:"2026-05-03", type:"Short Track",   miles:1.00, geo:"Concrete Bowl", chaos:.69 },
+    { id:"darlington2",  name:"Darlington II",          date:"2026-05-10", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.65 },
+    { id:"charlotte",    name:"Coca-Cola 600",          date:"2026-05-24", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.58 },
+    { id:"sonoma",       name:"Toyota/Save Mart 350",   date:"2026-06-14", type:"Road Course",   miles:2.52, geo:"Road Course",   chaos:.70 },
+    { id:"nh",           name:"Ambetter Health 301",    date:"2026-06-22", type:"Short Track",   miles:1.06, geo:"D-Shape",       chaos:.66 },
+    { id:"pocono",       name:"HighPoint.com 400",      date:"2026-07-12", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.85 },
+    { id:"indy",         name:"Brickyard 400",          date:"2026-07-26", type:"Superspeedway", miles:2.50, geo:"Oval",          chaos:.80 },
+    { id:"michigan",     name:"FireKeepers Casino 400", date:"2026-08-02", type:"Superspeedway", miles:2.00, geo:"D-Shape",       chaos:.82 },
+    { id:"watkins_glen", name:"Go Bowling at The Glen", date:"2026-08-16", type:"Road Course",   miles:2.45, geo:"Road Course",   chaos:.71 },
+    { id:"daytona2",     name:"Coke Zero Sugar 400",    date:"2026-08-23", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.92 },
+    { id:"bristol2",     name:"Bass Pro Night Race",    date:"2026-09-19", type:"Short Track",   miles:0.53, geo:"Bowl",          chaos:.80 },
+    { id:"talladega2",   name:"YellaWood 500",          date:"2026-10-04", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.94 },
+    { id:"martinsville2",name:"Xfinity 500",            date:"2026-10-25", type:"Short Track",   miles:0.53, geo:"Paperclip",     chaos:.76 },
+    { id:"phoenix2",     name:"United Rentals 500",     date:"2026-11-01", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.67 },
+    { id:"homestead",    name:"Ford 400",               date:"2026-11-08", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.61 },
+  ]),
+  xfin: computeSchedule([
+    { id:"daytona_x",    name:"United Rentals 300",     date:"2026-02-14", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.90, winner:"Sam Mayer"       },
+    { id:"atlanta_x",    name:"General Tire 200",       date:"2026-02-21", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.87, winner:"Justin Allgaier" },
+    { id:"phoenix_x",    name:"Nikola Truck Challenge", date:"2026-03-07", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.66, winner:"Justin Allgaier" },
+    { id:"lv_x",         name:"Boyd Gaming 300",        date:"2026-03-14", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.61, winner:"Taylor Gray"     },
+    { id:"darlington_x", name:"Sport Clips VFW 200",    date:"2026-03-21", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.64, winner:"Justin Allgaier" },
+    { id:"martin_x",     name:"NFPA 250",               date:"2026-03-28", type:"Short Track",   miles:0.53, geo:"Paperclip",     chaos:.74 },
+    { id:"bristol_x",    name:"Hooters 250",            date:"2026-04-04", type:"Short Track",   miles:0.53, geo:"Bowl",          chaos:.78 },
+    { id:"talladega_x",  name:"AG-Pro 300",             date:"2026-04-25", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.93 },
+    { id:"dover_x",      name:"A-1 Solar 200",          date:"2026-05-02", type:"Short Track",   miles:1.00, geo:"Concrete Bowl", chaos:.68 },
+    { id:"darlington_x2",name:"Steakhouse Elite 200",   date:"2026-05-09", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.64 },
+    { id:"charlotte_x",  name:"Alsco Uniforms 300",     date:"2026-05-23", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.59 },
+  ]),
+  truck: computeSchedule([
+    { id:"daytona_t",    name:"NextEra 250",            date:"2026-02-13", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",      chaos:.91, winner:"Layne Riggs"    },
+    { id:"atlanta_t",    name:"Fr8 208",                date:"2026-02-20", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.88, winner:"Gio Ruggiero"   },
+    { id:"phoenix_t",    name:"Victoria's Voice 200",   date:"2026-03-06", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.65, winner:"Chandler Smith" },
+    { id:"darlington_t", name:"Buckle Up SC 200",       date:"2026-03-20", type:"Intermediate",  miles:1.37, geo:"Stripe",        chaos:.65, winner:"Corey Heim"     },
+    { id:"rock_t",       name:"Rockingham 200",         date:"2026-04-03", type:"Short Track",   miles:1.02, geo:"Oval",          chaos:.70 },
+    { id:"talladega_t",  name:"Chevy Silverado 250",    date:"2026-04-24", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.93 },
+    { id:"dover_t",      name:"Town Fair Tire 200",     date:"2026-05-01", type:"Short Track",   miles:1.00, geo:"Concrete Bowl", chaos:.68 },
+    { id:"nc500_t",      name:"North Wilkesboro 200",   date:"2026-05-16", type:"Short Track",   miles:0.63, geo:"Oval",          chaos:.72 },
+  ]),
 };
 
 // ── TRACK HISTORY DATA ────────────────────────────────────────────────────────
@@ -213,8 +279,7 @@ const TRACK_HISTORY = {
 // ── SIMULATION ────────────────────────────────────────────────────────────────
 function gumbelRandom(mu=0, beta=1){ return mu - beta * Math.log(-Math.log(Math.random())); }
 
-function runSim(race, series, iters=25000){
-  const drivers = SERIES_CONFIG[series].drivers;
+function runSim(race, series, drivers, iters=25000){
   const hist = TRACK_HISTORY[race.geo] || {};
   const maxPts = Math.max(...drivers.map(d=>d.pts||0), 1);
   const chaosLevel = race.chaos; // 0–1 race chaos level
@@ -307,7 +372,7 @@ async function fetchDriverSummary(d, race, rank, series) {
   const seriesLabel = SERIES_CONFIG[series].label;
   const prompt = `You are a sharp NASCAR analyst writing a brief scouting note for a prediction sheet.
 
-Driver: ${d.name} | Sim rank: #${rank} of ${SERIES_CONFIG[series].drivers.length} | Series: ${seriesLabel}
+Driver: ${d.name} | Sim rank: #${rank} of ${currentDrivers.length} | Series: ${seriesLabel}
 Race: ${race.name} | Track type: ${race.type} (${race.geo} geometry) | Chaos level: ${(race.chaos*100).toFixed(0)}%
 
 Key stats:
@@ -500,7 +565,6 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function FinalLap(){
   const [series, setSeries] = useState("cup");
-  const [selectedRace, setSelectedRace] = useState(CALENDARS.cup.find(r=>r.next));
   const [results, setResults] = useState(null);
   const [simulating, setSimulating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -512,9 +576,98 @@ export default function FinalLap(){
   const [drawerOpen, setDrawerOpen] = useState(false);
   const ivRef = useRef(null); const liveRef = useRef(null);
 
+  // ── LIVE DATA STATE ─────────────────────────────────────────────────────────
+  const [liveDrivers, setLiveDrivers] = useState({
+    cup:   mergeDriverData(FALLBACK_DRIVERS.cup),
+    xfin:  mergeDriverData(FALLBACK_DRIVERS.xfin),
+    truck: mergeDriverData(FALLBACK_DRIVERS.truck),
+  });
+  const [liveSchedule, setLiveSchedule] = useState(STATIC_SCHEDULES);
+  const [liveEntries, setLiveEntries] = useState(null); // entry list for next race
+  const [dataStatus, setDataStatus] = useState("loading"); // loading | live | fallback
+  const [dataAsOf, setDataAsOf] = useState(null);
+
+  // Fetch all live data on mount and when series changes
+  const fetchLiveData = useCallback(async (seriesKey) => {
+    setDataStatus("loading");
+    let anyLive = false;
+
+    // 1. Fetch standings
+    try {
+      const res = await fetch(`/api/standings?series=${seriesKey}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.drivers?.length) {
+          setLiveDrivers(prev => ({
+            ...prev,
+            [seriesKey]: mergeDriverData(data.drivers),
+          }));
+          setDataAsOf(data.asOf);
+          anyLive = true;
+        }
+      }
+    } catch(e) { /* silent fallback */ }
+
+    // 2. Fetch schedule (all series at once, cached)
+    try {
+      const [cupRes, xfinRes, truckRes] = await Promise.all([
+        fetch("/api/schedule?series=cup"),
+        fetch("/api/schedule?series=xfin"),
+        fetch("/api/schedule?series=truck"),
+      ]);
+      const schedules = {};
+      for (const [key, r] of [["cup",cupRes],["xfin",xfinRes],["truck",truckRes]]) {
+        if (r.ok) {
+          const d = await r.json();
+          if (d.schedule?.length) { schedules[key] = d.schedule; anyLive = true; }
+        }
+      }
+      if (Object.keys(schedules).length) {
+        setLiveSchedule(prev => ({ ...prev, ...schedules }));
+      }
+    } catch(e) { /* silent fallback */ }
+
+    // 3. Fetch entry list for next race
+    try {
+      const res = await fetch(`/api/entrylist?series=${seriesKey}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.entries?.length) { setLiveEntries(data.entries); anyLive = true; }
+      }
+    } catch(e) { /* silent fallback */ }
+
+    setDataStatus(anyLive ? "live" : "fallback");
+  }, []);
+
+  useEffect(() => {
+    fetchLiveData(series);
+  }, [series, fetchLiveData]);
+
+  // Auto-refresh every 6 hours
+  useEffect(() => {
+    const interval = setInterval(() => fetchLiveData(series), 6 * 60 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [series, fetchLiveData]);
+
+  // Derive current drivers and schedule from live state
+  const currentDrivers = liveDrivers[series] || mergeDriverData(FALLBACK_DRIVERS[series] || []);
+  const currentSchedule = liveSchedule[series] || STATIC_SCHEDULES[series];
+  const nextRace = currentSchedule.find(r => r.next) || currentSchedule.find(r => !r.done);
+  const [selectedRace, setSelectedRace] = useState(null);
+  // Auto-select next race when schedule loads
+  useEffect(() => {
+    const next = currentSchedule.find(r => r.next) || currentSchedule.find(r => !r.done);
+    if (next && !selectedRace) setSelectedRace(next);
+    // If selected race became "done" after a data refresh, advance to next
+    if (selectedRace) {
+      const refreshed = currentSchedule.find(r => r.id === selectedRace.id);
+      if (refreshed) setSelectedRace(refreshed);
+    }
+  }, [currentSchedule]);
+
   function changeSeries(s){
     setSeries(s); setResults(null); setChart(null); setTab("picks");
-    setSelectedRace(CALENDARS[s].find(r=>r.next));
+    setSelectedRace(null); // triggers useEffect to set next race
   }
 
   function simulate(){
@@ -524,7 +677,7 @@ export default function FinalLap(){
     ivRef.current=setInterval(()=>{ p+=Math.random()*14+4; if(p>=92){clearInterval(ivRef.current);p=92;} setProgress(Math.min(p,92)); },80);
     setTimeout(()=>{
       clearInterval(ivRef.current); setProgress(97);
-      const r=runSim(selectedRace,series);
+      const r=runSim(selectedRace, series, currentDrivers);
       const c=genChart(selectedRace,r);
       const v={}; c.drivers.forEach((d,i)=>{ v[d.name]=i<6; });
       setTimeout(()=>{ setResults(r); setChart(c); setVis(v); setSimulating(false); setProgress(100); setTab("picks"); },300);
@@ -598,13 +751,13 @@ export default function FinalLap(){
             <div style={{padding:"10px 12px",background:`${cfg.color}14`,border:`1px solid ${cfg.color}33`,borderRadius:"9px"}}>
               <div style={{fontSize:"9px",color:cfg.color,letterSpacing:"0.1em",marginBottom:"1px"}}>{cfg.short} · {cfg.chase}</div>
               <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"15px",fontWeight:900,color:"#f0e8e0"}}>{cfg.label}</div>
-              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.70)",marginTop:"1px"}}>Win = {cfg.ptWin}pts · {cfg.drivers.length} drivers</div>
+              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.70)",marginTop:"1px"}}>Win = {cfg.ptWin}pts · {currentDrivers.length} drivers</div>
             </div>
 
             {/* Race list */}
             <div style={{fontSize:"9px",letterSpacing:"0.12em",color:"rgba(255,255,255,0.45)",marginBottom:"2px"}}>2026 SCHEDULE — OLDEST → NEWEST</div>
             <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
-              {CALENDARS[series].map(race=>{
+              {currentSchedule.map(race=>{
                 const sel=selectedRace?.id===race.id;
                 const days=daysUntil(race.date);
                 return (
@@ -674,7 +827,7 @@ export default function FinalLap(){
             ))}
           </div>
 
-          {/* Right side: race picker button + live dot */}
+          {/* Right side: race picker button + data status */}
           <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
             <button onClick={()=>setDrawerOpen(true)} style={{
               background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.12)",
@@ -690,7 +843,13 @@ export default function FinalLap(){
                 </span>
               </span>
             </button>
-            <div style={{width:"6px",height:"6px",borderRadius:"50%",background:"#22c55e",animation:"pulse 2.5s infinite",boxShadow:"0 0 6px #22c55e",flexShrink:0}}/>
+            {/* Live/Cached/Syncing status pill */}
+            <div style={{display:"flex",alignItems:"center",gap:"4px",padding:"3px 7px",background:dataStatus==="live"?"rgba(34,197,94,0.1)":dataStatus==="loading"?"rgba(255,215,0,0.08)":"rgba(255,78,0,0.08)",border:`1px solid ${dataStatus==="live"?"rgba(34,197,94,0.3)":dataStatus==="loading"?"rgba(255,215,0,0.25)":"rgba(255,78,0,0.25)"}`,borderRadius:"5px",flexShrink:0}}>
+              <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dataStatus==="live"?"#22c55e":dataStatus==="loading"?"#FFD700":"#FF6A00",animation:"pulse 2.5s infinite"}}/>
+              <span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"7px",color:dataStatus==="live"?"#22c55e":dataStatus==="loading"?"#FFD700":"#FF8C00",letterSpacing:"0.08em"}}>
+                {dataStatus==="live"?"LIVE":dataStatus==="loading"?"SYNC":"CACHED"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -712,7 +871,13 @@ export default function FinalLap(){
               </button>
             </div>
             <div style={{display:"flex",gap:"18px",flexWrap:"wrap",marginTop:"12px"}}>
-              {[["CHAOS",(selectedRace.chaos*100).toFixed(0)+"%"],["DRIVERS",cfg.drivers.length],["ITERS","25,000"],["ERA","2022–2026"]].map(([k,v])=>(
+              {[
+                ["CHAOS",(selectedRace.chaos*100).toFixed(0)+"%"],
+                ["DRIVERS", currentDrivers.length],
+                ["ENTRIES", liveEntries ? `${liveEntries.length} cars` : "TBD"],
+                ["ITERS","25,000"],
+                ["DATA", dataAsOf ? new Date(dataAsOf).toLocaleDateString("en-US",{month:"short",day:"numeric"}) : "Cached"],
+              ].map(([k,v])=>(
                 <div key={k}><div style={{fontSize:"8px",color:"rgba(255,255,255,0.45)",letterSpacing:"0.1em"}}>{k}</div><div style={{fontSize:"15px",fontWeight:700,color:"rgba(255,255,255,0.90)"}}>{v}</div></div>
               ))}
             </div>
@@ -724,7 +889,7 @@ export default function FinalLap(){
           <div onClick={()=>setDrawerOpen(true)} style={{background:"rgba(255,255,255,0.02)",border:"1px dashed rgba(255,255,255,0.1)",borderRadius:"12px",padding:"32px 20px",marginBottom:"14px",textAlign:"center",cursor:"pointer"}}>
             <div style={{fontSize:"28px",marginBottom:"8px",opacity:0.4}}>☰</div>
             <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",letterSpacing:"0.12em",color:"rgba(255,255,255,0.55)"}}>TAP TO SELECT A RACE</div>
-            <div style={{fontSize:"10px",color:"rgba(255,255,255,0.30)",marginTop:"4px"}}>{cfg.label} · {CALENDARS[series].filter(r=>!r.done).length} races remaining</div>
+            <div style={{fontSize:"10px",color:"rgba(255,255,255,0.30)",marginTop:"4px"}}>{cfg.label} · {currentSchedule.filter(r=>!r.done).length} races remaining</div>
           </div>
         )}
 
@@ -805,7 +970,7 @@ export default function FinalLap(){
                   <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"8px",color:"rgba(255,255,255,0.65)",padding:"6px 9px",background:"rgba(255,255,255,0.02)",borderRadius:"5px",marginBottom:"4px"}}>
                     2026 {cfg.label.toUpperCase()} STANDINGS · {cfg.chase} · WIN = {cfg.ptWin}PTS
                   </div>
-                  {cfg.drivers.filter((d,i,a)=>a.findIndex(x=>x.name===d.name)===i).map((d,i)=>{
+                  {currentDrivers.filter((d,i,a)=>a.findIndex(x=>x.name===d.name)===i).map((d,i)=>{
                     const r=results.find(x=>x.name===d.name);
                     const inChase=i<(series==="cup"?16:series==="xfin"?12:10);
                     return (
@@ -814,7 +979,7 @@ export default function FinalLap(){
                         <div>
                           <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"13px",fontWeight:700}}>{d.name}</div>
                           <div style={{display:"flex",alignItems:"center",gap:"5px",marginTop:"3px"}}>
-                            <Bar pct={d.pts||0} color={inChase?cfg.color:"#333"} max={Math.max(...cfg.drivers.map(x=>x.pts||0),1)}/>
+                            <Bar pct={d.pts||0} color={inChase?cfg.color:"#333"} max={Math.max(...currentDrivers.map(x=>x.pts||0),1)}/>
                             {inChase&&<span style={{fontSize:"6px",color:cfg.color,letterSpacing:"0.07em",whiteSpace:"nowrap"}}>CHASE</span>}
                           </div>
                         </div>
@@ -897,7 +1062,7 @@ export default function FinalLap(){
             <div style={{textAlign:"center",padding:"50px 20px",color:"rgba(255,255,255,0.60)"}}>
               <div style={{fontSize:"36px",marginBottom:"8px",opacity:0.35}}>◁</div>
               <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",letterSpacing:"0.1em"}}>SELECT A RACE · PULL THE SETUP</div>
-              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.07)",marginTop:"5px"}}>{cfg.label} · {CALENDARS[series].filter(r=>!r.done).length} races remaining</div>
+              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.07)",marginTop:"5px"}}>{cfg.label} · {currentSchedule.filter(r=>!r.done).length} races remaining</div>
             </div>
           )}
         </div>
