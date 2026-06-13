@@ -711,12 +711,12 @@ const ChartTip = ({ active, payload, label }) => {
 };
 
 // -- AI SCOUT SUMMARY fetcher --------------------------------------------------
-async function fetchDriverSummary(d, race, rank, series) {
+async function fetchDriverSummary(d, race, rank, series, driverCount) {
   const h = d.hist || {};
   const seriesLabel = SERIES_CONFIG[series].label;
   const prompt = `You are a sharp NASCAR analyst writing a brief scouting note for a prediction sheet.
 
-Driver: ${d.name} | Sim rank: #${rank} of ${currentDrivers.length} | Series: ${seriesLabel}
+Driver: ${d.name} | Sim rank: #${rank} of ${driverCount} | Series: ${seriesLabel}
 Race: ${race.name} | Track type: ${race.type} (${race.geo} geometry) | Chaos level: ${(race.chaos*100).toFixed(0)}%
 
 Key stats:
@@ -764,7 +764,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
     if (next && isTop10 && !aiSummary && !aiLoading) {
       setAiLoading(true);
       try {
-        const s = await fetchDriverSummary(d, race, rank, series);
+        const s = await fetchDriverSummary(d, race, rank, series, (series==='cup'?25:series==='xfin'?16:series==='truck'?15:25));
         setAiSummary(s);
       } catch(e) {
         setAiSummary("Scout note unavailable -- check API connection.");
