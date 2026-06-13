@@ -922,7 +922,7 @@ export default function FinalLap(){
                       </div>
                       <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"3px",marginLeft:"8px"}}>
                         {race.done&&<span style={{fontSize:"8px",color:"rgba(255,255,255,0.35)"}}>v DONE</span>}
-                        {race.next&&<span style={{fontSize:"8px",color:cfg.color,fontWeight:700,animation:"pulse 2s infinite"}}>NEXT ></span>}
+                        {race.next&&<span style={{fontSize:"8px",color:cfg.color,fontWeight:700,animation:"pulse 2s infinite"}}>NEXT &gt;</span>}
                         {!race.done&&!race.next&&days>0&&<span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"9px",color:"rgba(255,255,255,0.40)"}}>{days}d</span>}
                       </div>
                     </div>
