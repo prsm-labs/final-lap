@@ -733,17 +733,15 @@ Sentence 2: How their chaos avoidance rating (${d.chaosAvoid}/10) specifically p
 Sentence 3: Their single biggest vulnerability or risk to watch -- what could knock them out of contention.
 Use last name only after first mention. Be direct and specific.`;
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  // Route through /api/scout proxy (keeps API key server-side, fixes CORS)
+  const res = await fetch("/api/scout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }]
-    })
+    body: JSON.stringify({ prompt }),
   });
   const data = await res.json();
-  return data.content?.map(b => b.text || "").join("") || "Summary unavailable.";
+  if (data.error) throw new Error(data.error);
+  return data.text || "Summary unavailable.";
 }
 
 // -- EXPANDABLE DRIVER ROW  -  track history + AI scout note --------------------
