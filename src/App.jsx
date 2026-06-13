@@ -1043,7 +1043,6 @@ export default function FinalLap(){
                 </span>
               </div>
             </div>
-            </div>
           </div>
         )}
 
