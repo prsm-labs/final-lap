@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// STATIC BASELINE DATA — overridden by live API on load
+// STATIC BASELINE DATA  -  overridden by live API on load
 // Skill/chaos/aero are scout judgments that don't change race-to-race
 // pts/wins/mom are fetched live from /api/standings
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -67,7 +67,7 @@ const STATIC_DRIVER_RATINGS = {
   "Parker Kligerman":    { skill:72, spd:159.5, aero:5,  chaosAvoid:6 },
 };
 
-// Fallback drivers if API fails — updated after Race 15 Michigan, June 7 2026
+// Fallback drivers if API fails  -  updated after Race 15 Michigan, June 7 2026
 // NOTE: Kyle Busch passed away during the 2026 season; NASCAR removed him from standings
 const FALLBACK_DRIVERS = {
   cup: [
@@ -139,7 +139,7 @@ const SERIES_CONFIG = {
   truck: { label:"Truck Series",    short:"TRK", chase:"Top 10 after R18", ptWin:55, color:"#22c55e" },
 };
 
-// ── SCHEDULE — fetched live from /api/schedule, falls back to computed dates ──
+// ── SCHEDULE  -  fetched live from /api/schedule, falls back to computed dates ──
 // done/next are computed at runtime by the API based on today's date
 // This static version is only used if the API is unreachable
 function computeSchedule(races) {
@@ -154,7 +154,7 @@ function computeSchedule(races) {
 }
 
 const STATIC_SCHEDULES = {
-  // CUP — full 2026 season, results through Race 15 Michigan June 7
+  // CUP  -  full 2026 season, results through Race 15 Michigan June 7
   // Next race: Great American Getaway 400 at Pocono, June 14
   cup: computeSchedule([
     { id:"clash",        name:"Cook Out Clash (Exhib.)",      date:"2026-02-04", type:"Short Track",   miles:0.25, geo:"Oval",          chaos:.60, winner:"Ryan Preece",           exhib:true },
@@ -219,10 +219,10 @@ const STATIC_SCHEDULES = {
     { id:"homestead_t",  name:"Fr8Auctions.com 200",       date:"2026-03-20", type:"Intermediate",   miles:1.50, geo:"D-Shape",     chaos:.60, winner:"Kaden Honeycutt" },
     { id:"martinsville_t",name:"TTC Race 1 Martinsville",  date:"2026-03-28", type:"Short Track",    miles:0.53, geo:"Paperclip",   chaos:.75, winner:"Ty Majeski"      },
     { id:"richmond_t",   name:"Craftsman 250",             date:"2026-04-04", type:"Short Track",    miles:0.75, geo:"D-Shape",     chaos:.66, winner:"Chandler Smith"  },
-    { id:"bristol_t",    name:"TTC Race 2 – Bristol Dirt", date:"2026-04-11", type:"Dirt Short Track",miles:0.53, geo:"Bowl",       chaos:.85, winner:"Layne Riggs"     },
+    { id:"bristol_t",    name:"TTC Race 2 - Bristol Dirt", date:"2026-04-11", type:"Dirt Short Track",miles:0.53, geo:"Bowl",       chaos:.85, winner:"Layne Riggs"     },
     { id:"talladega_t",  name:"Chevy Silverado 250",       date:"2026-04-25", type:"Superspeedway",  miles:2.66, geo:"Tri-Oval",    chaos:.93, winner:"Gio Ruggiero"    },
     { id:"dover_t",      name:"Town Fair Tire 200",        date:"2026-05-02", type:"Short Track",    miles:1.00, geo:"Concrete Bowl",chaos:.68, winner:"Corey Heim"     },
-    { id:"nwilkes_t",    name:"TTC Race 3 – North Wilkes", date:"2026-05-09", type:"Short Track",    miles:0.63, geo:"Oval",        chaos:.72, winner:"Ben Rhodes"      },
+    { id:"nwilkes_t",    name:"TTC Race 3 - North Wilkes", date:"2026-05-09", type:"Short Track",    miles:0.63, geo:"Oval",        chaos:.72, winner:"Ben Rhodes"      },
     { id:"charlotte_t",  name:"NC Education Lottery 200",  date:"2026-05-22", type:"Intermediate",   miles:1.50, geo:"D-Shape",     chaos:.60, winner:"Kaden Honeycutt" },
     { id:"nashville_t",  name:"Rackley W.A.R. 200",        date:"2026-05-30", type:"Intermediate",   miles:1.33, geo:"D-Shape",     chaos:.63, winner:"Chandler Smith"  },
     { id:"michigan_t",   name:"CTS Michigan Race",         date:"2026-06-06", type:"Superspeedway",  miles:2.00, geo:"D-Shape",     chaos:.80, winner:"Ty Majeski"      },
@@ -448,7 +448,7 @@ Use last name only after first mention. Be direct and specific.`;
   return data.content?.map(b => b.text || "").join("") || "Summary unavailable.";
 }
 
-// ── EXPANDABLE DRIVER ROW — track history + AI scout note ────────────────────
+// ── EXPANDABLE DRIVER ROW  -  track history + AI scout note ────────────────────
 function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop10 }) {
   const [open, setOpen] = useState(false);
   const [aiSummary, setAiSummary] = useState(null);
@@ -497,7 +497,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
             <span style={{fontSize:"7px",background:`${chaosColor}18`,border:`1px solid ${chaosColor}44`,borderRadius:"3px",padding:"1px 5px",color:chaosColor,fontWeight:700}}>CHAOS {d.chaosAvoid}/10</span>
             {dnfNum > 7 && <span style={{fontSize:"7px",background:"rgba(255,78,0,0.1)",border:"1px solid rgba(255,78,0,0.3)",borderRadius:"3px",padding:"1px 5px",color:"#FF6A00",fontWeight:700}}>DNF~{d.dnfPct}%</span>}
           </div>
-          <div style={{fontSize:"9px",color:"rgba(255,255,255,0.78)",marginBottom:"5px"}}>{d.team} · {d.pts||"—"}pts · {d.wins}W</div>
+          <div style={{fontSize:"9px",color:"rgba(255,255,255,0.78)",marginBottom:"5px"}}>{d.team} - {d.pts||""}pts - {d.wins}W</div>
           <div style={{display:"flex",alignItems:"center",gap:"7px"}}>
             <Bar pct={d.winPct} color={isStd?"#FF6A00":isDH?"#BA80F8":isLS?"#06b6d4":"#2a2a3a"} max={maxWin}/>
             <span style={{fontSize:"9px",color:"rgba(255,255,255,0.75)",whiteSpace:"nowrap"}}>T5:{d.top5Pct}%</span>
@@ -562,7 +562,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
               <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",fontWeight:800,color:dnfNum>12?"#FF4E00":dnfNum>7?"#FF8C00":"#22c55e"}}>{d.dnfPct}%</div>
             </div>
             <div style={{fontSize:"9px",color:"rgba(255,255,255,0.55)",fontFamily:"'IBM Plex Mono',monospace",lineHeight:1.5}}>
-              Track chaos: {(race?.chaos*100||0).toFixed(0)}% · {d.chaosAvoid>=8?"Clean racer, avoids incidents well":d.chaosAvoid>=6?"Decent incident avoidance":"High incident risk at chaotic tracks"}
+              Track chaos: {(race?.chaos*100||0).toFixed(0)}% | {d.chaosAvoid>=8?"Clean racer, avoids incidents well":d.chaosAvoid>=6?"Decent incident avoidance":"High incident risk at chaotic tracks"}
             </div>
           </div>
 
@@ -571,7 +571,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
             <div style={{padding:"12px 14px 14px"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px"}}>
                 <div style={{fontSize:"9px",color:"rgba(255,255,255,0.75)",letterSpacing:"0.1em"}}>
-                  TRACK HISTORY · {h.starts} STARTS · {h.yearRange || "2023-2026"}
+                  TRACK HISTORY | {h.starts} STARTS | {h.yearRange || "2023-2026"}
                 </div>
                 {/* Live vs static badge */}
                 <div style={{fontSize:"7px",padding:"2px 6px",borderRadius:"4px",fontFamily:"'IBM Plex Mono',monospace",letterSpacing:"0.08em",
@@ -579,7 +579,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
                   border: d.histSource==="live" ? "1px solid rgba(34,197,94,0.3)" : "1px solid rgba(255,255,255,0.08)",
                   color: d.histSource==="live" ? "#22c55e" : "rgba(255,255,255,0.35)",
                 }}>
-                  {d.histSource==="live" ? "⬤ LIVE · racing-reference.info" : "○ STATIC BASELINE"}
+                  {d.histSource==="live" ? "LIVE | racing-reference.info" : "STATIC BASELINE"}
                 </div>
               </div>
 
@@ -840,7 +840,7 @@ export default function FinalLap(){
 
   const std = results?.[0];
   const dh = results?.find((d,i)=>i>=2&&(d.hist?.apt||0)>=7);
-  // Long shot: ranked 8–last, high chaos avoidance (survives chaos), low win% but real upside
+  // Long shot: ranked 8-last, high chaos avoidance (survives chaos), low win% but real upside
   // Must be distinct from std and dh. Prioritize: high chaosAvoid, decent mom, low win% (true long shot)
   const longShot = results?.find((d,i)=> {
     if(i<5) return false; // not already in the obvious group
@@ -898,9 +898,9 @@ export default function FinalLap(){
 
             {/* Series info chip */}
             <div style={{padding:"10px 12px",background:`${cfg.color}14`,border:`1px solid ${cfg.color}33`,borderRadius:"9px"}}>
-              <div style={{fontSize:"9px",color:cfg.color,letterSpacing:"0.1em",marginBottom:"1px"}}>{cfg.short} · {cfg.chase}</div>
+              <div style={{fontSize:"9px",color:cfg.color,letterSpacing:"0.1em",marginBottom:"1px"}}>{cfg.short} | {cfg.chase}</div>
               <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"15px",fontWeight:900,color:"#f0e8e0"}}>{cfg.label}</div>
-              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.70)",marginTop:"1px"}}>Win = {cfg.ptWin}pts · {currentDrivers.length} drivers</div>
+              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.70)",marginTop:"1px"}}>Win = {cfg.ptWin}pts | {currentDrivers.length} drivers</div>
             </div>
 
             {/* Race list */}
@@ -1011,9 +1011,9 @@ export default function FinalLap(){
           <div style={{background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"12px",padding:"14px 16px",marginBottom:"14px"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"10px"}}>
               <div>
-                <div style={{fontSize:"10px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.1em",marginBottom:"3px"}}>{fmtDate(selectedRace.date)} · {cfg.label.toUpperCase()}</div>
+                <div style={{fontSize:"10px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.1em",marginBottom:"3px"}}>{fmtDate(selectedRace.date)}  |  {cfg.label.toUpperCase()}</div>
                 <div style={{fontSize:"26px",fontWeight:900,color:selectedRace.next?cfg.color:"#FF8C00",letterSpacing:"0.02em",lineHeight:1}}>{selectedRace.name}</div>
-                <div style={{fontSize:"13px",color:"rgba(255,255,255,0.70)",marginTop:"3px"}}>{selectedRace.type} · {selectedRace.miles}mi · {selectedRace.geo}</div>
+                <div style={{fontSize:"13px",color:"rgba(255,255,255,0.70)",marginTop:"3px"}}>{selectedRace.type}  |  {selectedRace.miles}mi  |  {selectedRace.geo}</div>
               </div>
               <button onClick={()=>setDrawerOpen(true)} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",padding:"7px 14px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:700,color:"rgba(255,255,255,0.65)",letterSpacing:"0.08em",whiteSpace:"nowrap"}}>
                 ☰ CHANGE RACE
@@ -1039,7 +1039,7 @@ export default function FinalLap(){
                   animation: trackHistoryStatus==="loading"?"pulse 1.2s infinite":"none",
                 }}/>
                 <span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"7px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.07em"}}>
-                  {trackHistoryStatus==="live"?"TRACK HIST · LIVE":trackHistoryStatus==="loading"?"FETCHING TRACK HIST...":trackHistoryStatus==="failed"?"TRACK HIST · STATIC":"TRACK HIST · IDLE"}
+                  {trackHistoryStatus==="live"?"TRACK HIST | LIVE":trackHistoryStatus==="loading"?"FETCHING TRACK HIST...":trackHistoryStatus==="failed"?"TRACK HIST | STATIC":"TRACK HIST | IDLE"}
                 </span>
               </div>
             </div>
@@ -1052,7 +1052,7 @@ export default function FinalLap(){
           <div onClick={()=>setDrawerOpen(true)} style={{background:"rgba(255,255,255,0.02)",border:"1px dashed rgba(255,255,255,0.1)",borderRadius:"12px",padding:"32px 20px",marginBottom:"14px",textAlign:"center",cursor:"pointer"}}>
             <div style={{fontSize:"28px",marginBottom:"8px",opacity:0.4}}>☰</div>
             <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",letterSpacing:"0.12em",color:"rgba(255,255,255,0.55)"}}>TAP TO SELECT A RACE</div>
-            <div style={{fontSize:"10px",color:"rgba(255,255,255,0.30)",marginTop:"4px"}}>{cfg.label} · {currentSchedule.filter(r=>!r.done).length} races remaining</div>
+            <div style={{fontSize:"10px",color:"rgba(255,255,255,0.30)",marginTop:"4px"}}>{cfg.label}  |  {currentSchedule.filter(r=>!r.done).length} races remaining</div>
           </div>
         )}
 
@@ -1068,9 +1068,9 @@ export default function FinalLap(){
             transition:"all 0.2s",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",
             boxShadow:selectedRace.done||simulating?"none":`0 4px 28px ${cfg.color}44`,
           }}>
-            {selectedRace.done ? `✓ ${selectedRace.winner||"RACE COMPLETE"} — SELECT UPCOMING RACE` :
+            {selectedRace.done ? `✓ ${selectedRace.winner||"RACE COMPLETE"}  -  SELECT UPCOMING RACE` :
              simulating ? <><Spin/>PULLING THE SETUP... {Math.round(progress)}%</> :
-             `▶ PULL THE SETUP — ${selectedRace.name.toUpperCase()}`}
+             `▶ PULL THE SETUP  -  ${selectedRace.name.toUpperCase()}`}
           </button>
         )}
         {simulating&&<div style={{height:"2px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",marginTop:"-10px",marginBottom:"16px",overflow:"hidden"}}><div style={{height:"100%",width:`${progress}%`,background:`linear-gradient(90deg,${cfg.color},#FFD700)`,transition:"width 0.12s ease",borderRadius:"2px"}}/></div>}
@@ -1089,7 +1089,7 @@ export default function FinalLap(){
                   <div key={label} style={{background:bg,border:`1px solid ${bc}`,borderRadius:"11px",padding:"12px 10px"}}>
                     <div style={{fontSize:"7px",color:tc,letterSpacing:"0.12em",marginBottom:"4px",fontWeight:800}}>{label}</div>
                     <div style={{fontSize:"15px",fontWeight:900,color:vc,lineHeight:1.1,marginBottom:"2px"}}>{d?.name}</div>
-                    <div style={{fontSize:"8px",color:"rgba(255,255,255,0.65)",marginBottom:"5px"}}>#{d?.num} · {d?.team?.split(" ")[0]}</div>
+                    <div style={{fontSize:"8px",color:"rgba(255,255,255,0.65)",marginBottom:"5px"}}>#{d?.num}  |  {d?.team?.split(" ")[0]}</div>
                     <div style={{fontSize:"24px",fontWeight:900,color:tc,lineHeight:1}}>{d?.winPct}%</div>
                     <div style={{fontSize:"7px",color:"rgba(255,255,255,0.55)",marginBottom:"6px"}}>WIN PROB</div>
                     <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
@@ -1102,7 +1102,7 @@ export default function FinalLap(){
                     </div>
                     {label==="⚡ LONG SHOT" && d && (
                       <div style={{marginTop:"7px",fontSize:"8px",color:"rgba(6,182,212,0.80)",lineHeight:1.4,borderTop:"1px solid rgba(6,182,212,0.15)",paddingTop:"6px"}}>
-                        Chaos avoid {d.chaosAvoid}/10 · Ranked #{results.indexOf(d)+1} in sim
+                        Chaos avoid {d.chaosAvoid}/10  |  Ranked #{results.indexOf(d)+1} in sim
                       </div>
                     )}
                   </div>
@@ -1131,7 +1131,7 @@ export default function FinalLap(){
               {tab==="standings"&&(
                 <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
                   <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"8px",color:"rgba(255,255,255,0.65)",padding:"6px 9px",background:"rgba(255,255,255,0.02)",borderRadius:"5px",marginBottom:"4px"}}>
-                    2026 {cfg.label.toUpperCase()} STANDINGS · {cfg.chase} · WIN = {cfg.ptWin}PTS
+                    2026 {cfg.label.toUpperCase()} STANDINGS  |  {cfg.chase}  |  WIN = {cfg.ptWin}PTS
                   </div>
                   {currentDrivers.filter((d,i,a)=>a.findIndex(x=>x.name===d.name)===i).map((d,i)=>{
                     const r=results.find(x=>x.name===d.name);
@@ -1146,7 +1146,7 @@ export default function FinalLap(){
                             {inChase&&<span style={{fontSize:"6px",color:cfg.color,letterSpacing:"0.07em",whiteSpace:"nowrap"}}>CHASE</span>}
                           </div>
                         </div>
-                        <div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",fontWeight:900,color:cfg.color}}>{d.pts||"—"}</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.65)"}}>PTS</div></div>
+                        <div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",fontWeight:900,color:cfg.color}}>{d.pts||" - "}</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.65)"}}>PTS</div></div>
                         <div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",fontWeight:900,color:d.wins>0?"#FFD700":"rgba(255,255,255,0.62)"}}>{d.wins}</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.65)"}}>WINS</div></div>
                         {r&&<div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:700,color:"#FF8C00"}}>{r.winPct}%</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.65)"}}>SIM%</div></div>}
                       </div>
@@ -1172,7 +1172,7 @@ export default function FinalLap(){
               {tab==="history"&&(
                 <div>
                   <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"9px",color:"rgba(255,255,255,0.65)",padding:"6px 9px",background:"rgba(255,255,255,0.02)",borderRadius:"5px",marginBottom:"8px"}}>
-                    {selectedRace?.name} · {selectedRace?.geo} geometry · Click ▼ HIST to expand per-driver finish breakdown
+                    {selectedRace?.name}  |  {selectedRace?.geo} geometry  |  Click ▼ HIST to expand per-driver finish breakdown
                   </div>
                   {[...results].sort((a,b)=>(b.hist?.apt||0)-(a.hist?.apt||0)).map((d,i)=>(
                     <TrackHistRow key={d.name} d={d} rank={i+1} isStd={d.name===std?.name} isDH={d.name===(dh||results[2])?.name&&d.name!==std?.name} isLS={d.name===longShot?.name&&d.name!==std?.name&&d.name!==(dh||results[2])?.name} maxWin={maxW} series={series} race={selectedRace} isTop10={i<10}/>
@@ -1185,12 +1185,12 @@ export default function FinalLap(){
                 <div>
                   {liveLeader&&liveFrame>0&&(
                     <div style={{background:"rgba(255,78,0,0.07)",border:"1px solid rgba(255,78,0,0.22)",borderRadius:"8px",padding:"9px 13px",marginBottom:"9px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                      <div><div style={{fontSize:"8px",color:"rgba(255,255,255,0.75)",letterSpacing:"0.1em"}}>LIVE LEADER · LAP {chart.data[liveFrame]?.lap}</div><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"20px",fontWeight:900,color:"#FFD700",lineHeight:1}}>{liveLeader}</div></div>
+                      <div><div style={{fontSize:"8px",color:"rgba(255,255,255,0.75)",letterSpacing:"0.1em"}}>LIVE LEADER  |  LAP {chart.data[liveFrame]?.lap}</div><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"20px",fontWeight:900,color:"#FFD700",lineHeight:1}}>{liveLeader}</div></div>
                       <div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"26px",fontWeight:900,color:"#FF8C00"}}>{chart.data[liveFrame]?.[liveLeader]}%</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.70)"}}>WIN PROB</div></div>
                     </div>
                   )}
                   <div style={{background:"rgba(255,255,255,0.015)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:"10px",padding:"14px 6px 8px"}}>
-                    <div style={{fontSize:"8px",color:"rgba(255,255,255,0.72)",letterSpacing:"0.1em",marginBottom:"8px",paddingLeft:"8px"}}>WIN PROBABILITY SHIFT PER LAP — TRACK POS · PIT STRATEGY · CAUTIONS · TIRE WEAR · MOMENTUM</div>
+                    <div style={{fontSize:"8px",color:"rgba(255,255,255,0.72)",letterSpacing:"0.1em",marginBottom:"8px",paddingLeft:"8px"}}>WIN PROBABILITY SHIFT PER LAP  -  TRACK POS  |  PIT STRATEGY  |  CAUTIONS  |  TIRE WEAR  |  MOMENTUM</div>
                     <ResponsiveContainer width="100%" height={280}>
                       <LineChart data={liveData} margin={{top:3,right:8,left:-18,bottom:3}}>
                         <XAxis dataKey="lap" stroke="rgba(255,255,255,0.1)" tick={{fontSize:8,fontFamily:"'IBM Plex Mono',monospace",fill:"rgba(255,255,255,0.75)"}}/>
@@ -1215,8 +1215,8 @@ export default function FinalLap(){
               )}
 
               <div style={{marginTop:"12px",padding:"8px 11px",background:"rgba(255,255,255,0.01)",border:"1px solid rgba(255,255,255,0.04)",borderRadius:"7px",fontFamily:"'IBM Plex Mono',monospace",fontSize:"7px",color:"rgba(255,255,255,0.62)",lineHeight:1.7}}>
-                SCORE: Skill 32% · Momentum 22% · Standings 9% · Track History 14% · Hist Finishes (wins/top3/top5/top10) · Qual Speed 9% · Aero 11%{"\n"}
-                ENGINE: Gumbel dist · 25K iters · Chaos {(selectedRace?.chaos*100).toFixed(0)}% · NextGen 2022–2026 weighted · {cfg.label} · {cfg.chase}
+                SCORE: Skill 32%  |  Momentum 22%  |  Standings 9%  |  Track History 14%  |  Hist Finishes (wins/top3/top5/top10)  |  Qual Speed 9%  |  Aero 11%{"\n"}
+                ENGINE: Gumbel dist  |  25K iters  |  Chaos {(selectedRace?.chaos*100).toFixed(0)}%  |  NextGen 2022-2026 weighted  |  {cfg.label}  |  {cfg.chase}
               </div>
             </div>
           )}
@@ -1224,8 +1224,8 @@ export default function FinalLap(){
           {!results&&!simulating&&(
             <div style={{textAlign:"center",padding:"50px 20px",color:"rgba(255,255,255,0.60)"}}>
               <div style={{fontSize:"36px",marginBottom:"8px",opacity:0.35}}>◁</div>
-              <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",letterSpacing:"0.1em"}}>SELECT A RACE · PULL THE SETUP</div>
-              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.07)",marginTop:"5px"}}>{cfg.label} · {currentSchedule.filter(r=>!r.done).length} races remaining</div>
+              <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",letterSpacing:"0.1em"}}>SELECT A RACE  |  PULL THE SETUP</div>
+              <div style={{fontSize:"9px",color:"rgba(255,255,255,0.07)",marginTop:"5px"}}>{cfg.label}  |  {currentSchedule.filter(r=>!r.done).length} races remaining</div>
             </div>
           )}
         </div>
