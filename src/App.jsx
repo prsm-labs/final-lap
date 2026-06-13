@@ -143,14 +143,14 @@ const SERIES_CONFIG = {
 // done/next are computed at runtime by the API based on today's date
 // This static version is only used if the API is unreachable
 function computeSchedule(races) {
-  // Use yesterday's date as cutoff so race-day is never marked "done" until next day
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  const cutoff = d.toISOString().substring(0, 10);
+  // done = has a confirmed winner, OR date was yesterday or earlier
+  // This way: race-day shows as NEXT, not done
+  const now = new Date();
+  const yesterday = new Date(now - 86400000).toISOString().substring(0, 10);
   let nextSet = false;
   return races.map(r => {
-    const isPast = r.date <= cutoff && !r.winner === false;
-    const isNext = !isPast && !nextSet;
+    const isPast = !!r.winner || r.date <= yesterday;
+    const isNext = !isPast && !nextSet && !r.exhib;
     if (isNext) nextSet = true;
     return { ...r, done: isPast, next: isNext };
   });
@@ -191,7 +191,7 @@ const STATIC_SCHEDULES = {
     { id:"san_diego",    name:"NASCAR San Diego",             date:"2026-09-27", type:"Street Course", miles:1.80, geo:"Road Course",   chaos:.76, chase:true },
     { id:"talladega2",   name:"YellaWood 500",                date:"2026-10-04", type:"Superspeedway", miles:2.66, geo:"Tri-Oval",      chaos:.94, chase:true },
     { id:"charlotte2",   name:"Bank of America ROVAL 400",   date:"2026-10-11", type:"Road Course",   miles:2.28, geo:"Road Course",   chaos:.75, chase:true },
-    { id:"phoenix",      name:"United Rentals 500",           date:"2026-10-18", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.67, chase:true },
+    { id:"phoenix2",     name:"United Rentals 500",           date:"2026-10-18", type:"Short Track",   miles:1.00, geo:"D-Shape",       chaos:.67, chase:true },
     { id:"martinsville2",name:"Xfinity 500",                  date:"2026-10-25", type:"Short Track",   miles:0.53, geo:"Paperclip",     chaos:.76, chase:true },
     { id:"chicagoland",  name:"Chicagoland 400",              date:"2026-11-01", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.64, chase:true },
     { id:"homestead2",   name:"NASCAR Cup Championship",      date:"2026-11-08", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.62, chase:true },
@@ -789,11 +789,14 @@ export default function FinalLap(){
 
   // Auto-select next race when schedule loads
   useEffect(() => {
-    const next = currentSchedule.find(r => r.next) || currentSchedule.find(r => !r.done);
-    if (next && !selectedRace) setSelectedRace(next);
-    if (selectedRace) {
+    const next = currentSchedule.find(r => r.next) || currentSchedule.find(r => !r.done && !r.exhib);
+    // Only auto-set if nothing selected yet
+    if (next && !selectedRace) {
+      setSelectedRace(next);
+    } else if (selectedRace) {
+      // Only refresh the selected race data (e.g. winner update), don't change which race
       const refreshed = currentSchedule.find(r => r.id === selectedRace.id);
-      if (refreshed) setSelectedRace(refreshed);
+      if (refreshed && refreshed.id === selectedRace.id) setSelectedRace(refreshed);
     }
   }, [currentSchedule]);
 
@@ -929,7 +932,7 @@ export default function FinalLap(){
                         {!race.done&&!race.next&&days>0&&<span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"9px",color:"rgba(255,255,255,0.40)"}}>{days}d</span>}
                       </div>
                     </div>
-                    {race.done&&race.winner&&<div style={{fontSize:"9px",color:"#FF8C00",marginTop:"4px"}}>[W] {race.winner}</div>}
+                    {race.done&&race.winner&&<div style={{fontSize:"9px",color:"#FF8C00",marginTop:"4px"}}>W {race.winner}</div>}
                     <div style={{display:"flex",gap:"5px",marginTop:"5px",flexWrap:"wrap"}}>
                       <span style={{fontSize:"8px",color:"rgba(255,255,255,0.55)",background:"rgba(255,255,255,0.05)",padding:"2px 6px",borderRadius:"3px"}}>{race.type}</span>
                       <span style={{fontSize:"8px",color:race.chaos>.85?"#FF4E00":race.chaos>.7?"#FF8C00":"rgba(255,255,255,0.50)",background:"rgba(255,255,255,0.04)",padding:"2px 6px",borderRadius:"3px"}}>CHAOS {(race.chaos*100).toFixed(0)}%</span>
