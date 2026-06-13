@@ -1222,7 +1222,7 @@ export default function FinalLap(){
 
           {!results&&!simulating&&(
             <div style={{textAlign:"center",padding:"50px 20px",color:"rgba(255,255,255,0.60)"}}>
-              <div style={{fontSize:"36px",marginBottom:"8px",opacity:0.35}}><</div>
+              <div style={{fontSize:"36px",marginBottom:"8px",opacity:0.35}}>&#9664;</div>
               <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",letterSpacing:"0.1em"}}>SELECT A RACE  |  PULL THE SETUP</div>
               <div style={{fontSize:"9px",color:"rgba(255,255,255,0.07)",marginTop:"5px"}}>{cfg.label}  |  {currentSchedule.filter(r=>!r.done).length} races remaining</div>
             </div>
