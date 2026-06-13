@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ===============================================================================
 // STATIC BASELINE DATA  -  overridden by live API on load
 // Skill/chaos/aero are scout judgments that don't change race-to-race
 // pts/wins/mom are fetched live from /api/standings
-// ═══════════════════════════════════════════════════════════════════════════════
+// ===============================================================================
 
 const STATIC_DRIVER_RATINGS = {
   "Tyler Reddick":       { skill:94, spd:169.2, aero:9,  chaosAvoid:8 },
@@ -139,7 +139,7 @@ const SERIES_CONFIG = {
   truck: { label:"Truck Series",    short:"TRK", chase:"Top 10 after R18", ptWin:55, color:"#22c55e" },
 };
 
-// ── SCHEDULE  -  fetched live from /api/schedule, falls back to computed dates ──
+// -- SCHEDULE  -  fetched live from /api/schedule, falls back to computed dates --
 // done/next are computed at runtime by the API based on today's date
 // This static version is only used if the API is unreachable
 function computeSchedule(races) {
@@ -232,7 +232,7 @@ const STATIC_SCHEDULES = {
   ]),
 };
 
-// ── TRACK HISTORY DATA ────────────────────────────────────────────────────────
+// -- TRACK HISTORY DATA --------------------------------------------------------
 // { aptitude, starts, top20, top10, top5, top3, wins, avgFinish }
 const TRACK_HISTORY = {
   // Martinsville Paperclip
@@ -322,7 +322,7 @@ const TRACK_HISTORY = {
   },
 };
 
-// ── SIMULATION ────────────────────────────────────────────────────────────────
+// -- SIMULATION ----------------------------------------------------------------
 function gumbelRandom(mu=0, beta=1){ return mu - beta * Math.log(-Math.log(Math.random())); }
 
 function runSim(race, series, drivers, iters=25000){
@@ -394,12 +394,12 @@ function genChart(race, results){
   return { data, drivers:top8, laps:LAPS };
 }
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
+// -- HELPERS -------------------------------------------------------------------
 const DRIVER_COLORS=["#FF4E00","#FFD700","#22c55e","#3b82f6","#BA80F8","#f97316","#ec4899","#06b6d4"];
 const fmtDate = s=>new Date(s+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
 const daysUntil = s=>Math.ceil((new Date(s+"T12:00:00")-new Date())/86400000);
 
-// ── COMPONENTS ────────────────────────────────────────────────────────────────
+// -- COMPONENTS ----------------------------------------------------------------
 function PrismLogo(){ return <svg width="30" height="30" viewBox="0 0 36 36" fill="none"><polygon points="18,2 34,30 2,30" stroke="#FF4E00" strokeWidth="2" fill="none"/><polygon points="18,8 30,28 6,28" stroke="#FF8C00" strokeWidth="1" fill="rgba(255,76,0,0.08)"/><line x1="18" y1="2" x2="18" y2="30" stroke="#FFD700" strokeWidth="0.6" opacity="0.7"/></svg>; }
 function Bar({pct,color,max}){ const w=Math.min((parseFloat(pct)/max)*100,100); return <div style={{height:"5px",borderRadius:"3px",background:"rgba(255,255,255,0.07)",overflow:"hidden",flex:1}}><div style={{height:"100%",width:`${w}%`,background:color,borderRadius:"3px",transition:"width 0.9s ease"}}/></div>; }
 function Spin(){ return <svg width="36" height="36" viewBox="0 0 48 48" style={{animation:"spin 0.9s linear infinite"}}><circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,78,0,0.15)" strokeWidth="3"/><circle cx="24" cy="24" r="20" fill="none" stroke="#FF4E00" strokeWidth="3" strokeDasharray="28 97" strokeLinecap="round"/></svg>; }
@@ -412,7 +412,7 @@ const ChartTip = ({ active, payload, label }) => {
   </div>;
 };
 
-// ── AI SCOUT SUMMARY fetcher ──────────────────────────────────────────────────
+// -- AI SCOUT SUMMARY fetcher --------------------------------------------------
 async function fetchDriverSummary(d, race, rank, series) {
   const h = d.hist || {};
   const seriesLabel = SERIES_CONFIG[series].label;
@@ -448,7 +448,7 @@ Use last name only after first mention. Be direct and specific.`;
   return data.content?.map(b => b.text || "").join("") || "Summary unavailable.";
 }
 
-// ── EXPANDABLE DRIVER ROW  -  track history + AI scout note ────────────────────
+// -- EXPANDABLE DRIVER ROW  -  track history + AI scout note --------------------
 function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop10 }) {
   const [open, setOpen] = useState(false);
   const [aiSummary, setAiSummary] = useState(null);
@@ -480,9 +480,9 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
   return (
     <div style={{background:bgColor,border:`1px solid ${borderColor}`,borderRadius:"11px",overflow:"hidden",marginBottom:"6px"}}>
 
-      {/* ── Main collapsed row */}
+      {/* -- Main collapsed row */}
       <div style={{padding:"11px 14px",display:"grid",gridTemplateColumns:"26px 1fr auto auto",gap:"10px",alignItems:"center",position:"relative"}}>
-        {(isStd||isDH||isLS) && <div style={{position:"absolute",top:"6px",right:"50px",fontSize:"8px",fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:"0.1em",fontWeight:800,color:accentColor}}>{isStd?"⬟ STANDARD PICK":isDH?"◈ DARK HORSE":"⚡ LONG SHOT"}</div>}
+        {(isStd||isDH||isLS) && <div style={{position:"absolute",top:"6px",right:"50px",fontSize:"8px",fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:"0.1em",fontWeight:800,color:accentColor}}>{isStd?"# STANDARD PICK":isDH?"* DARK HORSE":"! LONG SHOT"}</div>}
 
         <div style={{textAlign:"center"}}>
           <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",fontWeight:800,color:rankColors[rank-1]||"rgba(255,255,255,0.65)"}}>{rank}</div>
@@ -510,11 +510,11 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
         </div>
 
         <button onClick={handleToggle} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.12)",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"11px",fontWeight:700,color:"rgba(255,255,255,0.85)",letterSpacing:"0.05em",whiteSpace:"nowrap",transition:"all 0.12s"}}>
-          {open ? "▲ HIDE" : "▼ INFO"}
+          {open ? "^ HIDE" : "v INFO"}
         </button>
       </div>
 
-      {/* ── Expanded panel */}
+      {/* -- Expanded panel */}
       {open && (
         <div style={{borderTop:"1px solid rgba(255,255,255,0.06)",background:"rgba(0,0,0,0.28)"}}>
 
@@ -522,7 +522,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
           {isTop10 && (
             <div style={{padding:"13px 14px 12px",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
               <div style={{fontSize:"8px",color:"#FF8C00",letterSpacing:"0.14em",marginBottom:"8px",display:"flex",alignItems:"center",gap:"8px",fontWeight:800}}>
-                ◈ CREW CHIEF NOTES
+                * CREW CHIEF NOTES
                 {aiLoading && <span style={{fontSize:"7px",color:"rgba(255,255,255,0.50)",fontWeight:400,animation:"pulse 1.5s infinite"}}>GENERATING...</span>}
               </div>
               {aiLoading && (
@@ -637,9 +637,9 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ===============================================================================
 // MAIN APP
-// ═══════════════════════════════════════════════════════════════════════════════
+// ===============================================================================
 export default function FinalLap(){
   const [series, setSeries] = useState("cup");
   const [results, setResults] = useState(null);
@@ -653,7 +653,7 @@ export default function FinalLap(){
   const [drawerOpen, setDrawerOpen] = useState(false);
   const ivRef = useRef(null); const liveRef = useRef(null);
 
-  // ── LIVE DATA STATE ─────────────────────────────────────────────────────────
+  // -- LIVE DATA STATE ---------------------------------------------------------
   const [liveDrivers, setLiveDrivers] = useState({
     cup:   mergeDriverData(FALLBACK_DRIVERS.cup),
     xfin:  mergeDriverData(FALLBACK_DRIVERS.xfin),
@@ -664,8 +664,8 @@ export default function FinalLap(){
   const [dataStatus, setDataStatus] = useState("loading");
   const [dataAsOf, setDataAsOf] = useState(null);
 
-  // ── LIVE TRACK HISTORY STATE ─────────────────────────────────────────────
-  // Keyed by "trackName|series" → { driverName: { starts, wins, top5, ... } }
+  // -- LIVE TRACK HISTORY STATE ---------------------------------------------
+  // Keyed by "trackName|series" -> { driverName: { starts, wins, top5, ... } }
   const [liveTrackHistory, setLiveTrackHistory] = useState({});
   const [trackHistoryStatus, setTrackHistoryStatus] = useState("idle"); // idle | loading | live | failed
 
@@ -870,7 +870,7 @@ export default function FinalLap(){
         ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#1a1a2a;border-radius:2px;}
       `}</style>
 
-      {/* ── DRAWER OVERLAY */}
+      {/* -- DRAWER OVERLAY */}
       {drawerOpen && (
         <div style={{position:"fixed",inset:0,zIndex:50,display:"flex"}}>
           {/* Backdrop */}
@@ -880,7 +880,7 @@ export default function FinalLap(){
             {/* Drawer header */}
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"4px"}}>
               <div style={{fontSize:"10px",color:"rgba(255,255,255,0.50)",letterSpacing:"0.14em"}}>RACE CARD - SELECT A RACE</div>
-              <button onClick={()=>setDrawerOpen(false)} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"6px",padding:"4px 10px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"13px",fontWeight:700,color:"rgba(255,255,255,0.70)"}}>✕ CLOSE</button>
+              <button onClick={()=>setDrawerOpen(false)} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"6px",padding:"4px 10px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"13px",fontWeight:700,color:"rgba(255,255,255,0.70)"}}>x CLOSE</button>
             </div>
 
             {/* Series tabs inside drawer */}
@@ -921,12 +921,12 @@ export default function FinalLap(){
                         <div style={{fontSize:"9px",color:"rgba(255,255,255,0.60)",marginTop:"2px"}}>{fmtDate(race.date)}</div>
                       </div>
                       <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"3px",marginLeft:"8px"}}>
-                        {race.done&&<span style={{fontSize:"8px",color:"rgba(255,255,255,0.35)"}}>✓ DONE</span>}
-                        {race.next&&<span style={{fontSize:"8px",color:cfg.color,fontWeight:700,animation:"pulse 2s infinite"}}>NEXT ▶</span>}
+                        {race.done&&<span style={{fontSize:"8px",color:"rgba(255,255,255,0.35)"}}>v DONE</span>}
+                        {race.next&&<span style={{fontSize:"8px",color:cfg.color,fontWeight:700,animation:"pulse 2s infinite"}}>NEXT ></span>}
                         {!race.done&&!race.next&&days>0&&<span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"9px",color:"rgba(255,255,255,0.40)"}}>{days}d</span>}
                       </div>
                     </div>
-                    {race.done&&race.winner&&<div style={{fontSize:"9px",color:"#FF8C00",marginTop:"4px"}}>🏆 {race.winner}</div>}
+                    {race.done&&race.winner&&<div style={{fontSize:"9px",color:"#FF8C00",marginTop:"4px"}}>[W] {race.winner}</div>}
                     <div style={{display:"flex",gap:"5px",marginTop:"5px",flexWrap:"wrap"}}>
                       <span style={{fontSize:"8px",color:"rgba(255,255,255,0.55)",background:"rgba(255,255,255,0.05)",padding:"2px 6px",borderRadius:"3px"}}>{race.type}</span>
                       <span style={{fontSize:"8px",color:race.chaos>.85?"#FF4E00":race.chaos>.7?"#FF8C00":"rgba(255,255,255,0.50)",background:"rgba(255,255,255,0.04)",padding:"2px 6px",borderRadius:"3px"}}>CHAOS {(race.chaos*100).toFixed(0)}%</span>
@@ -950,7 +950,7 @@ export default function FinalLap(){
         </div>
       )}
 
-      {/* ── HEADER */}
+      {/* -- HEADER */}
       <div style={{borderBottom:"1px solid rgba(255,255,255,0.07)",padding:"0 14px",position:"sticky",top:0,zIndex:40,background:"#07070f"}}>
         <div style={{maxWidth:"860px",margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:"54px",gap:"10px"}}>
           {/* Logo */}
@@ -984,7 +984,7 @@ export default function FinalLap(){
               fontFamily:"'Barlow Condensed',sans-serif",fontSize:"11px",fontWeight:700,
               color:"rgba(255,255,255,0.80)",letterSpacing:"0.08em",display:"flex",alignItems:"center",gap:"6px",
             }}>
-              <span>☰</span>
+              <span>=</span>
               <span style={{display:"flex",flexDirection:"column",alignItems:"flex-start",lineHeight:1.2}}>
                 <span style={{fontSize:"9px",color:"rgba(255,255,255,0.45)"}}>RACE CARD</span>
                 <span style={{fontSize:"10px",color:selectedRace?cfg.color:"rgba(255,255,255,0.40)",maxWidth:"90px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
@@ -1003,7 +1003,7 @@ export default function FinalLap(){
         </div>
       </div>
 
-      {/* ── MAIN CONTENT - full width ── */}
+      {/* -- MAIN CONTENT - full width -- */}
       <div style={{maxWidth:"860px",margin:"0 auto",padding:"16px 14px 72px"}}>
 
         {/* Selected race banner */}
@@ -1016,7 +1016,7 @@ export default function FinalLap(){
                 <div style={{fontSize:"13px",color:"rgba(255,255,255,0.70)",marginTop:"3px"}}>{selectedRace.type}  |  {selectedRace.miles}mi  |  {selectedRace.geo}</div>
               </div>
               <button onClick={()=>setDrawerOpen(true)} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",padding:"7px 14px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:700,color:"rgba(255,255,255,0.65)",letterSpacing:"0.08em",whiteSpace:"nowrap"}}>
-                ☰ CHANGE RACE
+                = CHANGE RACE
               </button>
             </div>
             <div style={{display:"flex",gap:"18px",flexWrap:"wrap",marginTop:"12px",alignItems:"flex-end"}}>
@@ -1050,7 +1050,7 @@ export default function FinalLap(){
         {/* No race selected prompt */}
         {!selectedRace && (
           <div onClick={()=>setDrawerOpen(true)} style={{background:"rgba(255,255,255,0.02)",border:"1px dashed rgba(255,255,255,0.1)",borderRadius:"12px",padding:"32px 20px",marginBottom:"14px",textAlign:"center",cursor:"pointer"}}>
-            <div style={{fontSize:"28px",marginBottom:"8px",opacity:0.4}}>☰</div>
+            <div style={{fontSize:"28px",marginBottom:"8px",opacity:0.4}}>=</div>
             <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",letterSpacing:"0.12em",color:"rgba(255,255,255,0.55)"}}>TAP TO SELECT A RACE</div>
             <div style={{fontSize:"10px",color:"rgba(255,255,255,0.30)",marginTop:"4px"}}>{cfg.label}  |  {currentSchedule.filter(r=>!r.done).length} races remaining</div>
           </div>
@@ -1068,9 +1068,9 @@ export default function FinalLap(){
             transition:"all 0.2s",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",
             boxShadow:selectedRace.done||simulating?"none":`0 4px 28px ${cfg.color}44`,
           }}>
-            {selectedRace.done ? `✓ ${selectedRace.winner||"RACE COMPLETE"}  -  SELECT UPCOMING RACE` :
+            {selectedRace.done ? `v ${selectedRace.winner||"RACE COMPLETE"}  -  SELECT UPCOMING RACE` :
              simulating ? <><Spin/>PULLING THE SETUP... {Math.round(progress)}%</> :
-             `▶ PULL THE SETUP  -  ${selectedRace.name.toUpperCase()}`}
+             `> PULL THE SETUP  -  ${selectedRace.name.toUpperCase()}`}
           </button>
         )}
         {simulating&&<div style={{height:"2px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",marginTop:"-10px",marginBottom:"16px",overflow:"hidden"}}><div style={{height:"100%",width:`${progress}%`,background:`linear-gradient(90deg,${cfg.color},#FFD700)`,transition:"width 0.12s ease",borderRadius:"2px"}}/></div>}
@@ -1082,9 +1082,9 @@ export default function FinalLap(){
               {/* Summary picks - 3 cards */}
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"11px"}}>
                 {[
-                  [std,       "⬟ STANDARD PICK", "rgba(255,78,0,0.07)",    "rgba(255,78,0,0.28)",    "#FF8C00", "#FFD700"],
-                  [dh||results[2], "◈ DARK HORSE","rgba(138,43,226,0.07)", "rgba(138,43,226,0.28)",  "#BA80F8", "#BA80F8"],
-                  [longShot,  "⚡ LONG SHOT",      "rgba(6,182,212,0.07)",  "rgba(6,182,212,0.28)",   "#06b6d4", "#06b6d4"],
+                  [std,       "# STANDARD PICK", "rgba(255,78,0,0.07)",    "rgba(255,78,0,0.28)",    "#FF8C00", "#FFD700"],
+                  [dh||results[2], "* DARK HORSE","rgba(138,43,226,0.07)", "rgba(138,43,226,0.28)",  "#BA80F8", "#BA80F8"],
+                  [longShot,  "! LONG SHOT",      "rgba(6,182,212,0.07)",  "rgba(6,182,212,0.28)",   "#06b6d4", "#06b6d4"],
                 ].map(([d,label,bg,bc,tc,vc])=>(
                   <div key={label} style={{background:bg,border:`1px solid ${bc}`,borderRadius:"11px",padding:"12px 10px"}}>
                     <div style={{fontSize:"7px",color:tc,letterSpacing:"0.12em",marginBottom:"4px",fontWeight:800}}>{label}</div>
@@ -1100,7 +1100,7 @@ export default function FinalLap(){
                         </div>
                       ))}
                     </div>
-                    {label==="⚡ LONG SHOT" && d && (
+                    {label==="! LONG SHOT" && d && (
                       <div style={{marginTop:"7px",fontSize:"8px",color:"rgba(6,182,212,0.80)",lineHeight:1.4,borderTop:"1px solid rgba(6,182,212,0.15)",paddingTop:"6px"}}>
                         Chaos avoid {d.chaosAvoid}/10  |  Ranked #{results.indexOf(d)+1} in sim
                       </div>
@@ -1122,12 +1122,12 @@ export default function FinalLap(){
                 ))}
               </div>
 
-              {/* ── PICKS TAB ── */}
+              {/* -- PICKS TAB -- */}
               {tab==="picks"&&results.map((d,i)=>(
                 <TrackHistRow key={d.name} d={d} rank={i+1} isStd={d.name===std?.name} isDH={d.name===(dh||results[2])?.name&&d.name!==std?.name} isLS={d.name===longShot?.name&&d.name!==std?.name&&d.name!==(dh||results[2])?.name} maxWin={maxW} series={series} race={selectedRace} isTop10={i<10}/>
               ))}
 
-              {/* ── STANDINGS TAB ── */}
+              {/* -- STANDINGS TAB -- */}
               {tab==="standings"&&(
                 <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
                   <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"8px",color:"rgba(255,255,255,0.65)",padding:"6px 9px",background:"rgba(255,255,255,0.02)",borderRadius:"5px",marginBottom:"4px"}}>
@@ -1155,7 +1155,7 @@ export default function FinalLap(){
                 </div>
               )}
 
-              {/* ── SPEED/AERO TAB ── */}
+              {/* -- SPEED/AERO TAB -- */}
               {tab==="speed"&&[...results].sort((a,b)=>b.spd-a.spd).map((d,i)=>(
                 <div key={d.name} style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:"9px",padding:"9px 12px",display:"grid",gridTemplateColumns:"20px 1fr auto auto",gap:"8px",alignItems:"center",marginBottom:"4px"}}>
                   <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:700,color:"rgba(255,255,255,0.70)"}}>{i+1}</div>
@@ -1168,11 +1168,11 @@ export default function FinalLap(){
                 </div>
               ))}
 
-              {/* ── TRACK HISTORY TAB ── */}
+              {/* -- TRACK HISTORY TAB -- */}
               {tab==="history"&&(
                 <div>
                   <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"9px",color:"rgba(255,255,255,0.65)",padding:"6px 9px",background:"rgba(255,255,255,0.02)",borderRadius:"5px",marginBottom:"8px"}}>
-                    {selectedRace?.name}  |  {selectedRace?.geo} geometry  |  Click ▼ HIST to expand per-driver finish breakdown
+                    {selectedRace?.name}  |  {selectedRace?.geo} geometry  |  Click v HIST to expand per-driver finish breakdown
                   </div>
                   {[...results].sort((a,b)=>(b.hist?.apt||0)-(a.hist?.apt||0)).map((d,i)=>(
                     <TrackHistRow key={d.name} d={d} rank={i+1} isStd={d.name===std?.name} isDH={d.name===(dh||results[2])?.name&&d.name!==std?.name} isLS={d.name===longShot?.name&&d.name!==std?.name&&d.name!==(dh||results[2])?.name} maxWin={maxW} series={series} race={selectedRace} isTop10={i<10}/>
@@ -1180,7 +1180,7 @@ export default function FinalLap(){
                 </div>
               )}
 
-              {/* ── IN-RACE CHART TAB ── */}
+              {/* -- IN-RACE CHART TAB -- */}
               {tab==="race"&&chart&&(
                 <div>
                   {liveLeader&&liveFrame>0&&(
@@ -1207,8 +1207,8 @@ export default function FinalLap(){
                     ))}
                   </div>
                   <div style={{display:"flex",gap:"7px",marginTop:"10px",alignItems:"center"}}>
-                    <button onClick={liveRunning?pauseRace:playRace} style={{background:liveRunning?"rgba(239,68,68,0.12)":"linear-gradient(135deg,#FF4E00,#FF8C00)",border:liveRunning?"1px solid rgba(239,68,68,0.35)":"none",borderRadius:"7px",padding:"8px 16px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:900,color:"#fff",letterSpacing:"0.1em"}}>{liveRunning?"⏸ PAUSE":"▶ PLAY RACE"}</button>
-                    <button onClick={resetRace} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"7px",padding:"8px 12px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:700,color:"rgba(255,255,255,0.82)",letterSpacing:"0.07em"}}>↺ RESET</button>
+                    <button onClick={liveRunning?pauseRace:playRace} style={{background:liveRunning?"rgba(239,68,68,0.12)":"linear-gradient(135deg,#FF4E00,#FF8C00)",border:liveRunning?"1px solid rgba(239,68,68,0.35)":"none",borderRadius:"7px",padding:"8px 16px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:900,color:"#fff",letterSpacing:"0.1em"}}>{liveRunning?"|| PAUSE":"> PLAY RACE"}</button>
+                    <button onClick={resetRace} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"7px",padding:"8px 12px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:700,color:"rgba(255,255,255,0.82)",letterSpacing:"0.07em"}}>R RESET</button>
                     <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"9px",color:"rgba(255,255,255,0.70)",flex:1,textAlign:"right"}}>LAP {chart.data[liveFrame]?.lap||0} / {chart.laps}</div>
                   </div>
                 </div>
@@ -1223,7 +1223,7 @@ export default function FinalLap(){
 
           {!results&&!simulating&&(
             <div style={{textAlign:"center",padding:"50px 20px",color:"rgba(255,255,255,0.60)"}}>
-              <div style={{fontSize:"36px",marginBottom:"8px",opacity:0.35}}>◁</div>
+              <div style={{fontSize:"36px",marginBottom:"8px",opacity:0.35}}><</div>
               <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",letterSpacing:"0.1em"}}>SELECT A RACE  |  PULL THE SETUP</div>
               <div style={{fontSize:"9px",color:"rgba(255,255,255,0.07)",marginTop:"5px"}}>{cfg.label}  |  {currentSchedule.filter(r=>!r.done).length} races remaining</div>
             </div>
