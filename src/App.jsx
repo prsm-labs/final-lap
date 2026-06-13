@@ -432,7 +432,7 @@ ${d.rookie?" - NOTE: Rookie driver":""}${d.sub?" - NOTE: Substitute driver":""}
 Write EXACTLY 3 sentences. No headers. No bullet points. No fluff.
 Sentence 1: The 1-2 biggest factors that earned them rank #${rank} in the simulation.
 Sentence 2: How their chaos avoidance rating (${d.chaosAvoid}/10) specifically plays out at a ${race.chaos>0.8?"high":"moderate"}-chaos ${race.type} like this one.
-Sentence 3: Their single biggest vulnerability or risk to watch — what could knock them out of contention.
+Sentence 3: Their single biggest vulnerability or risk to watch -- what could knock them out of contention.
 Use last name only after first mention. Be direct and specific.`;
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -471,7 +471,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
         const s = await fetchDriverSummary(d, race, rank, series);
         setAiSummary(s);
       } catch(e) {
-        setAiSummary("Scout note unavailable — check API connection.");
+        setAiSummary("Scout note unavailable -- check API connection.");
       }
       setAiLoading(false);
     }
@@ -480,7 +480,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
   return (
     <div style={{background:bgColor,border:`1px solid ${borderColor}`,borderRadius:"11px",overflow:"hidden",marginBottom:"6px"}}>
 
-      {/* ── Main collapsed row ── */}
+      {/* ── Main collapsed row */}
       <div style={{padding:"11px 14px",display:"grid",gridTemplateColumns:"26px 1fr auto auto",gap:"10px",alignItems:"center",position:"relative"}}>
         {(isStd||isDH||isLS) && <div style={{position:"absolute",top:"6px",right:"50px",fontSize:"8px",fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:"0.1em",fontWeight:800,color:accentColor}}>{isStd?"⬟ STANDARD PICK":isDH?"◈ DARK HORSE":"⚡ LONG SHOT"}</div>}
 
@@ -514,7 +514,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
         </button>
       </div>
 
-      {/* ── Expanded panel ── */}
+      {/* ── Expanded panel */}
       {open && (
         <div style={{borderTop:"1px solid rgba(255,255,255,0.06)",background:"rgba(0,0,0,0.28)"}}>
 
@@ -571,7 +571,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
             <div style={{padding:"12px 14px 14px"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px"}}>
                 <div style={{fontSize:"9px",color:"rgba(255,255,255,0.75)",letterSpacing:"0.1em"}}>
-                  TRACK HISTORY · {h.starts} STARTS · {h.yearRange || "2023–2026"}
+                  TRACK HISTORY · {h.starts} STARTS · {h.yearRange || "2023-2026"}
                 </div>
                 {/* Live vs static badge */}
                 <div style={{fontSize:"7px",padding:"2px 6px",borderRadius:"4px",fontFamily:"'IBM Plex Mono',monospace",letterSpacing:"0.08em",
@@ -597,7 +597,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
                       </div>
                     );
                   })}
-                  <div style={{fontSize:"7px",color:"rgba(255,255,255,0.2)",alignSelf:"center",marginLeft:"4px"}}>← last {h.recentFinishes.length} races here</div>
+                  <div style={{fontSize:"7px",color:"rgba(255,255,255,0.2)",alignSelf:"center",marginLeft:"4px"}}>last {h.recentFinishes.length} races here</div>
                 </div>
               )}
 
@@ -870,7 +870,7 @@ export default function FinalLap(){
         ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#1a1a2a;border-radius:2px;}
       `}</style>
 
-      {/* ── DRAWER OVERLAY ── */}
+      {/* ── DRAWER OVERLAY */}
       {drawerOpen && (
         <div style={{position:"fixed",inset:0,zIndex:50,display:"flex"}}>
           {/* Backdrop */}
@@ -879,7 +879,7 @@ export default function FinalLap(){
           <div style={{position:"relative",zIndex:51,width:"min(340px,90vw)",background:"#0e0e1a",borderRight:"1px solid rgba(255,255,255,0.08)",height:"100%",overflowY:"auto",padding:"16px 14px 40px",display:"flex",flexDirection:"column",gap:"12px",animation:"slideIn 0.22s ease"}}>
             {/* Drawer header */}
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"4px"}}>
-              <div style={{fontSize:"10px",color:"rgba(255,255,255,0.50)",letterSpacing:"0.14em"}}>RACE CARD — SELECT A RACE</div>
+              <div style={{fontSize:"10px",color:"rgba(255,255,255,0.50)",letterSpacing:"0.14em"}}>RACE CARD - SELECT A RACE</div>
               <button onClick={()=>setDrawerOpen(false)} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"6px",padding:"4px 10px",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"13px",fontWeight:700,color:"rgba(255,255,255,0.70)"}}>✕ CLOSE</button>
             </div>
 
@@ -904,7 +904,7 @@ export default function FinalLap(){
             </div>
 
             {/* Race list */}
-            <div style={{fontSize:"9px",letterSpacing:"0.12em",color:"rgba(255,255,255,0.45)",marginBottom:"2px"}}>2026 SCHEDULE — OLDEST → NEWEST</div>
+            <div style={{fontSize:"9px",letterSpacing:"0.12em",color:"rgba(255,255,255,0.45)",marginBottom:"2px"}}>2026 SCHEDULE - OLDEST TO NEWEST</div>
             <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
               {currentSchedule.map(race=>{
                 const sel=selectedRace?.id===race.id;
@@ -950,7 +950,7 @@ export default function FinalLap(){
         </div>
       )}
 
-      {/* ── HEADER ── */}
+      {/* ── HEADER */}
       <div style={{borderBottom:"1px solid rgba(255,255,255,0.07)",padding:"0 14px",position:"sticky",top:0,zIndex:40,background:"#07070f"}}>
         <div style={{maxWidth:"860px",margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:"54px",gap:"10px"}}>
           {/* Logo */}
@@ -963,7 +963,7 @@ export default function FinalLap(){
             </div>
           </div>
 
-          {/* Series tabs — center */}
+          {/* Series tabs - center */}
           <div style={{display:"flex",gap:"5px",flexShrink:0}}>
             {Object.entries(SERIES_CONFIG).map(([id,c])=>(
               <button key={id} onClick={()=>changeSeries(id)} style={{
@@ -1003,7 +1003,7 @@ export default function FinalLap(){
         </div>
       </div>
 
-      {/* ── MAIN CONTENT — full width ── */}
+      {/* ── MAIN CONTENT - full width ── */}
       <div style={{maxWidth:"860px",margin:"0 auto",padding:"16px 14px 72px"}}>
 
         {/* Selected race banner */}
@@ -1039,7 +1039,7 @@ export default function FinalLap(){
                   animation: trackHistoryStatus==="loading"?"pulse 1.2s infinite":"none",
                 }}/>
                 <span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"7px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.07em"}}>
-                  {trackHistoryStatus==="live"?"TRACK HIST · LIVE":trackHistoryStatus==="loading"?"FETCHING TRACK HIST…":trackHistoryStatus==="failed"?"TRACK HIST · STATIC":"TRACK HIST · IDLE"}
+                  {trackHistoryStatus==="live"?"TRACK HIST · LIVE":trackHistoryStatus==="loading"?"FETCHING TRACK HIST...":trackHistoryStatus==="failed"?"TRACK HIST · STATIC":"TRACK HIST · IDLE"}
                 </span>
               </div>
             </div>
@@ -1079,7 +1079,7 @@ export default function FinalLap(){
         <div>
           {results&&(
             <div style={{animation:"fadeUp 0.35s ease forwards"}}>
-              {/* Summary picks — 3 cards */}
+              {/* Summary picks - 3 cards */}
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"11px"}}>
                 {[
                   [std,       "⬟ STANDARD PICK", "rgba(255,78,0,0.07)",    "rgba(255,78,0,0.28)",    "#FF8C00", "#FFD700"],
