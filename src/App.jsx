@@ -143,10 +143,13 @@ const SERIES_CONFIG = {
 // done/next are computed at runtime by the API based on today's date
 // This static version is only used if the API is unreachable
 function computeSchedule(races) {
-  const today = new Date().toISOString().substring(0, 10);
+  // Use yesterday's date as cutoff so race-day is never marked "done" until next day
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const cutoff = d.toISOString().substring(0, 10);
   let nextSet = false;
   return races.map(r => {
-    const isPast = r.date < today;
+    const isPast = r.date <= cutoff && !r.winner === false;
     const isNext = !isPast && !nextSet;
     if (isNext) nextSet = true;
     return { ...r, done: isPast, next: isNext };
@@ -843,10 +846,10 @@ export default function FinalLap(){
   // Long shot: ranked 8-last, high chaos avoidance (survives chaos), low win% but real upside
   // Must be distinct from std and dh. Prioritize: high chaosAvoid, decent mom, low win% (true long shot)
   const longShot = results?.find((d,i)=> {
-    if(i<5) return false; // not already in the obvious group
+    if(i<3) return false; // not #1 or #2
     if(d.name===std?.name || d.name===dh?.name) return false;
-    return d.chaosAvoid>=7 && d.mom>=65; // survives chaos, has some momentum
-  }) || results?.find((d,i)=>i>=5&&d.name!==std?.name&&d.name!==dh?.name);
+    return d.chaosAvoid>=6 && d.mom>=60; // survives chaos, has some momentum
+  }) || results?.find((d,i)=>i>=3&&d.name!==std?.name&&d.name!==dh?.name);
   const maxW = results ? Math.max(...results.map(d=>parseFloat(d.winPct))) : 40;
   const liveData = chart ? chart.data.slice(0,liveFrame+1) : [];
   const liveLeader = chart&&liveFrame>0 ? Object.entries(chart.data[liveFrame]).filter(([k])=>k!=="lap").sort((a,b)=>b[1]-a[1])[0]?.[0] : null;
@@ -1039,7 +1042,7 @@ export default function FinalLap(){
                   animation: trackHistoryStatus==="loading"?"pulse 1.2s infinite":"none",
                 }}/>
                 <span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"7px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.07em"}}>
-                  {trackHistoryStatus==="live"?"TRACK HIST | LIVE":trackHistoryStatus==="loading"?"FETCHING TRACK HIST...":trackHistoryStatus==="failed"?"TRACK HIST | STATIC":"TRACK HIST | IDLE"}
+                  {trackHistoryStatus==="live"?"TRACK HIST | LIVE":trackHistoryStatus==="loading"?"FETCHING TRACK HIST...":trackHistoryStatus==="failed"?"TRACK HIST | DEPLOY /api/trackhistory":"TRACK HIST | IDLE"}
                 </span>
               </div>
             </div>
