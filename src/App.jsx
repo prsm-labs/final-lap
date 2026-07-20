@@ -176,8 +176,14 @@ function computeSchedule(races) {
   // the correct next race across any bye-week gap (7 days, 3 weeks, whatever), so it's a
   // strict superset of "find a race within 7 days, else next chronological race": there's
   // no separate 7-day branch needed because this logic never stops looking past 7 days.
+  //
+  // IMPORTANT: race dates are US Eastern calendar dates (NASCAR schedule). Using
+  // new Date().toISOString() here would compute the boundary in UTC, which rolls to the
+  // next calendar day at 8pm ET / 5pm PT -- marking the current day's race "done" with no
+  // winner hours before it actually runs. Anchor to America/New_York instead.
   const now = new Date();
-  const yesterday = new Date(now - 86400000).toISOString().substring(0, 10);
+  const etDateString = d => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+  const yesterday = etDateString(new Date(now - 86400000));
   let nextSet = false;
   return races.map(r => {
     const isPast = !!r.winner || r.date <= yesterday;

@@ -105,8 +105,14 @@ export default async function handler(req) {
   // winner-aware done/next: confirmed winner = done; future date = not done
   // "next" is the first non-done race in chronological order, so bye weeks of any length
   // (7 days, 3 weeks, whatever) are handled correctly without a separate 7-day-window branch.
+  //
+  // IMPORTANT: race dates are US Eastern calendar dates (NASCAR schedule). Using
+  // new Date().toISOString() here would compute the boundary in UTC, which rolls to the
+  // next calendar day at 8pm ET / 5pm PT -- marking the current day's race "done" with no
+  // winner hours before it actually runs. Anchor to America/New_York instead.
   const now = new Date();
-  const yesterday = new Date(now - 86400000).toISOString().substring(0, 10);
+  const etDateString = d => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+  const yesterday = etDateString(new Date(now - 86400000));
   let nextSet = false;
 
   const enriched = schedule.map(race => {
