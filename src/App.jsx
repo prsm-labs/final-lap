@@ -1137,43 +1137,22 @@ export default function FinalLap(){
   const [trackHistoryStatus, setTrackHistoryStatus] = useState("idle"); // idle | loading | live | failed
 
   // -- FINAL RESULTS STATE (official post-race results, sourced live from /api/results) ---
-  // Keyed by "series-raceId" -> { winner, results, recap, complete }
+  // Keyed by "series-raceId" -> { winner, results, qualifying, recap, complete }
   const [raceResultsCache, setRaceResultsCache] = useState({});
   const [resultsStatus, setResultsStatus] = useState("idle"); // idle | loading | live | failed | pending
 
-  // Track name mapping from race geo/id to the full venue name for the API
-  const TRACK_VENUE_NAMES = {
-    "Tri-Oval":        { daytona:"Daytona International Speedway", pocono:"Pocono Raceway", talladega:"Talladega Superspeedway" },
-    "Paperclip":       "Martinsville Speedway",
-    "D-Shape":         { phoenix:"Phoenix Raceway", las_vegas:"Las Vegas Motor Speedway", richmond:"Richmond Raceway", charlotte:"Charlotte Motor Speedway", nashville:"Nashville Superspeedway", iowa:"Iowa Speedway", nh:"New Hampshire Motor Speedway", chicagoland:"Chicagoland Speedway", kansas:"Kansas Speedway", texas:"Texas Motor Speedway", atlanta:"EchoPark Speedway", gateway:"World Wide Technology Raceway", michigan:"Michigan International Speedway" },
-    "Road Course":     { cota:"Circuit of the Americas", sonoma:"Sonoma Raceway", watkins_glen:"Watkins Glen International", coronado:"Coronado Street Course", charlotte2:"Charlotte Motor Speedway Road" },
-    "Bowl":            "Bristol Motor Speedway",
-    "Stripe":          "Darlington Raceway",
-    "Concrete Bowl":   "Dover Motor Speedway",
-    "Oval":            { nwilkes:"North Wilkesboro Speedway", indy:"Indianapolis Motor Speedway" },
-  };
+  // -- RECENT FORM STATE (real last-5 finishes per driver, from /api/recentform) -----------
+  const [liveRecentForm, setLiveRecentForm] = useState({}); // seriesKey -> { driverName: [finishes] }
 
-  function getVenueName(race) {
-    if (!race) return null;
-    const geo = race.geo;
-    const val = TRACK_VENUE_NAMES[geo];
-    if (!val) return null;
-    if (typeof val === "string") return val;
-    // Object keyed by race id prefix
-    const key = Object.keys(val).find(k => race.id.startsWith(k) || race.id.includes(k));
-    return key ? val[key] : Object.values(val)[0];
-  }
-
-  async function fetchTrackHistory(race, seriesKey, drivers) {
-    const venueName = getVenueName(race);
-    if (!venueName) return; // no mapping yet
-    const cacheKey = `${venueName}|${seriesKey}`;
+  // Real per-track driver history, computed server-side from NASCAR's official results
+  // feed (api/tracktrends.js) -- keyed by the race's own date, no venue-name mapping needed.
+  async function fetchTrackHistory(race, seriesKey) {
+    const cacheKey = `${race.date}|${seriesKey}`;
     if (liveTrackHistory[cacheKey]) return; // already fetched
 
     setTrackHistoryStatus("loading");
     try {
-      const driverList = drivers.slice(0, 20).map(d => d.name).join(",");
-      const url = `/api/trackhistory?track=${encodeURIComponent(venueName)}&series=${seriesKey}&drivers=${encodeURIComponent(driverList)}`;
+      const url = `/api/tracktrends?series=${seriesKey}&date=${race.date}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -1204,6 +1183,19 @@ export default function FinalLap(){
     } catch (e) {
       setResultsStatus("failed");
     }
+  }
+
+  // Real recent-form: last 5 finishes per driver, sourced from /api/recentform
+  async function fetchRecentForm(seriesKey) {
+    if (liveRecentForm[seriesKey]) return; // already fetched this session
+    try {
+      const res = await fetch(`/api/recentform?series=${seriesKey}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.drivers) {
+        setLiveRecentForm(prev => ({ ...prev, [seriesKey]: data.drivers }));
+      }
+    } catch (e) { /* silent -- falls back to whatever last5 the driver object already has */ }
   }
 
   // Fetch all live data on mount and when series changes
@@ -1258,6 +1250,13 @@ export default function FinalLap(){
     setDataStatus(anyLive ? "live" : "fallback");
   }, []);
 
+  // Fetch real recent-form (last 5 finishes per driver) whenever the series changes.
+  // Kept as its own effect (not inside fetchLiveData's memoized callback) so the
+  // "already fetched" cache check always sees the current liveRecentForm state.
+  useEffect(() => {
+    fetchRecentForm(series);
+  }, [series]);
+
   useEffect(() => {
     fetchLiveData(series);
   }, [series, fetchLiveData]);
@@ -1290,13 +1289,14 @@ export default function FinalLap(){
   // When a race is selected, kick off live track history fetch in background
   useEffect(() => {
     if (selectedRace && !selectedRace.done) {
-      fetchTrackHistory(selectedRace, series, currentDrivers);
+      fetchTrackHistory(selectedRace, series);
     }
   }, [selectedRace?.id, series]);
 
-  // When a completed race is selected, fetch its official results live
+  // Fetch official results/qualifying live for any non-exhibition race -- qualifying is
+  // often posted days before the race itself, so this fires regardless of selectedRace.done
   useEffect(() => {
-    if (selectedRace && selectedRace.done && !selectedRace.exhib) {
+    if (selectedRace && !selectedRace.exhib) {
       fetchRaceResults(selectedRace, series);
     } else {
       setResultsStatus("idle");
@@ -1315,19 +1315,25 @@ export default function FinalLap(){
     ivRef.current=setInterval(()=>{ p+=Math.random()*14+4; if(p>=92){clearInterval(ivRef.current);p=92;} setProgress(Math.min(p,92)); },80);
     setTimeout(()=>{
       clearInterval(ivRef.current); setProgress(97);
-      // Merge live track history into drivers if available
-      const venueName = getVenueName(selectedRace);
-      const cacheKey = `${venueName}|${series}`;
-      const liveHist = liveTrackHistory[cacheKey] || null;
-      const driversWithLiveHist = liveHist
-        ? currentDrivers.map(d => {
-            const scraped = liveHist[d.name];
-            if (scraped && scraped.starts > 0) {
-              return { ...d, _liveHist: scraped };
-            }
-            return d;
-          })
-        : currentDrivers;
+      // Merge real live track history, recent form, and qualifying into the driver pool
+      const histCacheKey = `${selectedRace.date}|${series}`;
+      const liveHist = liveTrackHistory[histCacheKey] || null;
+      const recentForm = liveRecentForm[series] || null;
+      const resultsCacheKey = `${series}-${selectedRace.id}`;
+      const qualifying = raceResultsCache[resultsCacheKey]?.qualifying || null;
+      const qualByName = qualifying ? Object.fromEntries(qualifying.map(q => [q.name, q.pos])) : null;
+
+      const driversWithLiveHist = currentDrivers.map(d => {
+        const scraped = liveHist?.[d.name];
+        const form = recentForm?.[d.name];
+        const qualPos = qualByName?.[d.name];
+        return {
+          ...d,
+          ...(scraped && scraped.starts > 0 ? { _liveHist: scraped } : {}),
+          ...(form && form.length ? { last5: form } : {}),
+          ...(qualPos ? { qualifyingPos: qualPos } : {}),
+        };
+      });
       const r=runSim(selectedRace, series, driversWithLiveHist);
       const c=genChart(selectedRace,r);
       const v={}; c.drivers.forEach((d,i)=>{ v[d.name]=i<6; });
