@@ -55,6 +55,10 @@ const STATIC_RATINGS = {
   "Christian Eckes":    { skill:80, spd:156.8, aero:7, chaosAvoid:7 },
   "Ben Rhodes":         { skill:80, spd:156.5, aero:7, chaosAvoid:8 },
   "Corey Heim":         { skill:91, spd:159.1, aero:9, chaosAvoid:9 },
+  "Todd Gilliland":     { skill:74, spd:163.0, aero:6, chaosAvoid:6 },
+  "Corey Day":          { skill:85, spd:162.0, aero:7, chaosAvoid:7 },
+  "Grant Enfinger":     { skill:79, spd:157.0, aero:7, chaosAvoid:7 },
+  "Carson Kvapil":      { skill:80, spd:161.5, aero:7, chaosAvoid:7 },
 };
 
 function calcMomentum(pts, wins, pos, totalDrivers) {
