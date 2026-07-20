@@ -219,7 +219,7 @@ const STATIC_SCHEDULES = {
     { id:"sonoma",       name:"Toyota/Save Mart 350",         date:"2026-06-28", type:"Road Course",   miles:2.52, geo:"Road Course",   chaos:.70, winner:"Shane van Gisbergen"    },
     { id:"chicagoland",  name:"eero 400",                     date:"2026-07-05", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.66, winner:"Chase Briscoe"          },
     { id:"atlanta2",     name:"Quaker State 400",             date:"2026-07-12", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.88, winner:"Ryan Blaney"            },
-    { id:"nwilkes",      name:"Window World 450",             date:"2026-07-19", type:"Short Track",   miles:0.63, geo:"Oval",          chaos:.73 },
+    { id:"nwilkes",      name:"Window World 450",             date:"2026-07-19", type:"Short Track",   miles:0.63, geo:"Oval",          chaos:.73, winner:"Joey Logano"            },
     { id:"indy",         name:"Brickyard 400",                date:"2026-07-26", type:"Superspeedway", miles:2.50, geo:"Oval",          chaos:.80 },
     { id:"iowa",         name:"Iowa Corn 350",                date:"2026-08-09", type:"Short Track",   miles:0.875,geo:"Oval",          chaos:.68 },
     { id:"richmond",     name:"Cook Out 400",                 date:"2026-08-15", type:"Short Track",   miles:0.75, geo:"D-Shape",       chaos:.68 },
@@ -1136,6 +1136,11 @@ export default function FinalLap(){
   const [liveTrackHistory, setLiveTrackHistory] = useState({});
   const [trackHistoryStatus, setTrackHistoryStatus] = useState("idle"); // idle | loading | live | failed
 
+  // -- FINAL RESULTS STATE (official post-race results, sourced live from /api/results) ---
+  // Keyed by "series-raceId" -> { winner, results, recap, complete }
+  const [raceResultsCache, setRaceResultsCache] = useState({});
+  const [resultsStatus, setResultsStatus] = useState("idle"); // idle | loading | live | failed | pending
+
   // Track name mapping from race geo/id to the full venue name for the API
   const TRACK_VENUE_NAMES = {
     "Tri-Oval":        { daytona:"Daytona International Speedway", pocono:"Pocono Raceway", talladega:"Talladega Superspeedway" },
@@ -1180,6 +1185,24 @@ export default function FinalLap(){
       }
     } catch (e) {
       setTrackHistoryStatus("failed");
+    }
+  }
+
+  // Fetch official post-race results for a completed race (independent of our
+  // hardcoded STATIC_SCHEDULES winner string -- this is the live source of truth)
+  async function fetchRaceResults(race, seriesKey) {
+    const cacheKey = `${seriesKey}-${race.id}`;
+    if (raceResultsCache[cacheKey]) { setResultsStatus(raceResultsCache[cacheKey].complete ? "live" : "pending"); return; }
+
+    setResultsStatus("loading");
+    try {
+      const res = await fetch(`/api/results?series=${seriesKey}&date=${race.date}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setRaceResultsCache(prev => ({ ...prev, [cacheKey]: data }));
+      setResultsStatus(data.complete ? "live" : "pending");
+    } catch (e) {
+      setResultsStatus("failed");
     }
   }
 
@@ -1268,6 +1291,15 @@ export default function FinalLap(){
   useEffect(() => {
     if (selectedRace && !selectedRace.done) {
       fetchTrackHistory(selectedRace, series, currentDrivers);
+    }
+  }, [selectedRace?.id, series]);
+
+  // When a completed race is selected, fetch its official results live
+  useEffect(() => {
+    if (selectedRace && selectedRace.done && !selectedRace.exhib) {
+      fetchRaceResults(selectedRace, series);
+    } else {
+      setResultsStatus("idle");
     }
   }, [selectedRace?.id, series]);
 
@@ -1518,6 +1550,50 @@ export default function FinalLap(){
                 </span>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Final Results panel - official post-race results, sourced live from /api/results */}
+        {selectedRace?.done && !selectedRace.exhib && (
+          <div style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"12px",padding:"14px 16px",marginBottom:"14px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px"}}>
+              <div style={{fontSize:"10px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.12em"}}>FINAL RESULTS</div>
+              <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:resultsStatus==="live"?"#22c55e":resultsStatus==="loading"?"#FFD700":resultsStatus==="failed"?"#FF4E00":"rgba(255,255,255,0.2)",animation:resultsStatus==="loading"?"pulse 1.2s infinite":"none"}}/>
+                <span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"7px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.07em"}}>
+                  {resultsStatus==="live"?"LIVE | NASCAR.com":resultsStatus==="loading"?"FETCHING...":resultsStatus==="pending"?"NOT YET OFFICIAL":resultsStatus==="failed"?"UNAVAILABLE":"IDLE"}
+                </span>
+              </div>
+            </div>
+            {(() => {
+              const cacheKey = `${series}-${selectedRace.id}`;
+              const rr = raceResultsCache[cacheKey];
+              if (resultsStatus==="loading") {
+                return <div style={{fontSize:"11px",color:"rgba(255,255,255,0.5)"}}>Pulling official results...</div>;
+              }
+              if (!rr || !rr.complete) {
+                return <div style={{fontSize:"11px",color:"rgba(255,255,255,0.5)"}}>WIN: {selectedRace.winner || "Results not yet official"}</div>;
+              }
+              return (
+                <div>
+                  <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"20px",fontWeight:900,color:"#FFD700",marginBottom:"8px"}}>WIN: {rr.winner}</div>
+                  {rr.recap && <div style={{fontSize:"10px",color:"rgba(255,255,255,0.65)",marginBottom:"10px",lineHeight:1.5}}>{rr.recap}</div>}
+                  <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
+                    {rr.results.slice(0,10).map(r=>(
+                      <div key={r.pos} style={{display:"grid",gridTemplateColumns:"24px 1fr auto auto",gap:"8px",alignItems:"center",padding:"6px 8px",background:"rgba(255,255,255,0.02)",borderRadius:"6px"}}>
+                        <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"13px",fontWeight:800,color:r.pos===1?"#FFD700":r.pos<=3?"#FF8C00":"rgba(255,255,255,0.65)"}}>{r.pos}</div>
+                        <div>
+                          <div style={{fontSize:"12px",fontWeight:700}}>{r.name}</div>
+                          <div style={{fontSize:"8px",color:"rgba(255,255,255,0.5)"}}>#{r.num} - {r.team}{r.manufacturer?` - ${r.manufacturer}`:""}</div>
+                        </div>
+                        <div style={{fontSize:"9px",color:"rgba(255,255,255,0.55)",textAlign:"right"}}>{r.lapsLed>0?`${r.lapsLed} LL`:""}</div>
+                        <div style={{fontSize:"9px",color:r.status==="Running"?"rgba(255,255,255,0.55)":"#FF6A00",textAlign:"right"}}>{r.status}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 

@@ -33,7 +33,7 @@ const SCHEDULE_BASE = {
     { id:"sonoma",       name:"Toyota/Save Mart 350",         date:"2026-06-28", type:"Road Course",   miles:2.52, geo:"Road Course",   chaos:.70, winner:"Shane van Gisbergen"    },
     { id:"chicagoland",  name:"eero 400",                     date:"2026-07-05", type:"Intermediate",  miles:1.50, geo:"D-Shape",       chaos:.66, winner:"Chase Briscoe"          },
     { id:"atlanta2",     name:"Quaker State 400",             date:"2026-07-12", type:"Superspeedway", miles:1.54, geo:"D-Shape",       chaos:.88, winner:"Ryan Blaney"            },
-    { id:"nwilkes",      name:"Window World 450",             date:"2026-07-19", type:"Short Track",   miles:0.63, geo:"Oval",          chaos:.73 },
+    { id:"nwilkes",      name:"Window World 450",             date:"2026-07-19", type:"Short Track",   miles:0.63, geo:"Oval",          chaos:.73, winner:"Joey Logano"            },
     { id:"indy",         name:"Brickyard 400",                date:"2026-07-26", type:"Superspeedway", miles:2.50, geo:"Oval",          chaos:.80 },
     { id:"iowa",         name:"Iowa Corn 350",                date:"2026-08-09", type:"Short Track",   miles:0.875,geo:"Oval",          chaos:.68 },
     { id:"richmond",     name:"Cook Out 400",                 date:"2026-08-15", type:"Short Track",   miles:0.75, geo:"D-Shape",       chaos:.68 },
