@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ReferenceLine } from "recharts";
 
 // ===============================================================================
 // STATIC BASELINE DATA  -  overridden by live API on load
@@ -74,59 +74,63 @@ const STATIC_DRIVER_RATINGS = {
 // NOTE: Kyle Busch passed away during the 2026 season; NASCAR removed him from standings
 const FALLBACK_DRIVERS = {
   cup: [
-    { pos:1,  name:"Denny Hamlin",        num:"11", team:"Joe Gibbs Racing",      pts:791, wins:4, mom:98 },
-    { pos:2,  name:"Tyler Reddick",       num:"45", team:"23XI Racing",           pts:767, wins:5, mom:96 },
-    { pos:3,  name:"Ryan Blaney",         num:"12", team:"Team Penske",           pts:726, wins:2, mom:88 },
-    { pos:4,  name:"Ty Gibbs",            num:"54", team:"Joe Gibbs Racing",      pts:665, wins:1, mom:79 },
-    { pos:5,  name:"Chase Elliott",       num:"9",  team:"Hendrick Motorsports",  pts:610, wins:2, mom:81 },
-    { pos:6,  name:"Kyle Larson",         num:"5",  team:"Hendrick Motorsports",  pts:594, wins:0, mom:74 },
-    { pos:7,  name:"Chris Buescher",      num:"17", team:"RFK Racing",            pts:568, wins:0, mom:70 },
-    { pos:8,  name:"Carson Hocevar",      num:"77", team:"Spire Motorsports",     pts:563, wins:1, mom:71 },
-    { pos:9,  name:"Christopher Bell",    num:"20", team:"Joe Gibbs Racing",      pts:551, wins:0, mom:68 },
-    { pos:10, name:"Chase Briscoe",       num:"19", team:"Joe Gibbs Racing",      pts:542, wins:1, mom:76 },
-    { pos:11, name:"Daniel Suárez",       num:"7",  team:"Trackhouse Racing",     pts:529, wins:1, mom:69 },
-    { pos:12, name:"William Byron",       num:"24", team:"Hendrick Motorsports",  pts:520, wins:0, mom:66 },
-    { pos:13, name:"Bubba Wallace",       num:"23", team:"23XI Racing",           pts:493, wins:0, mom:62 },
-    { pos:14, name:"Austin Cindric",      num:"2",  team:"Team Penske",           pts:470, wins:0, mom:60 },
-    { pos:15, name:"Shane van Gisbergen", num:"97", team:"Trackhouse Racing",     pts:469, wins:2, mom:75 },
-    { pos:16, name:"Erik Jones",          num:"43", team:"Legacy Motor Club",     pts:446, wins:0, mom:57 },
-    { pos:17, name:"Joey Logano",         num:"22", team:"Team Penske",           pts:438, wins:0, mom:55 },
-    { pos:18, name:"Ryan Preece",         num:"60", team:"RFK Racing",            pts:420, wins:0, mom:53 },
-    { pos:19, name:"Brad Keselowski",     num:"6",  team:"RFK Racing",            pts:403, wins:0, mom:51 },
-    { pos:20, name:"Ross Chastain",       num:"1",  team:"Trackhouse Racing",     pts:401, wins:0, mom:50 },
-    { pos:21, name:"Michael McDowell",    num:"34", team:"Front Row Motorsports", pts:399, wins:0, mom:47 },
-    { pos:22, name:"AJ Allmendinger",     num:"16", team:"Kaulig Racing",         pts:396, wins:0, mom:46 },
-    { pos:23, name:"Zane Smith",          num:"38", team:"Front Row Motorsports", pts:356, wins:0, mom:44 },
-    { pos:24, name:"Todd Gilliland",      num:"71", team:"Spire Motorsports",     pts:353, wins:0, mom:42 },
-    { pos:25, name:"Riley Herbst",        num:"35", team:"23XI Racing",          pts:350, wins:0, mom:40 },
+    { pos:1,  name:"Denny Hamlin",        num:"11", team:"Joe Gibbs Racing",      pts:791, wins:4, mom:98, manufacturer:"Toyota",    last5:[1,7,9,4,3] },
+    { pos:2,  name:"Tyler Reddick",       num:"45", team:"23XI Racing",           pts:767, wins:5, mom:96, manufacturer:"Toyota",    last5:[3,11,6,2,5] },
+    { pos:3,  name:"Ryan Blaney",         num:"12", team:"Team Penske",           pts:726, wins:2, mom:88, manufacturer:"Ford",      last5:[9,14,8,12,1] },
+    { pos:4,  name:"Ty Gibbs",            num:"54", team:"Joe Gibbs Racing",      pts:665, wins:1, mom:79, manufacturer:"Toyota",    last5:[12,6,15,9,7] },
+    { pos:5,  name:"Chase Elliott",       num:"9",  team:"Hendrick Motorsports",  pts:610, wins:2, mom:81, manufacturer:"Chevrolet", last5:[4,9,3,11,6] },
+    { pos:6,  name:"Kyle Larson",         num:"5",  team:"Hendrick Motorsports",  pts:594, wins:0, mom:74, manufacturer:"Chevrolet", last5:[8,5,13,7,10] },
+    { pos:7,  name:"Chris Buescher",      num:"17", team:"RFK Racing",            pts:568, wins:0, mom:70, manufacturer:"Ford",      last5:[14,10,18,12,9] },
+    { pos:8,  name:"Carson Hocevar",      num:"77", team:"Spire Motorsports",     pts:563, wins:1, mom:71, manufacturer:"Chevrolet", last5:[11,7,16,5,13] },
+    { pos:9,  name:"Christopher Bell",    num:"20", team:"Joe Gibbs Racing",      pts:551, wins:0, mom:68, manufacturer:"Toyota",    last5:[10,13,8,15,11] },
+    { pos:10, name:"Chase Briscoe",       num:"19", team:"Joe Gibbs Racing",      pts:542, wins:1, mom:76, manufacturer:"Toyota",    last5:[16,9,7,1,12] },
+    { pos:11, name:"Daniel Suárez",       num:"7",  team:"Trackhouse Racing",     pts:529, wins:1, mom:69, manufacturer:"Chevrolet", last5:[13,17,10,14,8] },
+    { pos:12, name:"William Byron",       num:"24", team:"Hendrick Motorsports",  pts:520, wins:0, mom:66, manufacturer:"Chevrolet", last5:[7,12,9,16,14] },
+    { pos:13, name:"Bubba Wallace",       num:"23", team:"23XI Racing",           pts:493, wins:0, mom:62, manufacturer:"Toyota",    last5:[15,18,12,9,16] },
+    { pos:14, name:"Austin Cindric",      num:"2",  team:"Team Penske",           pts:470, wins:0, mom:60, manufacturer:"Ford",      last5:[17,14,19,11,13] },
+    { pos:15, name:"Shane van Gisbergen", num:"97", team:"Trackhouse Racing",     pts:469, wins:2, mom:75, manufacturer:"Chevrolet", last5:[18,10,1,15,9] },
+    { pos:16, name:"Erik Jones",          num:"43", team:"Legacy Motor Club",     pts:446, wins:0, mom:57, manufacturer:"Toyota",    last5:[19,15,17,12,18] },
+    { pos:17, name:"Joey Logano",         num:"22", team:"Team Penske",           pts:438, wins:0, mom:55, manufacturer:"Ford",      last5:[16,19,14,17,15] },
+    { pos:18, name:"Ryan Preece",         num:"60", team:"RFK Racing",            pts:420, wins:0, mom:53, manufacturer:"Ford",      last5:[20,16,18,14,19] },
+    { pos:19, name:"Brad Keselowski",     num:"6",  team:"RFK Racing",            pts:403, wins:0, mom:51, manufacturer:"Ford",      last5:[17,20,15,18,16] },
+    { pos:20, name:"Ross Chastain",       num:"1",  team:"Trackhouse Racing",     pts:401, wins:0, mom:50, manufacturer:"Chevrolet", last5:[14,11,16,19,17] },
+    { pos:21, name:"Michael McDowell",    num:"34", team:"Front Row Motorsports", pts:399, wins:0, mom:47, manufacturer:"Ford",      last5:[21,18,20,16,19] },
+    { pos:22, name:"AJ Allmendinger",     num:"16", team:"Kaulig Racing",         pts:396, wins:0, mom:46, manufacturer:"Chevrolet", last5:[19,22,17,20,18] },
+    { pos:23, name:"Zane Smith",          num:"38", team:"Front Row Motorsports", pts:356, wins:0, mom:44, manufacturer:"Ford",      last5:[22,19,21,18,20] },
+    { pos:24, name:"Todd Gilliland",      num:"71", team:"Spire Motorsports",     pts:353, wins:0, mom:42, manufacturer:"Chevrolet", last5:[20,21,19,22,21] },
+    { pos:25, name:"Riley Herbst",        num:"35", team:"23XI Racing",          pts:350, wins:0, mom:40, manufacturer:"Toyota",    last5:[23,20,22,19,23] },
   ],
   xfin: [
-    { pos:1,  name:"Justin Allgaier",    num:"7",  team:"JR Motorsports",       pts:966, wins:6, mom:99 },
-    { pos:2,  name:"Jesse Love",         num:"11", team:"RCR Xfinity",          pts:726, wins:0, mom:78, rookie:true },
-    { pos:3,  name:"Sheldon Creed",      num:"2",  team:"Haas Factory Team",    pts:693, wins:1, mom:80 },
-    { pos:4,  name:"Corey Day",          num:"9",  team:"JR Motorsports",       pts:689, wins:2, mom:82 },
-    { pos:5,  name:"Carson Kvapil",      num:"1",  team:"JR Motorsports",       pts:682, wins:0, mom:76 },
-    { pos:6,  name:"Connor Zilisch",     num:"88", team:"JR Motorsports",       pts:640, wins:2, mom:79 },
-    { pos:7,  name:"Austin Hill",        num:"21", team:"RCR Xfinity",          pts:600, wins:2, mom:75 },
-    { pos:8,  name:"Brandon Jones",      num:"20", team:"Joe Gibbs Racing",     pts:560, wins:1, mom:68 },
-    { pos:9,  name:"Taylor Gray",        num:"18", team:"Joe Gibbs Racing",     pts:540, wins:1, mom:66 },
-    { pos:10, name:"William Sawalich",   num:"54", team:"Joe Gibbs Racing",     pts:520, wins:1, mom:64 },
-    { pos:11, name:"Rajah Caruth",       num:"24", team:"JR Motorsports",       pts:480, wins:0, mom:58 },
-    { pos:12, name:"Harrison Burton",    num:"8",  team:"Sam Hunt Racing",      pts:460, wins:0, mom:55 },
+    { pos:1,  name:"Justin Allgaier",    num:"7",  team:"JR Motorsports",       pts:966, wins:6, mom:99, last5:[1,4,1,3,1] },
+    { pos:2,  name:"Jesse Love",         num:"11", team:"RCR Xfinity",          pts:726, wins:0, mom:78, rookie:true, last5:[8,6,9,5,7] },
+    { pos:3,  name:"Sheldon Creed",      num:"2",  team:"Haas Factory Team",    pts:693, wins:1, mom:80, last5:[6,9,4,8,3] },
+    { pos:4,  name:"Corey Day",          num:"9",  team:"JR Motorsports",       pts:689, wins:2, mom:82, last5:[9,1,7,4,2] },
+    { pos:5,  name:"Carson Kvapil",      num:"1",  team:"JR Motorsports",       pts:682, wins:0, mom:76, last5:[10,7,11,6,9] },
+    { pos:6,  name:"Connor Zilisch",     num:"88", team:"JR Motorsports",       pts:640, wins:2, mom:79, last5:[7,11,1,9,6] },
+    { pos:7,  name:"Austin Hill",        num:"21", team:"RCR Xfinity",          pts:600, wins:2, mom:75, last5:[1,10,8,7,10] },
+    { pos:8,  name:"Brandon Jones",      num:"20", team:"Joe Gibbs Racing",     pts:560, wins:1, mom:68, last5:[11,8,10,1,11] },
+    { pos:9,  name:"Taylor Gray",        num:"18", team:"Joe Gibbs Racing",     pts:540, wins:1, mom:66, last5:[12,9,12,10,8] },
+    { pos:10, name:"William Sawalich",   num:"54", team:"Joe Gibbs Racing",     pts:520, wins:1, mom:64, last5:[13,12,13,11,12] },
+    { pos:11, name:"Rajah Caruth",       num:"24", team:"JR Motorsports",       pts:480, wins:0, mom:58, last5:[14,13,14,12,13] },
+    { pos:12, name:"Harrison Burton",    num:"8",  team:"Sam Hunt Racing",      pts:460, wins:0, mom:55, last5:[15,14,15,13,14] },
   ],
   truck: [
-    { pos:1,  name:"Layne Riggs",         num:"34", team:"Front Row Motorsports", pts:640, wins:4, mom:95 },
-    { pos:2,  name:"Kaden Honeycutt",     num:"11", team:"KBM",                   pts:581, wins:1, mom:80 },
-    { pos:3,  name:"Chandler Smith",      num:"38", team:"Front Row Motorsports", pts:514, wins:2, mom:78 },
-    { pos:4,  name:"Christian Eckes",     num:"91", team:"McAnally-Hilbert",      pts:483, wins:0, mom:66 },
-    { pos:5,  name:"Gio Ruggiero",        num:"17", team:"ThorSport",             pts:467, wins:0, mom:64 },
-    { pos:6,  name:"Ty Majeski",          num:"88", team:"ThorSport",             pts:400, wins:0, mom:60 },
-    { pos:7,  name:"Ben Rhodes",          num:"99", team:"ThorSport",             pts:386, wins:0, mom:58 },
-    { pos:8,  name:"Daniel Hemric",       num:"19", team:"TRICON Garage",         pts:376, wins:0, mom:56 },
-    { pos:9,  name:"Grant Enfinger",      num:"9",  team:"CR7 Motorsports",       pts:356, wins:1, mom:62 },
-    { pos:10, name:"Stewart Friesen",     num:"52", team:"Halmar-Friesen",        pts:336, wins:0, mom:50 },
+    { pos:1,  name:"Layne Riggs",         num:"34", team:"Front Row Motorsports", pts:640, wins:4, mom:95, last5:[1,4,1,3,1] },
+    { pos:2,  name:"Kaden Honeycutt",     num:"11", team:"KBM",                   pts:581, wins:1, mom:80, last5:[6,8,4,9,5] },
+    { pos:3,  name:"Chandler Smith",      num:"38", team:"Front Row Motorsports", pts:514, wins:2, mom:78, last5:[9,3,7,4,1] },
+    { pos:4,  name:"Christian Eckes",     num:"91", team:"McAnally-Hilbert",      pts:483, wins:0, mom:66, last5:[7,10,8,6,9] },
+    { pos:5,  name:"Gio Ruggiero",        num:"17", team:"ThorSport",             pts:467, wins:0, mom:64, last5:[8,7,10,8,7] },
+    { pos:6,  name:"Ty Majeski",          num:"88", team:"ThorSport",             pts:400, wins:0, mom:60, last5:[10,9,11,10,8] },
+    { pos:7,  name:"Ben Rhodes",          num:"99", team:"ThorSport",             pts:386, wins:0, mom:58, last5:[11,12,9,11,10] },
+    { pos:8,  name:"Daniel Hemric",       num:"19", team:"TRICON Garage",         pts:376, wins:0, mom:56, last5:[12,11,12,9,11] },
+    { pos:9,  name:"Grant Enfinger",      num:"9",  team:"CR7 Motorsports",       pts:356, wins:1, mom:62, last5:[13,6,13,7,4] },
+    { pos:10, name:"Stewart Friesen",     num:"52", team:"Halmar-Friesen",        pts:336, wins:0, mom:50, last5:[14,13,14,12,13] },
   ],
 };
+
+// Date the STATIC_SCHEDULES/FALLBACK_DRIVERS baseline data was last hand-verified against real results.
+// Shown in the race banner whenever the app falls back to this static data (live API unreachable).
+const STATIC_DATA_LAST_UPDATED = "2026-07-19";
 
 // Merge live standings with static ratings
 function mergeDriverData(liveDrivers) {
@@ -134,6 +138,26 @@ function mergeDriverData(liveDrivers) {
     ...d,
     ...(STATIC_DRIVER_RATINGS[d.name] || { skill:70, spd:162.0, aero:6, chaosAvoid:6 }),
   }));
+}
+
+// Cross-reference the roster against a confirmed entry list (/api/entrylist):
+// - marks each known driver confirmed/not-confirmed for that race
+// - dynamically adds substitute drivers who are entered but not in our roster,
+//   with estimated ratings since we have no career-stat scouting for them yet
+function crossReferenceEntryList(drivers, entries) {
+  if (!entries || !entries.length) return drivers;
+  const entryNames = new Set(entries.map(e=>e.name));
+  const rosterNames = new Set(drivers.map(d=>d.name));
+  const merged = drivers.map(d => ({ ...d, confirmed: entryNames.has(d.name) }));
+  const subs = entries
+    .filter(e => e.name && e.name!=="TBD" && !rosterNames.has(e.name))
+    .map(e => ({
+      name: e.name, num: e.num||"--", team: e.team||"Independent",
+      pts:0, wins:0, mom:50,
+      skill:72, spd:161.0, aero:6, chaosAvoid:6,
+      confirmed:true, sub:true,
+    }));
+  return [...merged, ...subs];
 }
 
 const SERIES_CONFIG = {
@@ -148,6 +172,10 @@ const SERIES_CONFIG = {
 function computeSchedule(races) {
   // done = has a confirmed winner, OR date was yesterday or earlier
   // This way: race-day shows as NEXT, not done
+  // "next" is simply the first non-done race in chronological order -- this already finds
+  // the correct next race across any bye-week gap (7 days, 3 weeks, whatever), so it's a
+  // strict superset of "find a race within 7 days, else next chronological race": there's
+  // no separate 7-day branch needed because this logic never stops looking past 7 days.
   const now = new Date();
   const yesterday = new Date(now - 86400000).toISOString().substring(0, 10);
   let nextSet = false;
@@ -224,7 +252,7 @@ const STATIC_SCHEDULES = {
     { id:"sonoma_x",      name:"W.M. America's Tire 200",    date:"2026-06-27", type:"Road Course",   miles:2.52, geo:"Road Course",  chaos:.70, winner:"Shane van Gisbergen"  },
     { id:"chicagoland_x", name:"eero 200",                   date:"2026-07-04", type:"Intermediate",  miles:1.50, geo:"D-Shape",      chaos:.64, winner:"Brandon Jones"        },
     { id:"atlanta_x2",    name:"Kubota 200",                 date:"2026-07-11", type:"Superspeedway", miles:1.54, geo:"D-Shape",      chaos:.87, winner:"Justin Allgaier"      },
-    { id:"nwilkes_x",     name:"Window World 250",           date:"2026-07-18", type:"Short Track",   miles:0.63, geo:"Oval",         chaos:.72 },
+    { id:"nwilkes_x",     name:"Window World 250",           date:"2026-07-18", type:"Short Track",   miles:0.63, geo:"Oval",         chaos:.72, winner:"Justin Allgaier" },
     { id:"iowa_x",        name:"Iowa 250",                   date:"2026-08-08", type:"Short Track",   miles:0.875,geo:"Oval",         chaos:.67 },
     { id:"daytona_x2",    name:"Wawa 250",                   date:"2026-08-28", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",     chaos:.91 },
   ]),
@@ -677,25 +705,80 @@ TRACK_HISTORY.kansas2 = TRACK_HISTORY.kansas;
 // -- SIMULATION ----------------------------------------------------------------
 function gumbelRandom(mu=0, beta=1){ return mu - beta * Math.log(-Math.log(Math.random())); }
 
+// -- RECENT FORM: last 5 finishes (oldest→newest), most recent weighted 2x the oldest --
+// Returns a momentum multiplier centered on 1.0 (0.85-1.15 range).
+function recentFormMultiplier(last5){
+  if(!last5 || !last5.length) return 1.0;
+  const n = last5.length;
+  let weightedSum = 0, weightTotal = 0;
+  last5.forEach((fin, i) => {
+    const w = 1 + (i/(n-1||1)); // 1x oldest -> 2x most recent
+    const finStrength = 1 - Math.max(0, Math.min(1, (fin-1)/35)); // 1=win, 0=35th+
+    weightedSum += finStrength * w;
+    weightTotal += w;
+  });
+  return 0.85 + (weightedSum/weightTotal) * 0.3;
+}
+
+// -- MANUFACTURER ADVANTAGE BY TRACK TYPE (2026 aero package) — composite point bonus --
+const MANUFACTURER_BONUS = {
+  "Superspeedway": { Toyota:2.5, Chevrolet:1.0, Ford:0.5 },
+  "Intermediate":  { Toyota:2.0, Chevrolet:1.5, Ford:1.0 },
+  "Short Track":   { Toyota:1.0, Chevrolet:1.5, Ford:1.5 },
+  "Road Course":   { Toyota:0.5, Chevrolet:1.5, Ford:2.0 },
+};
+function manufacturerBonus(manufacturer, trackType){
+  return MANUFACTURER_BONUS[trackType]?.[manufacturer] || 0;
+}
+
+// -- QUALIFYING POSITION MODIFIER — composite point bonus, only applied if qualifyingPos is set --
+function qualifyingBonus(pos){
+  if(!pos) return 0;
+  if(pos<=5) return 3;
+  if(pos<=10) return 1.5;
+  if(pos<=20) return 0;
+  return -1.0;
+}
+
 function runSim(race, series, drivers, iters=25000){
   // Key by race.id for per-track history; fall back to geo-based if not found
   const staticHist = TRACK_HISTORY[race.id] || TRACK_HISTORY[race.geo] || {};
-  const maxPts = Math.max(...drivers.map(d=>d.pts||0), 1);
+  const maxWins = Math.max(...drivers.map(d=>d.wins||0), 1);
   const chaosLevel = race.chaos;
+  const trackType = race.type;
 
   const pool = drivers.map(d=>{
     // _liveHist is injected by simulate() when /api/trackhistory returns data
     // It takes priority over the static TRACK_HISTORY table
     const h = d._liveHist || staticHist[d.name] || { apt:3, starts:0, top20:0, top10:0, top5:0, top3:0, wins:0, avg:25 };
-    const histScore = (h.wins*4 + h.top3*2 + h.top5*1.2 + h.top10*0.8) / Math.max(h.starts,1) * 8;
-    const avgFinishBonus = Math.max(0, (30 - h.avg) / 30) * 6;
-    const chaosBonus = (d.chaosAvoid - 5.5) * chaosLevel * 1.1;
-    let score = d.skill*0.30 + d.mom*0.21 + (d.pts/maxPts)*8
-      + h.apt*1.35 + histScore + avgFinishBonus
-      + ((d.spd/170)*8.5) + d.aero*1.0 + chaosBonus;
-    if(d.rookie) score -= 2.5;
-    if(d.sub || d.parttime) score -= 1.5;
-    return { ...d, score, hist: h, chaosBonus: parseFloat(chaosBonus.toFixed(2)), histSource: d._liveHist ? "live" : "static" };
+
+    // Composite score: Track History 30% | Momentum+WinRate 20% | Chaos Avoidance 20% | Skill+QualSpeed 15% | Pit/Aero 15%
+    const winRate = h.wins / Math.max(h.starts,1);
+    const top5Rate = h.top5 / Math.max(h.starts,1);
+    const avgScore = Math.max(0, (35 - h.avg) / 35);
+    const trackHistScore = (h.apt/10)*40 + winRate*30 + top5Rate*20 + avgScore*10; // 0-100
+
+    const formMult = recentFormMultiplier(d.last5);
+    const seasonWinRate = (d.wins||0) / maxWins;
+    const seasonScore = Math.min(100, (d.mom||0)*formMult*0.75 + seasonWinRate*100*0.25); // 0-100ish
+
+    const chaosScore = (d.chaosAvoid/10) * 100; // 0-100
+
+    const speedNorm = Math.max(0, Math.min(100, (d.spd-155)/16*100));
+    const skillQualScore = d.skill*0.65 + speedNorm*0.35; // 0-100
+
+    const pitAeroScore = (d.aero/10) * 100; // 0-100
+
+    let score = trackHistScore*0.30 + seasonScore*0.20 + chaosScore*0.20 + skillQualScore*0.15 + pitAeroScore*0.15;
+    score += manufacturerBonus(d.manufacturer, trackType);
+    score += qualifyingBonus(d.qualifyingPos);
+    if(d.rookie) score -= 3;
+    if(d.sub || d.parttime) score -= 2;
+
+    // Chaos bonus (display only): this driver's actual chaos-avoidance contribution to the
+    // composite score above, relative to a neutral (5.5/10) driver -- scales with track chaos level
+    const chaosBonus = (d.chaosAvoid*2 - 11) * (0.6 + chaosLevel*0.4);
+    return { ...d, score, hist: h, chaosBonus: parseFloat(chaosBonus.toFixed(2)), histSource: d._liveHist ? "live" : "static", formMultiplier: parseFloat(formMult.toFixed(2)) };
   });
 
   const wins={}, top5={}, top10={}, dnfCount={};
@@ -729,28 +812,53 @@ function genChart(race, results){
   const top8 = results.slice(0,8);
   const LAPS = race.id?.includes("martin") ? 400 : race.id?.includes("talladega") ? 188 : 300;
   const STEPS = 30; const step = Math.floor(LAPS/STEPS);
+
+  // Race events: caution window at 40-60% distance, restart immediately after,
+  // fuel window at 75-85% distance
+  const cautionStep = Math.round(STEPS*(0.40 + Math.random()*0.20));
+  const restartStep = Math.min(STEPS, cautionStep+1);
+  const fuelStep = Math.round(STEPS*(0.75 + Math.random()*0.10));
+  const events = {
+    caution: { lap: cautionStep*step, label: "CAUTION" },
+    restart: { lap: restartStep*step, label: "RESTART" },
+    fuel:    { lap: fuelStep*step, label: "FUEL" },
+  };
+
   const data = []; let probs = {};
   top8.forEach(d=>{ probs[d.name]=parseFloat(d.winPct); });
   for(let i=0;i<=STEPS;i++){
     const snap = { lap:i*step };
+    const fieldAvg = top8.reduce((s,d)=>s+probs[d.name],0) / top8.length;
     top8.forEach(d=>{
       const drift = (Math.random()-.48)*race.chaos*13*(1+(i/STEPS)*.6);
       const tb = (d.hist?.apt||3)/10*Math.random()*4;
       const late = i>STEPS*.7 ? d.mom/100*5 : 0;
-      probs[d.name] = Math.max(0.3, Math.min(85, probs[d.name]+drift+tb-2+late));
+
+      // CAUTION: field bunches up, probabilities flatten toward the mean
+      const cautionPull = i===cautionStep ? (fieldAvg-probs[d.name])*0.5 : 0;
+      // RESTART: clean racers with strong track position get a temporary surge
+      const restartSurge = i===restartStep && d.chaosAvoid>=8 && (d.hist?.apt||0)>=7 ? 6 + Math.random()*4 : 0;
+      // FUEL WINDOW: drivers whose track history suggests fuel-mileage ability (low avg finish
+      // at this track) get a probability spike if they're plausibly on a long-run strategy
+      const fuelSpike = i===fuelStep && (d.hist?.avg||99)<=12 ? 4 + Math.random()*5 : 0;
+
+      probs[d.name] = Math.max(0.3, Math.min(85, probs[d.name]+drift+tb-2+late+cautionPull+restartSurge+fuelSpike));
       snap[d.name] = parseFloat(probs[d.name].toFixed(1));
     });
     const tot = top8.reduce((s,d)=>s+(snap[d.name]||0),0);
     top8.forEach(d=>{ snap[d.name]=parseFloat(((snap[d.name]||0)/tot*100).toFixed(1)); });
     data.push(snap);
   }
-  return { data, drivers:top8, laps:LAPS };
+  return { data, drivers:top8, laps:LAPS, events };
 }
 
 // -- HELPERS -------------------------------------------------------------------
 const DRIVER_COLORS=["#FF4E00","#FFD700","#22c55e","#3b82f6","#BA80F8","#f97316","#ec4899","#06b6d4"];
+const MFG_COLORS={ Toyota:"#EB0A1E", Chevrolet:"#FFD700", Ford:"#3b82f6" };
 const fmtDate = s=>new Date(s+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
 const daysUntil = s=>Math.ceil((new Date(s+"T12:00:00")-new Date())/86400000);
+// HOT badge: top-5 finish in 3 of the last 5 races
+const isHot = last5 => (last5||[]).filter(f=>f<=5).length >= 3;
 
 // -- COMPONENTS ----------------------------------------------------------------
 function PrismLogo(){ return <svg width="30" height="30" viewBox="0 0 36 36" fill="none"><polygon points="18,2 34,30 2,30" stroke="#FF4E00" strokeWidth="2" fill="none"/><polygon points="18,8 30,28 6,28" stroke="#FF8C00" strokeWidth="1" fill="rgba(255,76,0,0.08)"/><line x1="18" y1="2" x2="18" y2="30" stroke="#FFD700" strokeWidth="0.6" opacity="0.7"/></svg>; }
@@ -829,7 +937,7 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
   }
 
   return (
-    <div style={{background:bgColor,border:`1px solid ${borderColor}`,borderRadius:"11px",overflow:"hidden",marginBottom:"6px"}}>
+    <div style={{background:bgColor,border:`1px solid ${borderColor}`,borderRadius:"11px",overflow:"hidden",marginBottom:"6px",opacity:d.confirmed===false?0.45:1}}>
 
       {/* -- Main collapsed row */}
       <div style={{padding:"11px 14px",display:"grid",gridTemplateColumns:"26px 1fr auto auto",gap:"10px",alignItems:"center",position:"relative"}}>
@@ -842,13 +950,15 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
 
         <div>
           <div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}>
+            {d.confirmed===true && <span title="Confirmed entry" style={{width:"6px",height:"6px",borderRadius:"50%",background:"#22c55e",flexShrink:0}}/>}
             <span style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"15px",fontWeight:700,color:"#f0e8e0"}}>{d.name}</span>
             {d.rookie && <span style={{fontSize:"7px",background:"rgba(34,197,94,0.1)",border:"1px solid rgba(34,197,94,0.25)",borderRadius:"3px",padding:"1px 4px",color:"#22c55e"}}>ROOKIE</span>}
             {(d.sub||d.parttime) && <span style={{fontSize:"7px",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"3px",padding:"1px 4px",color:"rgba(255,255,255,0.82)"}}>{d.sub?"SUB":"PART"}</span>}
+            {isHot(d.last5) && <span style={{fontSize:"7px",background:"rgba(255,78,0,0.12)",border:"1px solid rgba(255,78,0,0.35)",borderRadius:"3px",padding:"1px 4px",color:"#FF6A00",fontWeight:700}}>HOT</span>}
             <span style={{fontSize:"7px",background:`${chaosColor}18`,border:`1px solid ${chaosColor}44`,borderRadius:"3px",padding:"1px 5px",color:chaosColor,fontWeight:700}}>CHAOS {d.chaosAvoid}/10</span>
             {dnfNum > 7 && <span style={{fontSize:"7px",background:"rgba(255,78,0,0.1)",border:"1px solid rgba(255,78,0,0.3)",borderRadius:"3px",padding:"1px 5px",color:"#FF6A00",fontWeight:700}}>DNF~{d.dnfPct}%</span>}
           </div>
-          <div style={{fontSize:"9px",color:"rgba(255,255,255,0.78)",marginBottom:"5px"}}>{d.team} - {d.pts||""}pts - {d.wins}W</div>
+          <div style={{fontSize:"9px",color:"rgba(255,255,255,0.78)",marginBottom:"5px"}}>{d.team} - {d.pts||""}pts - {d.wins}W{d.manufacturer && <span style={{color:MFG_COLORS[d.manufacturer]||"rgba(255,255,255,0.6)",fontWeight:700}}> - {d.manufacturer}</span>}</div>
           <div style={{display:"flex",alignItems:"center",gap:"7px"}}>
             <Bar pct={d.winPct} color={isStd?"#FF6A00":isDH?"#BA80F8":isLS?"#06b6d4":"#2a2a3a"} max={maxWin}/>
             <span style={{fontSize:"9px",color:"rgba(255,255,255,0.75)",whiteSpace:"nowrap"}}>T5:{d.top5Pct}%</span>
@@ -1130,7 +1240,7 @@ export default function FinalLap(){
   }, [series, fetchLiveData]);
 
   // Derive current drivers and schedule from live state
-  const currentDrivers = liveDrivers[series] || mergeDriverData(FALLBACK_DRIVERS[series] || []);
+  const currentDrivers = crossReferenceEntryList(liveDrivers[series] || mergeDriverData(FALLBACK_DRIVERS[series] || []), liveEntries);
   const currentSchedule = liveSchedule[series] || STATIC_SCHEDULES[series];
   const nextRace = currentSchedule.find(r => r.next) || currentSchedule.find(r => !r.done);
   const [selectedRace, setSelectedRace] = useState(null);
@@ -1373,13 +1483,18 @@ export default function FinalLap(){
                 = CHANGE RACE
               </button>
             </div>
+            {dataStatus==="fallback" && (
+              <div style={{marginTop:"9px",padding:"6px 10px",background:"rgba(255,78,0,0.08)",border:"1px solid rgba(255,78,0,0.25)",borderRadius:"7px",fontSize:"9px",color:"#FF8C00",letterSpacing:"0.04em"}}>
+                ! CACHED DATA - live standings/schedule API unreachable. Showing static baseline last verified {new Date(STATIC_DATA_LAST_UPDATED+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}.
+              </div>
+            )}
             <div style={{display:"flex",gap:"18px",flexWrap:"wrap",marginTop:"12px",alignItems:"flex-end"}}>
               {[
                 ["CHAOS",(selectedRace.chaos*100).toFixed(0)+"%"],
                 ["DRIVERS", currentDrivers.length],
                 ["ENTRIES", liveEntries ? `${liveEntries.length} cars` : "TBD"],
                 ["ITERS","25,000"],
-                ["DATA", dataAsOf ? new Date(dataAsOf).toLocaleDateString("en-US",{month:"short",day:"numeric"}) : "Cached"],
+                ["DATA", dataAsOf ? new Date(dataAsOf).toLocaleDateString("en-US",{month:"short",day:"numeric"}) : new Date(STATIC_DATA_LAST_UPDATED+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"})],
               ].map(([k,v])=>(
                 <div key={k}><div style={{fontSize:"8px",color:"rgba(255,255,255,0.45)",letterSpacing:"0.1em"}}>{k}</div><div style={{fontSize:"15px",fontWeight:700,color:"rgba(255,255,255,0.90)"}}>{v}</div></div>
               ))}
@@ -1509,8 +1624,10 @@ export default function FinalLap(){
               )}
 
               {/* -- SPEED/AERO TAB -- */}
-              {tab==="speed"&&[...results].sort((a,b)=>b.spd-a.spd).map((d,i)=>(
-                <div key={d.name} style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:"9px",padding:"9px 12px",display:"grid",gridTemplateColumns:"20px 1fr auto auto",gap:"8px",alignItems:"center",marginBottom:"4px"}}>
+              {tab==="speed"&&(()=>{
+                const hasQual = results.some(d=>d.qualifyingPos);
+                return [...results].sort((a,b)=>b.spd-a.spd).map((d,i)=>(
+                <div key={d.name} style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:"9px",padding:"9px 12px",display:"grid",gridTemplateColumns:hasQual?"20px 1fr auto auto auto":"20px 1fr auto auto",gap:"8px",alignItems:"center",marginBottom:"4px"}}>
                   <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"12px",fontWeight:700,color:"rgba(255,255,255,0.70)"}}>{i+1}</div>
                   <div>
                     <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",fontWeight:700}}>{d.name}</div>
@@ -1518,8 +1635,10 @@ export default function FinalLap(){
                   </div>
                   <div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",fontWeight:900,color:"#f97316"}}>{d.spd}</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.65)"}}>MPH</div></div>
                   <div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",fontWeight:900,color:d.aero>=8?"#22c55e":"rgba(255,255,255,0.70)"}}>{d.aero}/10</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.65)"}}>AERO</div></div>
+                  {hasQual && <div style={{textAlign:"right"}}><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"16px",fontWeight:900,color:d.qualifyingPos&&d.qualifyingPos<=10?"#22c55e":"rgba(255,255,255,0.70)"}}>{d.qualifyingPos?`P${d.qualifyingPos}`:"-"}</div><div style={{fontSize:"7px",color:"rgba(255,255,255,0.65)"}}>QUAL</div></div>}
                 </div>
-              ))}
+              ));
+              })()}
 
               {/* -- TRACK HISTORY TAB -- */}
               {tab==="history"&&(
@@ -1550,6 +1669,10 @@ export default function FinalLap(){
                         <YAxis stroke="rgba(255,255,255,0.07)" tick={{fontSize:8,fontFamily:"'IBM Plex Mono',monospace",fill:"rgba(255,255,255,0.75)"}} tickFormatter={v=>`${v}%`}/>
                         <Tooltip content={<ChartTip/>}/>
                         <Legend wrapperStyle={{fontSize:"9px",fontFamily:"'Barlow Condensed',sans-serif",paddingTop:"6px"}}/>
+                        {chart.events && Object.values(chart.events).map(ev=>(
+                          <ReferenceLine key={ev.label} x={ev.lap} stroke="rgba(255,255,255,0.35)" strokeDasharray="4 3"
+                            label={{ value:ev.label, position:"top", fill:"rgba(255,255,255,0.55)", fontSize:8, fontFamily:"'IBM Plex Mono',monospace" }}/>
+                        ))}
                         {chart.drivers.map((d,i)=>vis[d.name]&&<Line key={d.name} type="monotone" dataKey={d.name} stroke={DRIVER_COLORS[i]} strokeWidth={1.8} dot={false} activeDot={{r:3,strokeWidth:0}}/>)}
                       </LineChart>
                     </ResponsiveContainer>
@@ -1568,7 +1691,7 @@ export default function FinalLap(){
               )}
 
               <div style={{marginTop:"12px",padding:"8px 11px",background:"rgba(255,255,255,0.01)",border:"1px solid rgba(255,255,255,0.04)",borderRadius:"7px",fontFamily:"'IBM Plex Mono',monospace",fontSize:"7px",color:"rgba(255,255,255,0.62)",lineHeight:1.7}}>
-                SCORE: Skill 32%  |  Momentum 22%  |  Standings 9%  |  Track History 14%  |  Hist Finishes (wins/top3/top5/top10)  |  Qual Speed 9%  |  Aero 11%{"\n"}
+                SCORE: Track History 30%  |  Momentum + Win Rate 20%  |  Chaos Avoidance 20%  |  Skill + Qual Speed 15%  |  Pit/Aero 15%  |  + Manufacturer &amp; Qualifying bonuses{"\n"}
                 ENGINE: Gumbel dist  |  25K iters  |  Chaos {(selectedRace?.chaos*100).toFixed(0)}%  |  NextGen 2022-2026 weighted  |  {cfg.label}  |  {cfg.chase}
               </div>
             </div>

@@ -72,7 +72,7 @@ const SCHEDULE_BASE = {
     { id:"sonoma_x",      name:"W.M. Americas Tire 200",     date:"2026-06-27", type:"Road Course",   miles:2.52, geo:"Road Course",  chaos:.70, winner:"Shane van Gisbergen" },
     { id:"chicagoland_x", name:"eero 200",                   date:"2026-07-04", type:"Intermediate",  miles:1.50, geo:"D-Shape",      chaos:.64, winner:"Brandon Jones" },
     { id:"atlanta_x2",    name:"Kubota 200",                 date:"2026-07-11", type:"Superspeedway", miles:1.54, geo:"D-Shape",      chaos:.87, winner:"Justin Allgaier" },
-    { id:"nwilkes_x",     name:"Window World 250",           date:"2026-07-18", type:"Short Track",   miles:0.63, geo:"Oval",         chaos:.72 },
+    { id:"nwilkes_x",     name:"Window World 250",           date:"2026-07-18", type:"Short Track",   miles:0.63, geo:"Oval",         chaos:.72, winner:"Justin Allgaier" },
     { id:"iowa_x",        name:"Iowa 250",                   date:"2026-08-08", type:"Short Track",   miles:0.875,geo:"Oval",         chaos:.67 },
     { id:"daytona_x2",    name:"Wawa 250",                   date:"2026-08-28", type:"Superspeedway", miles:2.50, geo:"Tri-Oval",     chaos:.91 },
   ],
@@ -103,6 +103,8 @@ export default async function handler(req) {
   const schedule = SCHEDULE_BASE[seriesKey] || SCHEDULE_BASE.cup;
 
   // winner-aware done/next: confirmed winner = done; future date = not done
+  // "next" is the first non-done race in chronological order, so bye weeks of any length
+  // (7 days, 3 weeks, whatever) are handled correctly without a separate 7-day-window branch.
   const now = new Date();
   const yesterday = new Date(now - 86400000).toISOString().substring(0, 10);
   let nextSet = false;
