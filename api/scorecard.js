@@ -6,9 +6,32 @@
 
 export const config = { runtime: "edge" };
 
-import { redisRead, gradeKey, indexKey } from "../lib/redis.js";
+import { redisRead, predKey, gradeKey, indexKey } from "../lib/redis.js";
 
 const STAGES = ["post_race", "lineups", "post_quali"];
+
+// The upcoming race's snapshots as they're created through the week, before grading
+// exists at all -- lets the UI show the pick evolving (Monday's favorite vs.
+// Wednesday's vs. Saturday's) instead of only ever showing historical graded races.
+async function fetchPending(origin, seriesKey) {
+  const schedRes = await fetch(`${origin}/api/schedule?series=${seriesKey}`);
+  if (!schedRes.ok) return null;
+  const schedData = await schedRes.json();
+  const nextRace = schedData.schedule.find(r => r.next);
+  if (!nextRace) return null;
+
+  const snapsRaw = await Promise.all(STAGES.map(s => redisRead.get(predKey(seriesKey, nextRace.id, s))));
+  const stages = {};
+  STAGES.forEach((s, i) => {
+    const raw = snapsRaw[i];
+    if (!raw) { stages[s] = null; return; }
+    const snap = typeof raw === "string" ? JSON.parse(raw) : raw;
+    stages[s] = { pick: snap.picks?.standard || null, darkHorse: snap.picks?.darkHorse || null, generatedAt: snap.generatedAt };
+  });
+
+  if (Object.values(stages).every(s => !s)) return null; // nothing snapshotted yet
+  return { raceId: nextRace.id, raceName: nextRace.name, raceDate: nextRace.date, stages };
+}
 
 function emptyStageSummary() {
   return { graded: 0, winnerHits: 0, top5Hits: 0, brierSum: 0 };
@@ -17,8 +40,11 @@ function emptyStageSummary() {
 export default async function handler(req) {
   const url = new URL(req.url);
   const seriesKey = url.searchParams.get("series") || "cup";
+  const origin = `https://${req.headers.get("host")}`;
 
   try {
+    const pending = await fetchPending(origin, seriesKey).catch(() => null);
+
     // Most recent 20 race IDs for this series, newest first
     const raceIds = await redisRead.zrange(indexKey(seriesKey), 0, 19, { rev: true });
 
@@ -56,6 +82,7 @@ export default async function handler(req) {
 
     return new Response(JSON.stringify({
       series: seriesKey,
+      pending,
       races,
       summary: summaryOut,
       asOf: new Date().toISOString(),

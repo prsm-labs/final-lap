@@ -547,8 +547,26 @@ function ScorecardView({ scorecard, status, cfg, series }) {
     </div>;
   }
   const stages = ["post_race","lineups","post_quali"];
+  const pending = scorecard.pending;
   return (
     <div>
+      {pending && (
+        <div style={{background:"rgba(255,78,0,0.05)",border:"1px solid rgba(255,78,0,0.2)",borderRadius:"11px",padding:"12px 14px",marginBottom:"14px"}}>
+          <div style={{fontSize:"9px",color:"#FF8C00",letterSpacing:"0.1em",marginBottom:"3px",fontWeight:800}}>UP NEXT - PICK AS OF EACH STAGE</div>
+          <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"18px",fontWeight:900,marginBottom:"10px"}}>{pending.raceName}</div>
+          <div style={{display:"flex",gap:"14px",flexWrap:"wrap"}}>
+            {stages.map(stage=>{
+              const s = pending.stages?.[stage];
+              return (
+                <div key={stage}>
+                  <div style={{fontSize:"7px",color:cfg.color,letterSpacing:"0.1em",fontWeight:800,marginBottom:"2px"}}>{STAGE_LABELS[stage]}</div>
+                  <div style={{fontSize:"13px",fontWeight:700,color:s?"#f0e8e0":"rgba(255,255,255,0.30)"}}>{s?s.pick:"not yet"}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div style={{fontSize:"10px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.12em",marginBottom:"10px"}}>
         PREDICTION ACCURACY - {cfg.label.toUpperCase()} - how our pre-race sim compares to real results, at each stage of information
       </div>
