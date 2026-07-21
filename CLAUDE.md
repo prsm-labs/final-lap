@@ -176,6 +176,12 @@ backup goes to `Claude/archive/` (untracked, never committed). See that folder's
   Redis write -> Redis read. Nothing left unverified in the core loop; grading itself
   will get its first real test once Indy (Cup), and the corresponding Xfinity/Truck
   races, actually complete and the cron runs again afterward.
+- User caught a real UX gap: the Scorecard tab only ever showed graded (post-race)
+  history, so it displayed nothing at all about the upcoming race until it finished.
+  Added a pending-race preview -- `api/scorecard.js` now also reads the next race's
+  ungraded snapshots directly and returns them; the frontend shows an "UP NEXT" card
+  with each stage's pick as it becomes available through the week (Monday's favorite
+  vs. Wednesday's vs. Saturday's), separate from the historical accuracy stats.
 
 ---
 
@@ -239,4 +245,4 @@ The first time a project gets an archive folder, drop a short README.md inside i
 ---
 ## Session Resume
 claude --resume f7211d5c-8e07-47ae-88c9-df679e52025f
-(stamped 2026-07-20 23:44 local)
+(stamped 2026-07-20 23:55 local)
