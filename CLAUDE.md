@@ -168,6 +168,14 @@ backup goes to `Claude/archive/` (untracked, never committed). See that folder's
 - Known regression: `rookie` flag is now hardcoded `false` (the old endpoint had an
   `IsRookie` field this data source doesn't provide an equivalent for). Low priority --
   affects the -3 composite-score penalty for rookies, nothing structural.
+- **Re-ran the cron test after the fix: full success.** All three series returned
+  `"snapshot":"created"` (cup->indy, xfin->iowa_x, truck->iowa_t). Confirmed
+  `api/scorecard?series=cup` reads it back cleanly (empty races/summary, correctly --
+  nothing's graded yet since Indy hasn't run). This is the first fully-validated
+  end-to-end pass: cron auth -> live standings/track-history/recent-form -> runSim() ->
+  Redis write -> Redis read. Nothing left unverified in the core loop; grading itself
+  will get its first real test once Indy (Cup), and the corresponding Xfinity/Truck
+  races, actually complete and the cron runs again afterward.
 
 ---
 
@@ -231,4 +239,4 @@ The first time a project gets an archive folder, drop a short README.md inside i
 ---
 ## Session Resume
 claude --resume f7211d5c-8e07-47ae-88c9-df679e52025f
-(stamped 2026-07-20 23:38 local)
+(stamped 2026-07-20 23:44 local)
