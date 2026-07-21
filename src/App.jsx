@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ReferenceLine } from "recharts";
+import { runSim, genChart } from "../lib/sim.js";
 
 // ===============================================================================
 // STATIC BASELINE DATA  -  overridden by live API on load
@@ -283,580 +284,7 @@ const STATIC_SCHEDULES = {
   ]),
 };
 
-// -- TRACK HISTORY DATA --------------------------------------------------------
-// { aptitude, starts, top20, top10, top5, top3, wins, avgFinish }
-const TRACK_HISTORY = {
-  // ── Keyed by race.id (actual track), not geometry ──────────────────────────
-  // Data: NextGen era 2022-2026 Cup Series. apt=1-10 track aptitude score.
-  // { apt, starts, top20, top10, top5, top3, wins, avg }
-
-  // ── POCONO RACEWAY (Great American Getaway 400) ──────────────────────────
-  "pocono": {
-    "Denny Hamlin":       { apt:10, starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:6.2 },
-    "Kyle Larson":        { apt:9,  starts:5, top20:4, top10:3, top5:2, top3:2, wins:1, avg:8.4 },
-    "Ryan Blaney":        { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:7.1 },
-    "Chase Elliott":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "William Byron":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.2 },
-    "Tyler Reddick":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.6 },
-    "Christopher Bell":   { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:0, wins:0, avg:12.1 },
-    "Joey Logano":        { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:9.4 },
-    "Brad Keselowski":    { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.8 },
-    "Chris Buescher":     { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Bubba Wallace":      { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.4 },
-    "Ross Chastain":      { apt:5,  starts:5, top20:3, top10:1, top5:1, top3:0, wins:0, avg:15.8 },
-    "Austin Cindric":     { apt:5,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.6 },
-    "Ty Gibbs":           { apt:5,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:16.3 },
-    "Carson Hocevar":     { apt:4,  starts:2, top20:1, top10:0, top5:0, top3:0, wins:0, avg:21.5 },
-    "Daniel Suárez":      { apt:4,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:18.6 },
-    "Chase Briscoe":      { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:1, wins:1, avg:10.8 },
-    "Shane van Gisbergen":{ apt:5,  starts:1, top20:1, top10:0, top5:0, top3:0, wins:0, avg:18.0 },
-    "Kyle Busch":         { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Erik Jones":         { apt:4,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:20.2 },
-    "Michael McDowell":   { apt:4,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:19.8 },
-  },
-
-  // ── DAYTONA INTERNATIONAL SPEEDWAY ──────────────────────────────────────
-  "daytona": {
-    "Tyler Reddick":      { apt:10, starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:7.4 },
-    "Bubba Wallace":      { apt:9,  starts:5, top20:5, top10:4, top5:2, top3:1, wins:0, avg:9.8 },
-    "Ryan Blaney":        { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:12.2 },
-    "Ross Chastain":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:1, wins:0, avg:13.4 },
-    "Shane van Gisbergen":{ apt:7,  starts:2, top20:2, top10:1, top5:1, top3:0, wins:0, avg:11.5 },
-    "Chase Elliott":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:16.2 },
-    "Kyle Larson":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:15.8 },
-    "Denny Hamlin":       { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:1, wins:0, avg:14.6 },
-    "William Byron":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:15.4 },
-    "Carson Hocevar":     { apt:7,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.3 },
-    "Austin Cindric":     { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:18.4 },
-  },
-  "daytona2": {
-    "Tyler Reddick":      { apt:9,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:9.2 },
-    "Bubba Wallace":      { apt:8,  starts:4, top20:4, top10:3, top5:1, top3:1, wins:0, avg:10.4 },
-    "Ryan Blaney":        { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.8 },
-    "Denny Hamlin":       { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.6 },
-  },
-
-  // ── TALLADEGA SUPERSPEEDWAY ──────────────────────────────────────────────
-  "talladega": {
-    "Shane van Gisbergen":{ apt:8,  starts:3, top20:3, top10:2, top5:2, top3:1, wins:1, avg:7.3 },
-    "Tyler Reddick":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.6 },
-    "Bubba Wallace":      { apt:9,  starts:5, top20:5, top10:3, top5:2, top3:1, wins:1, avg:9.4 },
-    "Ryan Blaney":        { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:0, wins:0, avg:15.2 },
-    "Chase Elliott":      { apt:6,  starts:5, top20:3, top10:1, top5:1, top3:0, wins:0, avg:17.4 },
-    "Ross Chastain":      { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:1, wins:0, avg:13.8 },
-    "Kyle Larson":        { apt:5,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:20.4 },
-    "Denny Hamlin":       { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:16.2 },
-    "Carson Hocevar":     { apt:7,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:11.3 },
-    "Brad Keselowski":    { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:18.8 },
-  },
-  "talladega2": {
-    "Tyler Reddick":      { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.2 },
-    "Bubba Wallace":      { apt:8,  starts:4, top20:4, top10:2, top5:1, top3:1, wins:0, avg:11.4 },
-    "Ross Chastain":      { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.6 },
-  },
-
-  // ── MARTINSVILLE SPEEDWAY ────────────────────────────────────────────────
-  "martinsville": {
-    "Ryan Blaney":        { apt:10, starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:4.3 },
-    "Denny Hamlin":       { apt:10, starts:5, top20:5, top10:5, top5:4, top3:3, wins:2, avg:5.8 },
-    "William Byron":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:7.2 },
-    "Chase Elliott":      { apt:8,  starts:5, top20:5, top10:4, top5:3, top3:1, wins:0, avg:9.4 },
-    "Christopher Bell":   { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:10.8 },
-    "Kyle Larson":        { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:11.9 },
-    "Brad Keselowski":    { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:11.2 },
-    "Tyler Reddick":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.1 },
-    "Joey Logano":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.8 },
-    "Kyle Busch":         { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.4 },
-    "Ross Chastain":      { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:15.2 },
-    "Austin Cindric":     { apt:5,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.5 },
-    "Bubba Wallace":      { apt:4,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.3 },
-    "Ty Gibbs":           { apt:4,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:14.8 },
-    "Chris Buescher":     { apt:4,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:15.6 },
-    "Carson Hocevar":     { apt:3,  starts:2, top20:1, top10:0, top5:0, top3:0, wins:0, avg:19.2 },
-    "Daniel Suárez":      { apt:3,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:18.9 },
-  },
-  "martinsville2": {
-    "Ryan Blaney":        { apt:10, starts:4, top20:4, top10:4, top5:3, top3:2, wins:1, avg:5.1 },
-    "Denny Hamlin":       { apt:9,  starts:4, top20:4, top10:3, top5:3, top3:2, wins:1, avg:7.2 },
-    "William Byron":      { apt:9,  starts:4, top20:4, top10:3, top5:2, top3:2, wins:1, avg:7.8 },
-    "Chase Elliott":      { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.6 },
-    "Christopher Bell":   { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.4 },
-    "Kyle Larson":        { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:1, wins:0, avg:11.2 },
-  },
-
-  // ── MICHIGAN INTERNATIONAL SPEEDWAY ─────────────────────────────────────
-  "michigan": {
-    "Denny Hamlin":       { apt:10, starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:5.8 },
-    "Kyle Larson":        { apt:8,  starts:5, top20:5, top10:4, top5:3, top3:1, wins:1, avg:7.4 },
-    "Tyler Reddick":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:9.2 },
-    "Chase Elliott":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:0, wins:0, avg:10.8 },
-    "William Byron":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Ryan Blaney":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Bubba Wallace":      { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:1, wins:0, avg:11.6 },
-    "Carson Hocevar":     { apt:6,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.3 },
-    "Erik Jones":         { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:1, wins:0, avg:13.2 },
-    "Christopher Bell":   { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.4 },
-    "Brad Keselowski":    { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:16.8 },
-    "Chris Buescher":     { apt:5,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.6 },
-  },
-
-  // ── BRISTOL MOTOR SPEEDWAY ───────────────────────────────────────────────
-  "bristol": {
-    "Kyle Larson":        { apt:10, starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:5.6 },
-    "Chase Elliott":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:6.8 },
-    "Denny Hamlin":       { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.4 },
-    "Christopher Bell":   { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "Tyler Reddick":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:1, wins:0, avg:10.6 },
-    "William Byron":      { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:0, wins:0, avg:12.4 },
-    "Carson Hocevar":     { apt:6,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:15.3 },
-    "Brad Keselowski":    { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Ryan Blaney":        { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.2 },
-  },
-  "bristol2": {
-    "Kyle Larson":        { apt:10, starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:6.4 },
-    "Chase Elliott":      { apt:9,  starts:4, top20:4, top10:3, top5:2, top3:2, wins:1, avg:7.2 },
-    "Denny Hamlin":       { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.6 },
-    "Christopher Bell":   { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:1, wins:0, avg:11.4 },
-    "Tyler Reddick":      { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.2 },
-  },
-
-  // ── RICHMOND RACEWAY ────────────────────────────────────────────────────
-  "richmond": {
-    "Ty Gibbs":           { apt:9,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:7.8 },
-    "Denny Hamlin":       { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:6.4 },
-    "Kyle Larson":        { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.6 },
-    "Tyler Reddick":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "Christopher Bell":   { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:0, wins:0, avg:10.4 },
-    "Chase Elliott":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:0, wins:0, avg:11.6 },
-    "William Byron":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.2 },
-    "Ryan Blaney":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Brad Keselowski":    { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Chris Buescher":     { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:16.4 },
-    "Carson Hocevar":     { apt:5,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:16.7 },
-  },
-  "richmond2": {
-    "Denny Hamlin":       { apt:9,  starts:4, top20:4, top10:3, top5:2, top3:2, wins:1, avg:6.8 },
-    "Kyle Larson":        { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.2 },
-    "Ty Gibbs":           { apt:8,  starts:3, top20:3, top10:2, top5:1, top3:1, wins:1, avg:8.4 },
-    "Tyler Reddick":      { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:11.4 },
-  },
-
-  // ── CHARLOTTE MOTOR SPEEDWAY (oval) ─────────────────────────────────────
-  "charlotte": {
-    "Kyle Larson":        { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:6.4 },
-    "Tyler Reddick":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:7.2 },
-    "William Byron":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.6 },
-    "Denny Hamlin":       { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.4 },
-    "Ryan Blaney":        { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.8 },
-    "Chase Elliott":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:0, wins:0, avg:11.2 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.6 },
-    "Ty Gibbs":           { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:1, wins:0, avg:12.4 },
-    "Brad Keselowski":    { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:16.8 },
-    "Ross Chastain":      { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.4 },
-  },
-
-  // ── CHARLOTTE ROVAL ─────────────────────────────────────────────────────
-  "charlotte2": {
-    "Chase Elliott":      { apt:10, starts:5, top20:5, top10:4, top5:4, top3:2, wins:2, avg:5.4 },
-    "Kyle Larson":        { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:6.8 },
-    "Tyler Reddick":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.4 },
-    "Shane van Gisbergen":{ apt:8,  starts:2, top20:2, top10:2, top5:1, top3:0, wins:0, avg:9.5 },
-    "Ross Chastain":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.6 },
-    "Christopher Bell":   { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:11.2 },
-    "Denny Hamlin":       { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.6 },
-    "Ryan Blaney":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "William Byron":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-  },
-
-  // ── DOVER MOTOR SPEEDWAY ─────────────────────────────────────────────────
-  "dover": {
-    "Kyle Larson":        { apt:10, starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:5.8 },
-    "Chase Elliott":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:7.2 },
-    "Tyler Reddick":      { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:0, wins:0, avg:12.4 },
-    "Denny Hamlin":       { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.6 },
-    "William Byron":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Kyle Busch":         { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.6 },
-    "Ryan Blaney":        { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.4 },
-    "Brad Keselowski":    { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:16.8 },
-  },
-
-  // ── DARLINGTON RACEWAY ───────────────────────────────────────────────────
-  "darlington": {
-    "Denny Hamlin":       { apt:10, starts:5, top20:5, top10:4, top5:4, top3:3, wins:2, avg:5.2 },
-    "Kyle Larson":        { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.4 },
-    "Tyler Reddick":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.6 },
-    "Brad Keselowski":    { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:2, wins:1, avg:7.8 },
-    "William Byron":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:9.2 },
-    "Chase Elliott":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Ryan Blaney":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Chris Buescher":     { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:16.6 },
-    "Bubba Wallace":      { apt:4,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:19.4 },
-  },
-
-  // ── CIRCUIT OF THE AMERICAS ──────────────────────────────────────────────
-  "cota": {
-    "Tyler Reddick":      { apt:10, starts:4, top20:4, top10:4, top5:3, top3:2, wins:2, avg:4.8 },
-    "Kyle Larson":        { apt:10, starts:5, top20:5, top10:4, top5:4, top3:3, wins:2, avg:4.2 },
-    "Chase Elliott":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:6.4 },
-    "Ross Chastain":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "Shane van Gisbergen":{ apt:8,  starts:2, top20:2, top10:2, top5:1, top3:0, wins:0, avg:8.5 },
-    "Ryan Blaney":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.6 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Denny Hamlin":       { apt:5,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:18.4 },
-    "William Byron":      { apt:5,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:17.6 },
-    "Austin Cindric":     { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.2 },
-  },
-
-  // ── SONOMA RACEWAY ───────────────────────────────────────────────────────
-  "sonoma": {
-    "Kyle Larson":        { apt:10, starts:5, top20:5, top10:5, top5:4, top3:3, wins:3, avg:3.8 },
-    "Chase Elliott":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:6.4 },
-    "Tyler Reddick":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "Shane van Gisbergen":{ apt:8,  starts:2, top20:2, top10:2, top5:1, top3:1, wins:0, avg:7.5 },
-    "Ross Chastain":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:0, wins:0, avg:12.4 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Denny Hamlin":       { apt:5,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:19.4 },
-    "Ryan Blaney":        { apt:5,  starts:5, top20:2, top10:1, top5:0, top3:0, wins:0, avg:18.8 },
-  },
-
-  // ── PHOENIX RACEWAY ──────────────────────────────────────────────────────
-  "phoenix": {
-    "Ryan Blaney":        { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:5.6 },
-    "Denny Hamlin":       { apt:8,  starts:5, top20:5, top10:3, top5:2, top3:1, wins:0, avg:10.4 },
-    "Kyle Larson":        { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.8 },
-    "Chase Elliott":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:11.2 },
-    "Tyler Reddick":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.6 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "William Byron":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Brad Keselowski":    { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Austin Cindric":     { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.8 },
-    "Joey Logano":        { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:9.6 },
-  },
-  "phoenix2": {
-    "Ryan Blaney":        { apt:9,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:7.4 },
-    "Denny Hamlin":       { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "Kyle Larson":        { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.2 },
-    "Joey Logano":        { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:1, wins:1, avg:9.4 },
-  },
-
-  // ── NASHVILLE SUPERSPEEDWAY ──────────────────────────────────────────────
-  "nashville": {
-    "Denny Hamlin":       { apt:9,  starts:4, top20:4, top10:3, top5:3, top3:2, wins:2, avg:5.4 },
-    "Kyle Larson":        { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.2 },
-    "Tyler Reddick":      { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "William Byron":      { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.4 },
-    "Christopher Bell":   { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Ryan Blaney":        { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Chase Elliott":      { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Ty Gibbs":           { apt:6,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.6 },
-    "Bubba Wallace":      { apt:5,  starts:4, top20:2, top10:1, top5:0, top3:0, wins:0, avg:18.2 },
-  },
-
-  // ── NORTH WILKESBORO ─────────────────────────────────────────────────────
-  "nwilkes": {
-    "Chase Elliott":      { apt:9,  starts:2, top20:2, top10:2, top5:1, top3:1, wins:1, avg:5.5 },
-    "Kyle Larson":        { apt:8,  starts:2, top20:2, top10:2, top5:1, top3:0, wins:0, avg:8.5 },
-    "Denny Hamlin":       { apt:7,  starts:2, top20:2, top10:1, top5:1, top3:1, wins:0, avg:9.5 },
-    "Tyler Reddick":      { apt:7,  starts:2, top20:2, top10:1, top5:1, top3:0, wins:0, avg:10.5 },
-    "Ryan Blaney":        { apt:6,  starts:2, top20:1, top10:1, top5:0, top3:0, wins:0, avg:14.5 },
-    "William Byron":      { apt:6,  starts:2, top20:1, top10:1, top5:0, top3:0, wins:0, avg:13.5 },
-  },
-  "nwilkes2": {
-    "Chase Elliott":      { apt:9,  starts:2, top20:2, top10:2, top5:1, top3:1, wins:1, avg:5.5 },
-    "Kyle Larson":        { apt:8,  starts:2, top20:2, top10:1, top5:1, top3:0, wins:0, avg:9.5 },
-    "Denny Hamlin":       { apt:7,  starts:2, top20:2, top10:1, top5:1, top3:0, wins:0, avg:10.0 },
-    "Tyler Reddick":      { apt:7,  starts:2, top20:2, top10:1, top5:0, top3:0, wins:0, avg:12.5 },
-  },
-
-  // ── LAS VEGAS MOTOR SPEEDWAY ─────────────────────────────────────────────
-  "las_vegas": {
-    "Denny Hamlin":       { apt:9,  starts:5, top20:4, top10:3, top5:2, top3:2, wins:2, avg:7.4 },
-    "Kyle Larson":        { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.8 },
-    "Tyler Reddick":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:1, wins:0, avg:10.8 },
-    "William Byron":      { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.6 },
-    "Ryan Blaney":        { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:0, wins:0, avg:12.4 },
-    "Chase Elliott":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Brad Keselowski":    { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.2 },
-    "Joey Logano":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.8 },
-  },
-
-  // ── ATLANTA MOTOR SPEEDWAY (superspeedway config) ────────────────────────
-  "atlanta": {
-    "Tyler Reddick":      { apt:9,  starts:4, top20:4, top10:3, top5:3, top3:2, wins:1, avg:7.2 },
-    "Bubba Wallace":      { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "Ryan Blaney":        { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Ross Chastain":      { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.8 },
-    "Carson Hocevar":     { apt:7,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:11.3 },
-    "Shane van Gisbergen":{ apt:6,  starts:2, top20:2, top10:1, top5:0, top3:0, wins:0, avg:14.5 },
-    "Chase Elliott":      { apt:5,  starts:4, top20:2, top10:1, top5:0, top3:0, wins:0, avg:18.6 },
-    "Kyle Larson":        { apt:5,  starts:4, top20:2, top10:1, top5:0, top3:0, wins:0, avg:17.8 },
-    "William Byron":      { apt:5,  starts:4, top20:2, top10:1, top5:0, top3:0, wins:0, avg:17.2 },
-    "Denny Hamlin":       { apt:5,  starts:4, top20:2, top10:1, top5:0, top3:0, wins:0, avg:18.4 },
-  },
-
-  "homestead2": {
-    "Tyler Reddick":      { apt:9,  starts:4, top20:4, top10:3, top5:2, top3:2, wins:1, avg:7.8 },
-    "Denny Hamlin":       { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.4 },
-    "Kyle Larson":        { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.8 },
-    "Joey Logano":        { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:1, wins:1, avg:9.2 },
-  },
-
-  // ── CHICAGOLAND SPEEDWAY (moved to intermediate oval for 2026) ───────────
-  "chicagoland": {
-    "Chase Briscoe":      { apt:8,  starts:3, top20:3, top10:2, top5:2, top3:1, wins:1, avg:6.7 },
-    "Denny Hamlin":       { apt:7,  starts:3, top20:3, top10:2, top5:1, top3:1, wins:0, avg:9.3 },
-    "Kyle Larson":        { apt:7,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:10.7 },
-    "Tyler Reddick":      { apt:6,  starts:3, top20:2, top10:1, top5:1, top3:0, wins:0, avg:12.3 },
-    "Chase Elliott":      { apt:6,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:13.7 },
-    "William Byron":      { apt:6,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:14.3 },
-    "Ryan Blaney":        { apt:5,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:15.3 },
-  },
-
-  // ── KANSAS SPEEDWAY ───────────────────────────────────────────────────────
-  "kansas": {
-    "Tyler Reddick":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:7.4 },
-    "Kyle Larson":        { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:1, avg:7.9 },
-    "Denny Hamlin":       { apt:8,  starts:5, top20:5, top10:4, top5:2, top3:1, wins:1, avg:8.8 },
-    "William Byron":      { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:9.6 },
-    "Chase Elliott":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:0, wins:0, avg:11.8 },
-    "Carson Hocevar":     { apt:6,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:11.9 },
-    "Ryan Blaney":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:14.2 },
-    "Christopher Bell":   { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.6 },
-    "Ty Gibbs":           { apt:6,  starts:3, top20:2, top10:2, top5:1, top3:0, wins:0, avg:12.4 },
-    "Brad Keselowski":    { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:16.4 },
-  },
-
-  // ── TEXAS MOTOR SPEEDWAY ──────────────────────────────────────────────────
-  "texas": {
-    "Chase Elliott":      { apt:8,  starts:5, top20:5, top10:3, top5:2, top3:1, wins:1, avg:8.6 },
-    "Kyle Larson":        { apt:8,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:1, avg:9.2 },
-    "Denny Hamlin":       { apt:7,  starts:5, top20:4, top10:3, top5:2, top3:1, wins:0, avg:10.4 },
-    "Tyler Reddick":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:1, wins:0, avg:11.2 },
-    "William Byron":      { apt:7,  starts:5, top20:4, top10:2, top5:1, top3:0, wins:0, avg:12.6 },
-    "Ryan Blaney":        { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Ty Gibbs":           { apt:6,  starts:3, top20:2, top10:1, top5:1, top3:0, wins:0, avg:13.4 },
-    "Christopher Bell":   { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:15.8 },
-  },
-
-  // ── WATKINS GLEN INTERNATIONAL ────────────────────────────────────────────
-  "watkins_glen": {
-    "Shane van Gisbergen":{ apt:10, starts:3, top20:3, top10:3, top5:3, top3:2, wins:1, avg:4.6 },
-    "Chase Elliott":      { apt:9,  starts:5, top20:5, top10:4, top5:3, top3:2, wins:2, avg:6.2 },
-    "Kyle Larson":        { apt:8,  starts:5, top20:5, top10:4, top5:2, top3:1, wins:0, avg:8.6 },
-    "Christopher Bell":   { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:1, wins:0, avg:10.4 },
-    "Ross Chastain":      { apt:7,  starts:5, top20:4, top10:3, top5:1, top3:0, wins:0, avg:11.2 },
-    "Tyler Reddick":      { apt:6,  starts:5, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "Denny Hamlin":       { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.8 },
-    "Ryan Blaney":        { apt:5,  starts:5, top20:3, top10:1, top5:0, top3:0, wins:0, avg:17.2 },
-  },
-
-  // ── CORONADO STREET COURSE (new venue, 2026) ──────────────────────────────
-  "coronado": {
-    "Corey Heim":         { apt:8,  starts:1, top20:1, top10:1, top5:1, top3:1, wins:1, avg:2.0 },
-    "Shane van Gisbergen":{ apt:8,  starts:1, top20:1, top10:1, top5:1, top3:0, wins:0, avg:5.0 },
-    "Chase Elliott":      { apt:7,  starts:1, top20:1, top10:1, top5:0, top3:0, wins:0, avg:8.0 },
-    "Ross Chastain":      { apt:6,  starts:1, top20:1, top10:1, top5:0, top3:0, wins:0, avg:9.0 },
-    "Christopher Bell":   { apt:6,  starts:1, top20:1, top10:0, top5:0, top3:0, wins:0, avg:12.0 },
-    "Kyle Larson":        { apt:5,  starts:1, top20:1, top10:0, top5:0, top3:0, wins:0, avg:14.0 },
-  },
-
-  // ── IOWA SPEEDWAY ────────────────────────────────────────────────────────
-  "iowa": {
-    "Kyle Larson":        { apt:9,  starts:3, top20:3, top10:3, top5:2, top3:1, wins:1, avg:6.3 },
-    "Denny Hamlin":       { apt:8,  starts:3, top20:3, top10:2, top5:2, top3:1, wins:1, avg:7.3 },
-    "Tyler Reddick":      { apt:7,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:10.7 },
-    "Christopher Bell":   { apt:7,  starts:3, top20:3, top10:2, top5:1, top3:0, wins:0, avg:11.3 },
-    "Chase Elliott":      { apt:6,  starts:3, top20:2, top10:1, top5:1, top3:0, wins:0, avg:13.7 },
-    "William Byron":      { apt:6,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:15.3 },
-    "Ty Gibbs":           { apt:7,  starts:2, top20:2, top10:2, top5:1, top3:1, wins:0, avg:8.5 },
-    "Ryan Blaney":        { apt:5,  starts:3, top20:2, top10:1, top5:0, top3:0, wins:0, avg:16.7 },
-  },
-
-  // ── NEW HAMPSHIRE MOTOR SPEEDWAY ─────────────────────────────────────────
-  "nh": {
-    "Christopher Bell":   { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:7.8 },
-    "Kyle Larson":        { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:1, avg:8.2 },
-    "Denny Hamlin":       { apt:7,  starts:4, top20:4, top10:3, top5:2, top3:1, wins:0, avg:9.8 },
-    "Tyler Reddick":      { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.8 },
-    "Ryan Blaney":        { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.4 },
-    "William Byron":      { apt:5,  starts:4, top20:2, top10:1, top5:0, top3:0, wins:0, avg:17.8 },
-    "Chase Elliott":      { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Brad Keselowski":    { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.2 },
-  },
-
-  // ── INDIANAPOLIS MOTOR SPEEDWAY ──────────────────────────────────────────
-  "indy": {
-    "Tyler Reddick":      { apt:8,  starts:4, top20:4, top10:3, top5:2, top3:2, wins:1, avg:7.8 },
-    "Kyle Larson":        { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:1, wins:0, avg:11.5 },
-    "Chase Elliott":      { apt:7,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:12.3 },
-    "Ryan Blaney":        { apt:6,  starts:4, top20:3, top10:2, top5:1, top3:0, wins:0, avg:13.8 },
-    "Denny Hamlin":       { apt:6,  starts:4, top20:3, top10:1, top5:1, top3:0, wins:0, avg:14.2 },
-    "Shane van Gisbergen":{ apt:7,  starts:2, top20:2, top10:2, top5:1, top3:0, wins:0, avg:9.5 },
-    "William Byron":      { apt:5,  starts:4, top20:2, top10:1, top5:0, top3:0, wins:0, avg:17.3 },
-  },
-
-  // ── DAYTONA (summer race) reuses daytona2 ─────────────────────────────
-  // ── TALLADEGA (fall) reuses talladega2 ────────────────────────────────
-};
-
-// Second-visit races at the same physical track reuse that track's history table
-TRACK_HISTORY.atlanta2 = TRACK_HISTORY.atlanta;
-TRACK_HISTORY.darlington2 = TRACK_HISTORY.darlington;
-TRACK_HISTORY.las_vegas2 = TRACK_HISTORY.las_vegas;
-TRACK_HISTORY.kansas2 = TRACK_HISTORY.kansas;
-
-// -- SIMULATION ----------------------------------------------------------------
-function gumbelRandom(mu=0, beta=1){ return mu - beta * Math.log(-Math.log(Math.random())); }
-
-// -- RECENT FORM: last 5 finishes (oldest→newest), most recent weighted 2x the oldest --
-// Returns a momentum multiplier centered on 1.0 (0.85-1.15 range).
-function recentFormMultiplier(last5){
-  if(!last5 || !last5.length) return 1.0;
-  const n = last5.length;
-  let weightedSum = 0, weightTotal = 0;
-  last5.forEach((fin, i) => {
-    const w = 1 + (i/(n-1||1)); // 1x oldest -> 2x most recent
-    const finStrength = 1 - Math.max(0, Math.min(1, (fin-1)/35)); // 1=win, 0=35th+
-    weightedSum += finStrength * w;
-    weightTotal += w;
-  });
-  return 0.85 + (weightedSum/weightTotal) * 0.3;
-}
-
-// -- MANUFACTURER ADVANTAGE BY TRACK TYPE (2026 aero package) — composite point bonus --
-const MANUFACTURER_BONUS = {
-  "Superspeedway": { Toyota:2.5, Chevrolet:1.0, Ford:0.5 },
-  "Intermediate":  { Toyota:2.0, Chevrolet:1.5, Ford:1.0 },
-  "Short Track":   { Toyota:1.0, Chevrolet:1.5, Ford:1.5 },
-  "Road Course":   { Toyota:0.5, Chevrolet:1.5, Ford:2.0 },
-};
-function manufacturerBonus(manufacturer, trackType){
-  return MANUFACTURER_BONUS[trackType]?.[manufacturer] || 0;
-}
-
-// -- QUALIFYING POSITION MODIFIER — composite point bonus, only applied if qualifyingPos is set --
-function qualifyingBonus(pos){
-  if(!pos) return 0;
-  if(pos<=5) return 3;
-  if(pos<=10) return 1.5;
-  if(pos<=20) return 0;
-  return -1.0;
-}
-
-function runSim(race, series, drivers, iters=25000){
-  // Key by race.id for per-track history; fall back to geo-based if not found
-  const staticHist = TRACK_HISTORY[race.id] || TRACK_HISTORY[race.geo] || {};
-  const maxWins = Math.max(...drivers.map(d=>d.wins||0), 1);
-  const chaosLevel = race.chaos;
-  const trackType = race.type;
-
-  const pool = drivers.map(d=>{
-    // _liveHist is injected by simulate() when /api/trackhistory returns data
-    // It takes priority over the static TRACK_HISTORY table
-    const h = d._liveHist || staticHist[d.name] || { apt:3, starts:0, top20:0, top10:0, top5:0, top3:0, wins:0, avg:25 };
-
-    // Composite score: Track History 30% | Momentum+WinRate 20% | Chaos Avoidance 20% | Skill+QualSpeed 15% | Pit/Aero 15%
-    const winRate = h.wins / Math.max(h.starts,1);
-    const top5Rate = h.top5 / Math.max(h.starts,1);
-    const avgScore = Math.max(0, (35 - h.avg) / 35);
-    const trackHistScore = (h.apt/10)*40 + winRate*30 + top5Rate*20 + avgScore*10; // 0-100
-
-    const formMult = recentFormMultiplier(d.last5);
-    const seasonWinRate = (d.wins||0) / maxWins;
-    const seasonScore = Math.min(100, (d.mom||0)*formMult*0.75 + seasonWinRate*100*0.25); // 0-100ish
-
-    const chaosScore = (d.chaosAvoid/10) * 100; // 0-100
-
-    const speedNorm = Math.max(0, Math.min(100, (d.spd-155)/16*100));
-    const skillQualScore = d.skill*0.65 + speedNorm*0.35; // 0-100
-
-    const pitAeroScore = (d.aero/10) * 100; // 0-100
-
-    let score = trackHistScore*0.30 + seasonScore*0.20 + chaosScore*0.20 + skillQualScore*0.15 + pitAeroScore*0.15;
-    score += manufacturerBonus(d.manufacturer, trackType);
-    score += qualifyingBonus(d.qualifyingPos);
-    if(d.rookie) score -= 3;
-    if(d.sub || d.parttime) score -= 2;
-
-    // Chaos bonus (display only): this driver's actual chaos-avoidance contribution to the
-    // composite score above, relative to a neutral (5.5/10) driver -- scales with track chaos level
-    const chaosBonus = (d.chaosAvoid*2 - 11) * (0.6 + chaosLevel*0.4);
-    return { ...d, score, hist: h, chaosBonus: parseFloat(chaosBonus.toFixed(2)), histSource: d._liveHist ? "live" : "static", formMultiplier: parseFloat(formMult.toFixed(2)) };
-  });
-
-  const wins={}, top5={}, top10={}, dnfCount={};
-  pool.forEach(d=>{ wins[d.name]=0; top5[d.name]=0; top10[d.name]=0; dnfCount[d.name]=0; });
-
-  for(let i=0;i<iters;i++){
-    // Per-iteration: each driver rolls a chaos incident check
-    // Low chaosAvoid + high chaos track = higher DNF probability
-    const run = pool.map(d=>{
-      // DNF probability: base = chaos * (1 - chaosAvoid/10) * 0.18
-      const dnfProb = chaosLevel * (1 - d.chaosAvoid/10) * 0.18;
-      const isDNF = Math.random() < dnfProb;
-      if(isDNF){ dnfCount[d.name]++; return { name:d.name, s: -99 - Math.random()*10 }; }
-      return { name:d.name, s: d.score + gumbelRandom(0, chaosLevel*6) + (Math.random()-.5)*9 };
-    }).sort((a,b)=>b.s-a.s);
-    wins[run[0].name]++;
-    run.slice(0,5).forEach(d=>top5[d.name]++);
-    run.slice(0,10).forEach(d=>top10[d.name]++);
-  }
-
-  return pool.map(d=>({
-    ...d,
-    winPct:   ((wins[d.name]/iters)*100).toFixed(1),
-    top5Pct:  ((top5[d.name]/iters)*100).toFixed(1),
-    top10Pct: ((top10[d.name]/iters)*100).toFixed(1),
-    dnfPct:   ((dnfCount[d.name]/iters)*100).toFixed(1),
-  })).sort((a,b)=>parseFloat(b.winPct)-parseFloat(a.winPct));
-}
-
-function genChart(race, results){
-  const top8 = results.slice(0,8);
-  const LAPS = race.id?.includes("martin") ? 400 : race.id?.includes("talladega") ? 188 : 300;
-  const STEPS = 30; const step = Math.floor(LAPS/STEPS);
-
-  // Race events: caution window at 40-60% distance, restart immediately after,
-  // fuel window at 75-85% distance
-  const cautionStep = Math.round(STEPS*(0.40 + Math.random()*0.20));
-  const restartStep = Math.min(STEPS, cautionStep+1);
-  const fuelStep = Math.round(STEPS*(0.75 + Math.random()*0.10));
-  const events = {
-    caution: { lap: cautionStep*step, label: "CAUTION" },
-    restart: { lap: restartStep*step, label: "RESTART" },
-    fuel:    { lap: fuelStep*step, label: "FUEL" },
-  };
-
-  const data = []; let probs = {};
-  top8.forEach(d=>{ probs[d.name]=parseFloat(d.winPct); });
-  for(let i=0;i<=STEPS;i++){
-    const snap = { lap:i*step };
-    const fieldAvg = top8.reduce((s,d)=>s+probs[d.name],0) / top8.length;
-    top8.forEach(d=>{
-      const drift = (Math.random()-.48)*race.chaos*13*(1+(i/STEPS)*.6);
-      const tb = (d.hist?.apt||3)/10*Math.random()*4;
-      const late = i>STEPS*.7 ? d.mom/100*5 : 0;
-
-      // CAUTION: field bunches up, probabilities flatten toward the mean
-      const cautionPull = i===cautionStep ? (fieldAvg-probs[d.name])*0.5 : 0;
-      // RESTART: clean racers with strong track position get a temporary surge
-      const restartSurge = i===restartStep && d.chaosAvoid>=8 && (d.hist?.apt||0)>=7 ? 6 + Math.random()*4 : 0;
-      // FUEL WINDOW: drivers whose track history suggests fuel-mileage ability (low avg finish
-      // at this track) get a probability spike if they're plausibly on a long-run strategy
-      const fuelSpike = i===fuelStep && (d.hist?.avg||99)<=12 ? 4 + Math.random()*5 : 0;
-
-      probs[d.name] = Math.max(0.3, Math.min(85, probs[d.name]+drift+tb-2+late+cautionPull+restartSurge+fuelSpike));
-      snap[d.name] = parseFloat(probs[d.name].toFixed(1));
-    });
-    const tot = top8.reduce((s,d)=>s+(snap[d.name]||0),0);
-    top8.forEach(d=>{ snap[d.name]=parseFloat(((snap[d.name]||0)/tot*100).toFixed(1)); });
-    data.push(snap);
-  }
-  return { data, drivers:top8, laps:LAPS, events };
-}
+// -- SIMULATION ENGINE -- extracted to lib/sim.js so the cron/scorecard job can share it
 
 // -- HELPERS -------------------------------------------------------------------
 const DRIVER_COLORS=["#FF4E00","#FFD700","#22c55e","#3b82f6","#BA80F8","#f97316","#ec4899","#06b6d4"];
@@ -1104,6 +532,74 @@ function TrackHistRow({ d, rank, isStd, isDH, isLS, maxWin, series, race, isTop1
   );
 }
 
+// -- SCORECARD VIEW -- prediction accuracy vs reality, sourced from api/scorecard.js --
+const STAGE_LABELS = { post_race: "POST-RACE", lineups: "LINEUPS", post_quali: "POST-QUALI" };
+function ScorecardView({ scorecard, status, cfg, series }) {
+  if (status === "loading") {
+    return <div style={{textAlign:"center",padding:"50px 20px",color:"rgba(255,255,255,0.55)"}}>
+      <Spin/><div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"13px",marginTop:"10px",letterSpacing:"0.1em"}}>LOADING SCORECARD...</div>
+    </div>;
+  }
+  if (status === "failed" || !scorecard) {
+    return <div style={{textAlign:"center",padding:"50px 20px",color:"rgba(255,255,255,0.55)"}}>
+      <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"13px",letterSpacing:"0.1em"}}>SCORECARD UNAVAILABLE</div>
+      <div style={{fontSize:"10px",color:"rgba(255,255,255,0.35)",marginTop:"6px"}}>No graded predictions yet, or the API is unreachable.</div>
+    </div>;
+  }
+  const stages = ["post_race","lineups","post_quali"];
+  return (
+    <div>
+      <div style={{fontSize:"10px",color:"rgba(255,255,255,0.55)",letterSpacing:"0.12em",marginBottom:"10px"}}>
+        PREDICTION ACCURACY - {cfg.label.toUpperCase()} - how our pre-race sim compares to real results, at each stage of information
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"16px"}}>
+        {stages.map(stage=>{
+          const s = scorecard.summary?.[stage] || {};
+          return (
+            <div key={stage} style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"11px",padding:"12px 10px"}}>
+              <div style={{fontSize:"8px",color:cfg.color,letterSpacing:"0.1em",marginBottom:"8px",fontWeight:800}}>{STAGE_LABELS[stage]}</div>
+              <div style={{fontSize:"22px",fontWeight:900,color:"#f0e8e0",lineHeight:1}}>{s.winnerHitRate!=null?`${s.winnerHitRate}%`:"-"}</div>
+              <div style={{fontSize:"7px",color:"rgba(255,255,255,0.55)",marginBottom:"8px"}}>WINNER HIT RATE</div>
+              <div style={{fontSize:"14px",fontWeight:700,color:"rgba(255,255,255,0.85)"}}>{s.top5HitRate!=null?`${s.top5HitRate}%`:"-"}</div>
+              <div style={{fontSize:"7px",color:"rgba(255,255,255,0.55)",marginBottom:"8px"}}>TOP-5 HIT RATE</div>
+              <div style={{fontSize:"12px",fontWeight:700,color:"rgba(255,255,255,0.70)"}}>{s.avgBrier!=null?s.avgBrier:"-"}</div>
+              <div style={{fontSize:"7px",color:"rgba(255,255,255,0.55)"}}>AVG BRIER (lower=better)</div>
+              <div style={{fontSize:"7px",color:"rgba(255,255,255,0.35)",marginTop:"6px"}}>{s.graded||0} races graded</div>
+            </div>
+          );
+        })}
+      </div>
+      {(!scorecard.races || scorecard.races.length===0) && (
+        <div style={{textAlign:"center",padding:"30px 20px",color:"rgba(255,255,255,0.40)",fontSize:"11px"}}>
+          No graded races yet -- the cron job needs to run at least once after a race completes.
+        </div>
+      )}
+      {scorecard.races?.map(race=>(
+        <div key={race.raceId} style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:"10px",padding:"11px 13px",marginBottom:"6px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"6px"}}>
+            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"14px",fontWeight:700}}>{race.raceName}</div>
+            <div style={{fontSize:"10px",color:"#FFD700"}}>WIN: {race.winner}</div>
+          </div>
+          <div style={{display:"flex",gap:"10px",flexWrap:"wrap"}}>
+            {stages.map(stage=>{
+              const s = race.stages?.[stage];
+              if(!s) return null;
+              return (
+                <div key={stage} style={{fontSize:"9px",color:"rgba(255,255,255,0.55)"}}>
+                  <span style={{color:cfg.color,fontWeight:700}}>{STAGE_LABELS[stage]}:</span>{" "}
+                  <span style={{color:s.winnerHit?"#22c55e":"rgba(255,255,255,0.55)"}}>{s.pick||"-"}</span>
+                  {s.winnerHit && <span style={{color:"#22c55e"}}> v WIN</span>}
+                  {!s.winnerHit && s.top5Hit && <span style={{color:"#FFD700"}}> - TOP5</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ===============================================================================
 // MAIN APP
 // ===============================================================================
@@ -1118,6 +614,9 @@ export default function FinalLap(){
   const [liveFrame, setLiveFrame] = useState(0);
   const [vis, setVis] = useState({});
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [view, setView] = useState("predict"); // predict | scorecard
+  const [scorecard, setScorecard] = useState(null);
+  const [scorecardStatus, setScorecardStatus] = useState("idle"); // idle | loading | live | failed
   const ivRef = useRef(null); const liveRef = useRef(null);
 
   // -- LIVE DATA STATE ---------------------------------------------------------
@@ -1198,6 +697,21 @@ export default function FinalLap(){
     } catch (e) { /* silent -- falls back to whatever last5 the driver object already has */ }
   }
 
+  // Prediction-accuracy scorecard: how our pre-race sim snapshots (generated by the
+  // cron job) compare to actual results, once graded.
+  async function fetchScorecard(seriesKey) {
+    setScorecardStatus("loading");
+    try {
+      const res = await fetch(`/api/scorecard?series=${seriesKey}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setScorecard(data);
+      setScorecardStatus("live");
+    } catch (e) {
+      setScorecardStatus("failed");
+    }
+  }
+
   // Fetch all live data on mount and when series changes
   const fetchLiveData = useCallback(async (seriesKey) => {
     setDataStatus("loading");
@@ -1256,6 +770,11 @@ export default function FinalLap(){
   useEffect(() => {
     fetchRecentForm(series);
   }, [series]);
+
+  // Fetch the scorecard whenever it's the active view, or the series changes while viewing it
+  useEffect(() => {
+    if (view === "scorecard") fetchScorecard(series);
+  }, [view, series]);
 
   useEffect(() => {
     fetchLiveData(series);
@@ -1486,6 +1005,15 @@ export default function FinalLap(){
 
           {/* Right side: race picker button + data status */}
           <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
+            <button onClick={()=>setView(view==="scorecard"?"predict":"scorecard")} style={{
+              background:view==="scorecard"?`${cfg.color}22`:"rgba(255,255,255,0.04)",
+              border:`1px solid ${view==="scorecard"?cfg.color:"rgba(255,255,255,0.12)"}`,
+              borderRadius:"8px",padding:"6px 10px",cursor:"pointer",
+              fontFamily:"'Barlow Condensed',sans-serif",fontSize:"10px",fontWeight:800,
+              color:view==="scorecard"?cfg.color:"rgba(255,255,255,0.70)",letterSpacing:"0.08em",
+            }}>
+              {view==="scorecard"?"< PREDICT":"SCORECARD"}
+            </button>
             <button onClick={()=>setDrawerOpen(true)} style={{
               background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.12)",
               borderRadius:"8px",padding:"6px 12px",cursor:"pointer",
@@ -1513,6 +1041,9 @@ export default function FinalLap(){
 
       {/* -- MAIN CONTENT - full width -- */}
       <div style={{maxWidth:"860px",margin:"0 auto",padding:"16px 14px 72px"}}>
+        {view==="scorecard" ? (
+        <ScorecardView scorecard={scorecard} status={scorecardStatus} cfg={cfg} series={series}/>
+        ) : (<>
 
         {/* Selected race banner */}
         {selectedRace && (
@@ -1793,6 +1324,7 @@ export default function FinalLap(){
             </div>
           )}
         </div>
+        </>)}
       </div>
     </div>
   );
