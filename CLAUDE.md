@@ -3,6 +3,16 @@
 NASCAR predictive analytics PWA (React/Vite, deployed on Vercel Pro at lap.prsmlabs.app).
 Repo: prsm-labs/final-lap. Single-file frontend (`src/App.jsx`), Vercel edge functions in `api/`.
 
+## Deploy workflow (overrides claude_rules.md Rule 4 for this project)
+
+Push to `main` triggers Vercel's auto-deploy to the live production site — a real,
+visible change, not just a local edit. For this project specifically: Claude runs
+`git push origin main` directly (not just handing the user the command), but **must
+ask for explicit confirmation every single time before doing so, no exceptions** —
+this is so both sides can confirm what's being pushed is correct before it goes live.
+Never batch/skip the confirmation because a previous push was approved; each one is
+a fresh ask.
+
 ## Architecture — live data sources
 
 All of these hit `cf.nascar.com/cacher/...` (NASCAR's own JSON feed, undocumented but
@@ -245,4 +255,4 @@ The first time a project gets an archive folder, drop a short README.md inside i
 ---
 ## Session Resume
 claude --resume f7211d5c-8e07-47ae-88c9-df679e52025f
-(stamped 2026-07-20 23:55 local)
+(stamped 2026-07-20 23:59 local)
