@@ -1,19 +1,55 @@
 // api/standings.js
-// Fetches live 2026 standings from NASCAR's official stats API
+// Computes live 2026 standings by summing points_earned across every completed race's
+// weekend-feed.json (same reliable cf.nascar.com data source used by results.js,
+// recentform.js, and tracktrends.js). Previously this hit a dedicated "standings" URL
+// that turned out to be genuinely broken (S3 AccessDenied, not rate-limiting) --
+// silently masked for a long time because the frontend gracefully falls back to
+// cached data on any failure, so nobody noticed until the cron job (which has no
+// such fallback) surfaced it immediately on its first real run.
 // Vercel caches the response for 6 hours (s-maxage=21600)
 // Falls back to last known data if fetch fails
 
 export const config = { runtime: "edge" };
 
-const SERIES_IDS = {
-  cup:   "nascar-cup-series",
-  xfin:  "nascar-oreilly-auto-parts-series",
-  truck: "nascar-craftsman-truck-series",
-};
+const SERIES_NUM = { cup: 1, xfin: 2, truck: 3 };
 
-// NASCAR Stats API - publicly accessible, no auth required
-const NASCAR_STANDINGS_URL = (seriesId) =>
-  `https://cf.nascar.com/cacher/2026/1/standings/${seriesId}/driver-standings.json`;
+async function computeStandings(seriesKey) {
+  const seriesId = SERIES_NUM[seriesKey] || 1;
+  const listRes = await fetch(`https://cf.nascar.com/cacher/2026/race_list_basic.json`, {
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; FinalLap/1.0)" },
+  });
+  if (!listRes.ok) throw new Error(`race list HTTP ${listRes.status}`);
+  const listData = await listRes.json();
+  const races = (listData[`series_${seriesId}`] || []).filter(r => r.winner_driver_id);
+  if (!races.length) return [];
+
+  const feeds = await Promise.all(races.map(r =>
+    fetch(`https://cf.nascar.com/cacher/2026/${seriesId}/${r.race_id}/weekend-feed.json`, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; FinalLap/1.0)" },
+    }).then(res => res.ok ? res.json() : null).catch(() => null)
+  ));
+
+  const totals = {}; // driver name -> { pts, wins, num, team, lastDate }
+  races.forEach((race, i) => {
+    const results = feeds[i]?.weekend_race?.[0]?.results || [];
+    results.forEach(r => {
+      const name = r.driver_fullname;
+      if (!name) return;
+      if (!totals[name]) totals[name] = { pts: 0, wins: 0, num: r.car_number, team: r.team_name, rookie: false, lastDate: race.race_date };
+      totals[name].pts += r.points_earned || 0;
+      if (r.finishing_position === 1) totals[name].wins++;
+      if (race.race_date >= totals[name].lastDate) {
+        totals[name].num = r.car_number;
+        totals[name].team = r.team_name;
+        totals[name].lastDate = race.race_date;
+      }
+    });
+  });
+
+  return Object.entries(totals)
+    .map(([name, t]) => ({ name, pts: t.pts, wins: t.wins, num: t.num, team: t.team }))
+    .sort((a, b) => b.pts - a.pts);
+}
 
 // Skill/chaos ratings stay static — these are scout judgments, not live data
 const STATIC_RATINGS = {
@@ -72,36 +108,24 @@ function calcMomentum(pts, wins, pos, totalDrivers) {
 export default async function handler(req) {
   const url = new URL(req.url);
   const seriesKey = url.searchParams.get("series") || "cup";
-  const seriesId = SERIES_IDS[seriesKey] || SERIES_IDS.cup;
 
   try {
-    const res = await fetch(NASCAR_STANDINGS_URL(seriesId), {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; FinalLap/1.0)" },
-      cf: { cacheTtl: 21600 }, // Cloudflare edge cache: 6 hours
-    });
+    const ranked = await computeStandings(seriesKey);
+    if (!ranked.length) throw new Error("no completed races found for this series");
 
-    if (!res.ok) throw new Error(`NASCAR API returned ${res.status}`);
-    const raw = await res.json();
-
-    // NASCAR CF endpoint returns { response: [ ...drivers ] }
-    const driverList = raw.response || raw;
-
-    const drivers = driverList.slice(0, 36).map((d, i) => {
-      const name = `${d.FirstName} ${d.LastName}`.trim();
-      const ratings = STATIC_RATINGS[name] || { skill:70, spd:162.0, aero:6, chaosAvoid:6 };
-      const pos = d.PointsPosition || i + 1;
-      const pts = d.Points || 0;
-      const wins = d.Wins || 0;
+    const drivers = ranked.map((d, i) => {
+      const pos = i + 1;
+      const ratings = STATIC_RATINGS[d.name] || { skill:70, spd:162.0, aero:6, chaosAvoid:6 };
       return {
         pos,
-        name,
-        num: d.CarNumber || "00",
-        team: d.TeamName || "Independent",
-        pts,
-        wins,
-        mom: calcMomentum(pts, wins, pos, driverList.length),
+        name: d.name,
+        num: d.num || "00",
+        team: d.team || "Independent",
+        pts: d.pts,
+        wins: d.wins,
+        mom: calcMomentum(d.pts, d.wins, pos, ranked.length),
         ...ratings,
-        rookie: d.IsRookie || false,
+        rookie: false,
       };
     });
 
@@ -109,7 +133,7 @@ export default async function handler(req) {
       series: seriesKey,
       drivers,
       asOf: new Date().toISOString(),
-      source: "nascar.com/cf",
+      source: "cf.nascar.com (computed from race results)",
     }), {
       headers: {
         "Content-Type": "application/json",

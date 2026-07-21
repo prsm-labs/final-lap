@@ -10,7 +10,7 @@ reliable and structured — same endpoint family throughout):
 
 | File | Purpose | Series-generic? |
 |---|---|---|
-| `api/standings.js` | Live points standings | Yes (`series` param) |
+| `api/standings.js` | Live points standings -- **computed** by summing `points_earned` across every completed race's `weekend-feed.json`, not fetched from a dedicated standings URL (that URL was broken -- see changelog) | Yes (`series` param) |
 | `api/schedule.js` | Schedule + done/next logic (ET-anchored, see below) | Yes |
 | `api/entrylist.js` | Confirmed entry list per race | Yes |
 | `api/results.js` | Official post-race results + real qualifying (weekend_runs run_type 2) | Yes |
@@ -149,6 +149,26 @@ backup goes to `Claude/archive/` (untracked, never committed). See that folder's
 - Pure logic (stage detection, Brier scoring) verified locally with Node; full
   end-to-end has not been exercised against a live deployment yet.
 
+**2026-07-21 — First real cron test found (and fixed) a genuine pre-existing bug**
+- User manually triggered `/api/cron/snapshot` for real. Result: correctly identified
+  the `post_race` stage (confirming the ET-anchored day-of-week logic works in
+  production), but every series was skipped with "no live driver data."
+- Root cause: `api/standings.js` was hitting a dead URL
+  (`cacher/2026/1/standings/{seriesId}/driver-standings.json`) that returns S3
+  `AccessDenied` -- a genuinely broken/stale endpoint, not rate-limiting. This had
+  almost certainly been silently broken for a while; the browser never surfaced it
+  because it gracefully falls back to cached `FALLBACK_DRIVERS` data on any failure.
+  The cron job has no such fallback, so it surfaced the bug on its very first real run.
+- Fixed by rewriting `api/standings.js` to compute standings itself: sum
+  `points_earned` per driver across every completed race's `weekend-feed.json` (the
+  same reliable data source `results.js`/`recentform.js`/`tracktrends.js` already use),
+  rather than depending on a separate dedicated standings endpoint at all. Verified
+  against known reality for all three series (Hamlin/Allgaier/Riggs correctly leading).
+  Same response contract preserved, so nothing downstream needed to change.
+- Known regression: `rookie` flag is now hardcoded `false` (the old endpoint had an
+  `IsRookie` field this data source doesn't provide an equivalent for). Low priority --
+  affects the -3 composite-score penalty for rookies, nothing structural.
+
 ---
 
 Claude User Rules (Portable — Copy This Whole Section Into Any Project's CLAUDE.md)
@@ -211,4 +231,4 @@ The first time a project gets an archive folder, drop a short README.md inside i
 ---
 ## Session Resume
 claude --resume f7211d5c-8e07-47ae-88c9-df679e52025f
-(stamped 2026-07-20 23:23 local)
+(stamped 2026-07-20 23:38 local)
