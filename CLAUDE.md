@@ -193,6 +193,51 @@ backup goes to `Claude/archive/` (untracked, never committed). See that folder's
   with each stage's pick as it becomes available through the week (Monday's favorite
   vs. Wednesday's vs. Saturday's), separate from the historical accuracy stats.
 
+**2026-07-25 — Found and fixed: Xfinity/Truck schedules were missing the entire
+Indianapolis weekend; Vercel Cron appears to have never fired on schedule**
+- User reported (correctly) that the live site showed the next Xfinity/Truck race
+  as ~2 weeks out (Iowa, Aug 7/8), despite an actual Xfinity race running that same
+  day (Sat July 25) and a Truck race having run the night before (Fri July 24).
+- Root cause: `SCHEDULE_BASE`/`STATIC_SCHEDULES` (`api/schedule.js` + `App.jsx`) had
+  Cup's Indy weekend entry (`indy`, 2026-07-26, Brickyard 400) but no corresponding
+  Xfinity or Truck entries at all -- both series' hardcoded schedules jumped straight
+  from North Wilkesboro (07-18) to Iowa (08-07/08-08), silently skipping the Indy
+  weekend entirely. This was a gap from the original 2026-07-19/20 realignment, not a
+  new regression.
+- Verified the real races directly against NASCAR's live feed
+  (`cf.nascar.com/cacher/2026/race_list_basic.json` + per-race `weekend-feed.json`,
+  the same source `results.js`/`standings.js` already use) rather than guessing:
+  - Xfinity: race_id 5654, "Pennzoil 250 presented by Take 5 Oil Change," Indianapolis
+    Motor Speedway (the oval, not the road course), 2026-07-25, 250mi/100 laps.
+    Confirmed complete via `race_comments` in the feed even though
+    `race_list_basic.json`'s `winner_driver_id` hadn't updated yet -- winner Carson
+    Kvapil, his first series win. (Race comments literally read "...NASCAR O'Reilly
+    Auto Parts Series victory" -- confirms the series' real in-world branding, which
+    is what the user meant by "O'Reilly series.")
+  - Truck: race_id 5682, "TSport 200 presented by Warn Industries," Lucas Oil
+    Indianapolis Raceway Park, 2026-07-24, 137.2mi/200 laps (~0.686mi short track
+    oval). Winner: Layne Riggs (already the points leader per the 07-21 standings
+    fix).
+  - Added both as `indy_x` / `indy_t` to `SCHEDULE_BASE` (api/schedule.js) and the
+    matching `STATIC_SCHEDULES` array (App.jsx), between nwilkes_x/t and iowa_x/t,
+    with `winner` set on both since both races are already complete. Verified via
+    difflib: pure insertions, zero lines altered elsewhere, no duplicate race IDs
+    (81 total across cup/xfin/truck, up from 79), `npm run build` passes clean.
+- Separately, the user's second complaint -- no `lineups`/`post_quali` scorecard
+  stages have ever appeared, only the one `post_race` snapshot from the 2026-07-21
+  manual test -- checks out against live data: `api/scorecard` for all three series
+  still shows a single snapshot generated `2026-07-21T03:43:46Z`, nothing since,
+  despite the `vercel.json` cron schedule (Mon/Wed/Sat) having had ~2 Monday, ~1
+  Wednesday, and 1 Saturday (today) opportunities to fire since then. This means the
+  Vercel Cron schedule has not actually fired on its own even once since it was
+  deployed -- only the one manual trigger has ever produced a snapshot. Cause
+  unconfirmed: couldn't inspect Vercel's own cron run history/logs from here (would
+  require either Vercel CLI OAuth, which needs an interactive browser step only the
+  user can complete, or dashboard access). Needs the user to check the Vercel
+  dashboard's Cron Jobs tab for the project, or re-trigger
+  `/api/cron/snapshot?stage=post_quali` manually (with `CRON_SECRET`) to backfill
+  today's stage while diagnosing.
+
 ---
 
 Claude User Rules (Portable — Copy This Whole Section Into Any Project's CLAUDE.md)
@@ -254,5 +299,6 @@ The first time a project gets an archive folder, drop a short README.md inside i
 
 ---
 ## Session Resume
-claude --resume f7211d5c-8e07-47ae-88c9-df679e52025f
+claude --resume fb3919a2-4b7c-417a-a730-fcb31c3c6da4
+(stamped 2026-07-25 18:45 local)
 (stamped 2026-07-20 23:59 local)
