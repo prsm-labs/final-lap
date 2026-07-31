@@ -297,7 +297,7 @@ const daysUntil = s=>Math.ceil((new Date(s+"T12:00:00")-new Date())/86400000);
 const isHot = last5 => (last5||[]).filter(f=>f<=5).length >= 3;
 
 // -- COMPONENTS ----------------------------------------------------------------
-function PrismLogo(){ return <svg width="30" height="30" viewBox="0 0 36 36" fill="none"><polygon points="18,2 34,30 2,30" stroke="#FF4E00" strokeWidth="2" fill="none"/><polygon points="18,8 30,28 6,28" stroke="#FF8C00" strokeWidth="1" fill="rgba(255,76,0,0.08)"/><line x1="18" y1="2" x2="18" y2="30" stroke="#FFD700" strokeWidth="0.6" opacity="0.7"/></svg>; }
+function PrismLogo(){ return <img src="/logo.png" alt="Final Lap" width="34" height="34" style={{objectFit:"contain",display:"block"}}/>; }
 function Bar({pct,color,max}){ const w=Math.min((parseFloat(pct)/max)*100,100); return <div style={{height:"5px",borderRadius:"3px",background:"rgba(255,255,255,0.07)",overflow:"hidden",flex:1}}><div style={{height:"100%",width:`${w}%`,background:color,borderRadius:"3px",transition:"width 0.9s ease"}}/></div>; }
 function Spin(){ return <svg width="36" height="36" viewBox="0 0 48 48" style={{animation:"spin 0.9s linear infinite"}}><circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,78,0,0.15)" strokeWidth="3"/><circle cx="24" cy="24" r="20" fill="none" stroke="#FF4E00" strokeWidth="3" strokeDasharray="28 97" strokeLinecap="round"/></svg>; }
 
