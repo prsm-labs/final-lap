@@ -13,6 +13,16 @@ this is so both sides can confirm what's being pushed is correct before it goes 
 Never batch/skip the confirmation because a previous push was approved; each one is
 a fresh ask.
 
+**Known environment limitation (found 2026-07-25):** in this Claude Code environment,
+`git push` is blocked outright by the harness's own auto-mode permission classifier,
+independent of and in addition to the confirmation step above -- it fires even after
+the user has already said yes. So in practice: Claude still asks for confirmation as
+documented, but once confirmed, Claude cannot execute the push itself and must hand
+the user the exact command (`git push origin main`) to run themselves. If a future
+session finds this restriction lifted (permissions/settings changed), Claude should
+attempt the direct push per the original rule above and only fall back to handing off
+the command if it's actually denied again.
+
 ## Architecture — live data sources
 
 All of these hit `cf.nascar.com/cacher/...` (NASCAR's own JSON feed, undocumented but
@@ -300,5 +310,4 @@ The first time a project gets an archive folder, drop a short README.md inside i
 ---
 ## Session Resume
 claude --resume fb3919a2-4b7c-417a-a730-fcb31c3c6da4
-(stamped 2026-07-25 18:45 local)
-(stamped 2026-07-20 23:59 local)
+(stamped 2026-07-30 22:19 local)

@@ -54,10 +54,28 @@ async function buildDriverPool(origin, series, race, stage) {
     if (resultsRes?.ok) qualifying = (await resultsRes.json()).qualifying;
   }
 
+  // "lineups" (Wed) and "post_quali" (Sat) are supposed to reflect the confirmed
+  // entry list, not just the full points roster -- filter the pool down to entered
+  // drivers once the entry list is out. Falls back to the full roster if the entry
+  // list is unavailable or empty (too far out) or if name-matching against standings
+  // zeroes out the pool (e.g. a spelling mismatch -- see driver-name gotcha in
+  // CLAUDE.md), same defensive posture as the rest of this function.
+  let confirmedEntries = null;
+  if (stage === "lineups" || stage === "post_quali") {
+    const entryRes = await fetch(`${origin}/api/entrylist?series=${series}`).catch(() => null);
+    if (entryRes?.ok) {
+      const entryData = await entryRes.json();
+      if (entryData.entries?.length) confirmedEntries = new Set(entryData.entries.map(e => e.name));
+    }
+  }
+
   const baseDrivers = standingsRes?.drivers?.length ? standingsRes.drivers : null;
   if (!baseDrivers) return null;
 
-  return baseDrivers.map(d => {
+  const filtered = confirmedEntries ? baseDrivers.filter(d => confirmedEntries.has(d.name)) : baseDrivers;
+  const pool = filtered.length ? filtered : baseDrivers;
+
+  return pool.map(d => {
     const scraped = trendsRes?.drivers?.[d.name];
     const form = recentFormRes?.drivers?.[d.name];
     const qualPos = qualifying?.find(q => q.name === d.name)?.pos;
