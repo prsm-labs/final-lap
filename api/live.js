@@ -20,11 +20,15 @@ export default async function handler(req, res) {
       onTrack: v.is_on_track,
       avgPos: v.average_running_position,
       fast: v.fastest_laps_run,
+      best: v.best_lap_time || null,            // practice / qualifying: best lap, its speed, and the last lap
+      bestSpeed: v.best_lap_speed || null,
+      lastLap: v.last_lap_time || null,
+      lastSpeed: v.last_lap_speed || null,
       pits: (v.pit_stops || []).filter((p) => p.pit_in_lap_count > 0).length,
     })).sort((a, b) => a.pos - b.pos)
     res.setHeader('Cache-Control', 's-maxage=10, stale-while-revalidate=20')
     res.status(200).json({
-      race_id: d.race_id, series_id: d.series_id, name: d.run_name, track: d.track_name, run_type: d.run_type,
+      race_id: d.race_id, series_id: d.series_id, elapsed: d.elapsed_time ?? null, name: d.run_name, track: d.track_name, run_type: d.run_type,
       lap: d.lap_number, laps: d.laps_in_race, to_go: d.laps_to_go, flag: FLAGS[d.flag_state] || String(d.flag_state),
       flag_state: d.flag_state, cautions: d.number_of_caution_segments, leaders: d.number_of_leaders,
       lead_changes: d.number_of_lead_changes, stage: d.stage, updated: d.time_of_day_os, vehicles,

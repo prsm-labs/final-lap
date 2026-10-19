@@ -34,6 +34,7 @@ export default function Projections({ card }) {
               <Th k="rating" label="Rating" sort={sort} title="Driver rating (loop data), recent races weighted most" />
               <Th k="type_rating" label="Type" sort={sort} title="Driver rating on this kind of track" />
               <Th k="trk_rating" label="Track" sort={sort} title="Driver rating at this exact track" />
+              <Th k="prac" label="Prac" sort={sort} title="Final-practice speed rank (best lap) -- fills in after practice" />
               <th title="Last 5 finishes, oldest to newest">Last 5</th>
             </tr>
           </thead>
@@ -52,6 +53,7 @@ export default function Projections({ card }) {
                 <td className="num">{fx(d.rating, 0)}</td>
                 <td className="num">{fx(d.type_rating, 0)}</td>
                 <td className="num">{fx(d.trk_rating, 0)}</td>
+                <td className="num">{d.prac ? ord(d.prac) : '—'}</td>
                 <td className="fins">{last5(d).map((f, i) => <Finish key={i} n={f} />)}</td>
               </tr>
             ))}

@@ -28,7 +28,10 @@ export default function About() {
           <li><b>Team / equipment</b>: how the car owner's entries have run.</li>
           <li><b>Starting spot</b> after qualifying (counts less at Daytona, Talladega and Atlanta, where the pack shuffles everyone).</li>
           <li><b>Cup drivers in O'Reilly races</b> are rated partly from their Cup speed.</li>
-          <li>Tested and <b>left out</b> because they added nothing: hot / cold streaks, laps-led history and wreck (DNF) rate.</li>
+          <li><b>Practice speed</b>: each driver's best lap in final practice, ranked against the field (all three series; added Oct 2026 after it improved the 2024-26 backtest). Chances update once practice is run.</li>
+          <li><b>Crew chief</b> (Cup only): how the crew chief's cars have been running compared with the driver's own form.</li>
+          <li>Tested and <b>left out</b> because they added nothing on top of the above: hot / cold streaks, laps-led history, wreck (DNF) rate, fastest-lap counts, quality passes, closing position, laps run in the top 15, practice 10-lap averages, and qualifying speed beyond the starting spot.</li>
+          <li>Aero / horsepower packages aren't in NASCAR's data feed by name; they follow the track type (superspeedway package at Daytona / Talladega / Atlanta, short-track / road package elsewhere), which the model already rates separately.</li>
         </ul>
       </div>
       <div className="card">

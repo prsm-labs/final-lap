@@ -5,6 +5,7 @@ import { RaceCtx } from './components/ui.jsx'
 import DriverSlideout from './components/DriverSlideout.jsx'
 import RaceCard from './tabs/RaceCard.jsx'
 import Projections from './tabs/Projections.jsx'
+import Weekend from './tabs/Weekend.jsx'
 import Live from './tabs/Live.jsx'
 import MyPicks from './tabs/MyPicks.jsx'
 import Schedule from './tabs/Schedule.jsx'
@@ -13,10 +14,11 @@ import TrackRecord from './tabs/TrackRecord.jsx'
 import About from './tabs/About.jsx'
 
 // Final Lap 2.0 -- Slap Shot / CourtIQ layout for NASCAR: a series switcher, then Race Card (Top Picks + cheat sheets),
-// Projections, Live, My Picks, Schedule, Drivers, Track Record, About.
+// Projections, Weekend (lineup / practice / qualifying), Live, My Picks, Schedule, Drivers, Track Record, About.
 const TABS = [
   { key: 'card', label: '🏁 Race Card', C: RaceCard, needsCard: true },
   { key: 'proj', label: '🔮 Projections', C: Projections, needsCard: true },
+  { key: 'weekend', label: '📋 Weekend', C: Weekend, needsCard: true },
   { key: 'live', label: '🔴 Live', C: Live },
   { key: 'picks', label: '⭐ My Picks', C: MyPicks },
   { key: 'schedule', label: '📅 Schedule', C: Schedule },
