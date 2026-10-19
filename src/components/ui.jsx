@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { pct } from '../lib/data.js'
 import { PICK_TYPE, PICK_TYPES, pickId, removePick, setPick, usePicks } from '../lib/picks.js'
-import { betLine, gamblyUrl } from '../lib/gambly.js'
 import { openDriver } from '../lib/stores.js'
 
 // Shared Final Lap pieces (Slap Shot / CourtIQ components, NASCAR versions).
@@ -41,26 +40,7 @@ export function Prob({ v, strong = 0.5 }) {
   return <span className={`prob ${v >= strong ? 'strong' : ''}`} style={{ '--w': `${Math.min(100, Math.round(v * 100))}%` }}>{pct(v)}</span>
 }
 
-export function GamblyButton({ text, compact = true, label = 'Gambly' }) {
-  const [done, setDone] = useState(false)
-  if (!text) return null
-  const go = async (e) => {
-    e.stopPropagation()
-    e.preventDefault()
-    try {
-      await navigator.clipboard.writeText(text)
-      setDone(true)
-      setTimeout(() => setDone(false), 2000)
-    } catch { /* clipboard blocked: still typed into Gambly */ }
-    window.open(gamblyUrl(text), '_blank', 'noopener,noreferrer')
-  }
-  return (
-    <button type="button" className={`gambly-btn ${compact ? 'compact' : ''}`} onClick={go} title={`Gambly: copies "${text.split('\n').join(' · ')}" and opens Gambly with it typed in`}>
-      <img src="/brand/gambly.png" alt="" width={compact ? 12 : 14} height={compact ? 12 : 14} />
-      {done ? '✓' : compact ? null : label}
-    </button>
-  )
-}
+// Gambly buttons removed 2026-10-18: Gambly doesn't take motorsport props yet. lib/gambly.js is kept for when it does.
 
 const MENU_W = 180
 export function PickButton({ d, prop = 'win' }) {
@@ -94,7 +74,6 @@ export function PickButton({ d, prop = 'win' }) {
       <button ref={btn} className={`pick-btn ${type ? 'picked' : ''}`} onClick={toggle} title={type ? `My pick: ${type.label}` : 'Add to My Picks'}>
         {type ? type.emoji : '＋'}
       </button>
-      <GamblyButton text={betLine(d, prop, ctx.race)} />
       {pos && createPortal(
         <div ref={menu} className="pick-menu" style={{ left: pos.left, top: pos.top, width: MENU_W }}>
           <div className="pick-menu-title">{d.name}</div>

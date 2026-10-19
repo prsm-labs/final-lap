@@ -1,28 +1,49 @@
 import { useContext, useEffect } from 'react'
 import { fx, ord, pct, useJson } from '../lib/data.js'
 import { closeDriver, seriesStore, slideStore } from '../lib/stores.js'
-import { betLine } from '../lib/gambly.js'
-import { Avatar, GamblyButton, PickButton, RaceCtx, Tags } from './ui.jsx'
+import { Avatar, PickButton, RaceCtx, Tags } from './ui.jsx'
 
 // Driver slideout (Slap Shot's global slideout): this race's chances, finishing spread, loop-data rating by track type,
 // last 10 finishes, this-track history and the season line.
 const TYPES = [['ss', 'Superspeedway'], ['int', 'Intermediate'], ['short', 'Short Track'], ['road', 'Road / Street']]
 
-function FinishBars({ list, title, note }) {
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const md = (s) => `${+s.slice(5, 7)}/${+s.slice(8, 10)}`                    // 2026-10-05 -> 10/5
+const monYr = (s) => `${MON[+s.slice(5, 7) - 1]} '${s.slice(2, 4)}`          // 2025-04-27 -> Apr '25
+const longDate = (s) => `${MON[+s.slice(5, 7) - 1]} ${+s.slice(8, 10)}, ${s.slice(0, 4)}`
+
+// dates[i] = 'YYYY-MM-DD' or ['YYYY-MM-DD', track] (older data files have no dates: bars show without labels)
+function FinishBars({ list, dates, label, title, note }) {
   if (!list?.length) return null
+  const at = (i) => { const v = dates?.[i]; return Array.isArray(v) ? v : v ? [v, null] : [null, null] }
   return (
     <div className="stat-chart">
       <div className="stat-chart-head"><b>{title}</b><span className="muted small">{note}</span></div>
       <div className="bars">
-        {list.map((f, i) => (
-          <div key={i} className="bar" title={`Finished ${ord(f)}`}>
-            <span className="bar-v">{f}</span>
-            <span className={`bar-fill ${f <= 10 ? 'hit' : ''}`} style={{ height: `${Math.max(4, ((41 - Math.min(f, 40)) / 40) * 80)}%` }} />
-          </div>
-        ))}
+        {list.map((f, i) => {
+          const [dt, trk] = at(i)
+          return (
+            <div key={i} className="bar" title={`Finished ${ord(f)}${trk ? ` · ${trk}` : ''}${dt ? ` · ${longDate(dt)}` : ''}`}>
+              <span className="bar-v">{f}</span>
+              <span className={`bar-fill ${f <= 10 ? 'hit' : ''}`} style={{ height: `${Math.max(4, ((41 - Math.min(f, 40)) / 40) * 80)}%` }} />
+            </div>
+          )
+        })}
       </div>
+      {dates?.length === list.length && (
+        <div className="bar-dates">{list.map((_, i) => <span key={i}>{at(i)[0] ? label(at(i)[0]) : ''}</span>)}</div>
+      )}
     </div>
   )
+}
+
+const span = (dates) => {   // "Apr – Oct 2026" / "Sep 2025 – Oct 2026"
+  const ds = (dates || []).map((v) => (Array.isArray(v) ? v[0] : v)).filter(Boolean)
+  if (!ds.length) return ''
+  const [a, b] = [ds[0], ds[ds.length - 1]]
+  return a.slice(0, 4) === b.slice(0, 4)
+    ? `${MON[+a.slice(5, 7) - 1]} – ${MON[+b.slice(5, 7) - 1]} ${b.slice(0, 4)}`
+    : `${MON[+a.slice(5, 7) - 1]} ${a.slice(0, 4)} – ${MON[+b.slice(5, 7) - 1]} ${b.slice(0, 4)}`
 }
 
 export default function DriverSlideout() {
@@ -79,8 +100,9 @@ export default function DriverSlideout() {
           </div>
           <p className="muted small">Driver rating sums speed, running position, laps led and finish every lap (max 150; ~100 = a top-5 car).</p>
           <div className="chart-grid">
-            <FinishBars list={d.last10} title="Last 10 races" note={d.last10?.length ? `avg ${fx(d.last10.reduce((a, b) => a + b, 0) / d.last10.length)}` : ''} />
-            <FinishBars list={d.trk_fins} title="This track" note={d.trk_fins?.length ? `${d.trk_fins.length} starts since 2022` : 'no starts here'} />
+            <FinishBars list={d.last10} dates={d.last10_d} label={md} title="Last 10 races"
+              note={d.last10?.length ? `${span(d.last10_d)}${d.last10_d ? ' · ' : ''}avg ${fx(d.last10.reduce((a, b) => a + b, 0) / d.last10.length)}` : ''} />
+            <FinishBars list={d.trk_fins} dates={d.trk_d} label={monYr} title="This track" note={d.trk_fins?.length ? `${d.trk_fins.length} starts since 2022` : 'no starts here'} />
           </div>
           {row && (
             <>
@@ -89,14 +111,6 @@ export default function DriverSlideout() {
                 <thead><tr><th>Starts</th><th>Wins</th><th>Top 5</th><th>Top 10</th><th>Avg fin</th><th>Rating</th><th>Laps led</th><th>Pts rank</th></tr></thead>
                 <tbody><tr><td>{row.starts}</td><td>{row.wins}</td><td>{row.top5}</td><td>{row.top10}</td><td>{fx(row.avg_finish)}</td><td>{fx(row.rating, 0)}</td><td>{row.led}</td><td>{row.pts_rank}</td></tr></tbody>
               </table></div>
-            </>
-          )}
-          {d.win != null && ctx && (
-            <>
-              <h3>Send to Gambly</h3>
-              <div className="pill-row">
-                {['win', 'top3', 'top5', 'top10'].map((k) => <GamblyButton key={k} compact={false} label={betLine(d, k).split('— ')[1]} text={betLine(d, k, ctx.race)} />)}
-              </div>
             </>
           )}
           <p className="muted small">Chances come from a model tested on 2024-2026 races it never saw. Projections, not guarantees. No sportsbook odds are used.</p>

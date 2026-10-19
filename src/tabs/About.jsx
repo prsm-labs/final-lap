@@ -40,7 +40,7 @@ export default function About() {
         <b>Sources</b>
         <ul>
           <li>Schedule, entry lists, qualifying, results, loop data and live timing: NASCAR's official data feed. Entry lists fall back to ESPN, then to a projected field (labelled) when none is posted yet.</li>
-          <li>No sportsbook odds are used anywhere. Gambly buttons only copy a bet description so you don't have to type it.</li>
+          <li>No sportsbook odds are used anywhere.</li>
         </ul>
       </div>
     </div>

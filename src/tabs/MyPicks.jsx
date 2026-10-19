@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { dayLabel, pct } from '../lib/data.js'
 import { clearPicks, PICK_TYPES, removePick, usePicks } from '../lib/picks.js'
-import { betLine, betText } from '../lib/gambly.js'
 import { openDriver } from '../lib/stores.js'
-import { Avatar, GamblyButton, Section } from '../components/ui.jsx'
+import { Avatar, Section } from '../components/ui.jsx'
 
-// ⭐ My Picks (Slap Shot / CourtIQ layout): every driver tagged with ＋, grouped by race and category, the chance we gave
-// when picked, Gambly per pick and "All N as a parlay". Saved in this browser only.
+// ⭐ My Picks (Slap Shot / CourtIQ layout): every driver tagged with ＋, grouped by race and category, and the chance we gave
+// when picked. Saved in this browser only. (No Gambly: it doesn't take motorsport props yet.)
 export default function MyPicks({ card }) {
   const picks = usePicks()
   const [confirm, setConfirm] = useState(false)
@@ -34,8 +33,7 @@ export default function MyPicks({ card }) {
               if (!sub.length) return null
               return (
                 <div key={t.key}>
-                  <div className="cat-head small"><span>{t.emoji} {t.label}</span>
-                    {sub.length > 1 && <GamblyButton compact={false} label={`All ${sub.length} as a parlay`} text={betText(sub.map((k) => betLine(k, t.prop, k.race)))} />}</div>
+                  <div className="cat-head small"><span>{t.emoji} {t.label}</span></div>
                   {sub.map((k) => {
                     const d = card?.race?.race_id === k.raceId ? now.get(k.driver_id) : null
                     return (
@@ -47,7 +45,6 @@ export default function MyPicks({ card }) {
                             <div className="muted small">When picked: win {pct(k.proj?.win, 1)} · top 5 {pct(k.proj?.top5)} · top 10 {pct(k.proj?.top10)}{d ? ` · now win ${pct(d.win, 1)}` : ''}</div>
                           </div>
                         </div>
-                        <GamblyButton text={betLine(k, t.prop, k.race)} />
                         <button className="link" onClick={() => removePick(k.id)} title="Remove">✕</button>
                       </div>
                     )
