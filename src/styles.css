@@ -220,6 +220,7 @@ table.data-table th { position: sticky; }
 .tag-type { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
 .tag-cup { color: #7fb2ff; border-color: #7fb2ff66; }
 .tag-new { color: var(--muted); }
+.tag-chaos { color: #ff8a4c; border-color: #ff8a4c66; }
 tr.hl td { background: color-mix(in srgb, var(--accent) 7%, transparent); }
 tr.hl td.sticky { background: color-mix(in srgb, var(--accent) 7%, var(--surface)); }
 .fin { display: inline-block; min-width: 22px; text-align: center; border-radius: 4px; padding: 0 3px; margin-right: 2px; font-variant-numeric: tabular-nums; font-size: 0.78rem; border: 1px solid var(--border); }

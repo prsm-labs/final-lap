@@ -104,6 +104,12 @@ export default function DriverSlideout() {
               note={d.last10?.length ? `${span(d.last10_d)}${d.last10_d ? ' · ' : ''}avg ${fx(d.last10.reduce((a, b) => a + b, 0) / d.last10.length)}` : ''} />
             <FinishBars list={d.trk_fins} dates={d.trk_d} label={monYr} title="This track" note={d.trk_fins?.length ? `${d.trk_fins.length} starts since 2022` : 'no starts here'} />
           </div>
+          {d.chaos?.n > 0 && d.chaos.calm_n > 0 && (
+            <p className="muted small" title="Chaos race = the series' top third of races by cautions + cars out in accidents (2022-26). Context only: tested as a model input and it added nothing.">
+              🌪️ Chaos races: avg finish {fx(d.chaos.avg)} in {d.chaos.n} vs {fx(d.chaos.calm_avg)} in {d.chaos.calm_n} calm races ·{' '}
+              against drivers at his level, {d.chaos.spots >= 0 ? `${fx(d.chaos.spots)} spots better` : `${fx(-d.chaos.spots)} spots worse`} in chaos races than in calm ones · context only
+            </p>
+          )}
           {row && (
             <>
               <h3>This season</h3>

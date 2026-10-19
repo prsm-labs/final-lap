@@ -31,6 +31,7 @@ export default function About() {
           <li><b>Practice speed</b>: each driver's best lap in final practice, ranked against the field (all three series; added Oct 2026 after it improved the 2024-26 backtest). Chances update once practice is run.</li>
           <li><b>Crew chief</b> (Cup only): how the crew chief's cars have been running compared with the driver's own form.</li>
           <li>Tested and <b>left out</b> because they added nothing on top of the above: hot / cold streaks, laps-led history, wreck (DNF) rate, fastest-lap counts, quality passes, closing position, laps run in the top 15, practice 10-lap averages, and qualifying speed beyond the starting spot.</li>
+          <li><b>Chaos tag</b> (context only): drivers who finish well above drivers at their level in chaos races (the series' top third by cautions + cars out in accidents, 2022-26) compared with calm races. Tested as a model input: no help in Cup or Truck (most chaos races are superspeedways, which the track-type rating already covers), a small consistent help in O'Reilly — so for now it's shown, not counted.</li>
           <li>Aero / horsepower packages aren't in NASCAR's data feed by name; they follow the track type (superspeedway package at Daytona / Talladega / Atlanta, short-track / road package elsewhere), which the model already rates separately.</li>
         </ul>
       </div>
