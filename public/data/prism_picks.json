@@ -1,0 +1,209 @@
+{
+ "generated_at": "2026-10-20T14:44+00:00",
+ "rule": {
+  "floor": 0.7,
+  "last_max": 0.8,
+  "margin": 0.05,
+  "last_n": 10,
+  "min_races": 4,
+  "picks": 3
+ },
+ "backtest": {
+  "nascar": {
+   "n": 446,
+   "hits": 320,
+   "said": 0.835,
+   "races": 215,
+   "seasons": {
+    "2024": [
+     150,
+     103
+    ],
+    "2025": [
+     152,
+     112
+    ],
+    "2026": [
+     144,
+     105
+    ]
+   },
+   "bands": [
+    [
+     0.7,
+     0.8,
+     175,
+     123
+    ],
+    [
+     0.8,
+     0.85,
+     79,
+     56
+    ],
+    [
+     0.85,
+     0.9,
+     83,
+     57
+    ],
+    [
+     0.9,
+     0.95,
+     65,
+     46
+    ],
+    [
+     0.95,
+     1.01,
+     44,
+     38
+    ]
+   ]
+  },
+  "f1": {
+   "n": 274,
+   "hits": 239,
+   "said": 0.927,
+   "races": 61,
+   "seasons": {
+    "2024": [
+     73,
+     66
+    ],
+    "2025": [
+     100,
+     90
+    ],
+    "2026": [
+     101,
+     83
+    ]
+   },
+   "bands": [
+    [
+     0.7,
+     0.8,
+     18,
+     12
+    ],
+    [
+     0.8,
+     0.85,
+     18,
+     14
+    ],
+    [
+     0.85,
+     0.9,
+     41,
+     38
+    ],
+    [
+     0.9,
+     0.95,
+     68,
+     58
+    ],
+    [
+     0.95,
+     1.01,
+     129,
+     117
+    ]
+   ]
+  }
+ },
+ "live": {
+  "nascar": {
+   "n": 0,
+   "hits": 0
+  },
+  "f1": {
+   "n": 0,
+   "hits": 0
+  }
+ },
+ "next": {
+  "cup": [
+   "cup",
+   5631
+  ],
+  "oreilly": [
+   "oreilly",
+   5664
+  ],
+  "truck": [
+   "truck",
+   5689
+  ],
+  "f1": [
+   "f1",
+   202618
+  ]
+ },
+ "races": [
+  {
+   "race_id": 5689,
+   "name": "Love's RV Stop 225",
+   "track": "Talladega Superspeedway",
+   "start": "2026-10-23T16:00:00",
+   "date": "2026-10-23",
+   "stage": "pre",
+   "picks": [],
+   "series": "truck",
+   "locked": false
+  },
+  {
+   "race_id": 5664,
+   "name": "The Progress Group 250",
+   "track": "Talladega Superspeedway",
+   "start": "2026-10-24T15:30:00",
+   "date": "2026-10-24",
+   "stage": "pre",
+   "picks": [],
+   "series": "oreilly",
+   "locked": false
+  },
+  {
+   "race_id": 5631,
+   "name": "YellaWood 500",
+   "track": "Talladega Superspeedway",
+   "start": "2026-10-25T14:00:00",
+   "date": "2026-10-25",
+   "stage": "pre",
+   "picks": [],
+   "series": "cup",
+   "locked": false
+  },
+  {
+   "race_id": 202618,
+   "name": "United States Grand Prix",
+   "track": "Circuit of the Americas",
+   "start": "2026-10-25T16:00:00",
+   "date": "2026-10-25",
+   "stage": "pre",
+   "picks": [
+    {
+     "driver_id": "piastri",
+     "name": "Oscar Piastri",
+     "car": "81",
+     "team": "McLaren",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.7543,
+     "last": [
+      10,
+      7
+     ],
+     "start": null,
+     "track": 0.696,
+     "trackN": 18
+    }
+   ],
+   "series": "f1",
+   "locked": false
+  }
+ ]
+}

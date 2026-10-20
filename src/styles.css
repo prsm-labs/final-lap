@@ -121,6 +121,30 @@ td.tough, .tough { color: var(--bad); }
 .cheat-main { flex: 1; min-width: 0; }
 .cheat-stat { flex-shrink: 0; }
 
+/* 💎 PRISM Picks -- gold glow card at the top of the Race Card's cheat sheets (components/PrismPicks.jsx) */
+.prism-card { --gold-text: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 75%, transparent); margin-bottom: 14px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 9%, var(--surface)), var(--surface) 70%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 30%, transparent), 0 0 22px color-mix(in srgb, var(--gold) 38%, transparent);
+  animation: prism-glow 3.2s ease-in-out infinite; }
+@keyframes prism-glow { 50% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 45%, transparent), 0 0 32px color-mix(in srgb, var(--gold) 55%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .prism-card { animation: none; } }
+@media (prefers-color-scheme: light) { .prism-card { --gold-text: #8a6d0f; } }
+.prism-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.prism-gem { font-size: 1.5rem; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--gold) 70%, transparent)); }
+.prism-title { font-weight: 800; font-size: 1.05rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-text); }
+.prism-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid color-mix(in srgb, var(--gold) 22%, var(--border)); cursor: pointer; }
+.prism-main { flex: 1; min-width: 0; }
+.prism-prop { font-size: 0.86rem; }
+.prism-line { font-weight: 800; font-size: 1rem; color: var(--gold-text); }
+.prism-result.hit { color: var(--good); }
+.prism-result.miss { color: var(--bad); }
+.prism-stat { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; line-height: 1.2; }
+.prism-stat b { font-size: 1.2rem; color: var(--gold-text); font-variant-numeric: tabular-nums; }
+.prism-foot { margin-top: 8px; line-height: 1.45; }
+.prism-past { margin-top: 6px; font-size: 0.82rem; }
+.prism-past summary { cursor: pointer; color: var(--gold-text); }
+.prism-past-row { padding: 4px 0; border-bottom: 1px solid var(--border); }
+
 .top-pick { display: grid; gap: 8px; }
 .top-tier { font-weight: 800; color: var(--accent); }
 .top-head { display: flex; align-items: center; gap: 10px; cursor: pointer; }

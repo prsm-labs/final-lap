@@ -15,6 +15,7 @@ function F1About() {
           <li>For every driver in this weekend's Grand Prix: chance to win, finish 2nd, finish 3rd, podium (top 3), top 5, points (top 10), and an average projected finish.</li>
           <li>Each race is simulated 20,000 times. Chances update after practice and again after qualifying, when the grid is known.</li>
           <li>Picks are frozen at lights out and graded against the official results on the Track Record page.</li>
+          <li>💎 PRISM Picks (Race Card, top of the cheat sheets): up to 3 top-3 / top-5 / top-10 finishes at a 70%+ chance that the driver hit in 80% or fewer of his last 10 races, with the model at least 5 points above that. 2024-26, each race predicted from earlier races only: 239 of 274 hit (87%). The big number is the track record at that chance, not the raw chance.</li>
         </ul>
       </div>
       <div className="card">
@@ -63,6 +64,7 @@ export default function About({ series }) {
           <li>For every driver entered in this weekend's race: chance to win, finish 2nd, finish 3rd, top 3, top 5, top 10, and an average projected finish.</li>
           <li>Each race is simulated 20,000 times. Chances update when the entry list posts and again after qualifying.</li>
           <li>Picks are frozen at the green flag and graded against official results on the Track Record page. Nothing is edited after the fact.</li>
+          <li>💎 PRISM Picks (Race Card, top of the cheat sheets): up to 3 top-3 / top-5 / top-10 finishes at a 70%+ chance that the driver hit in 80% or fewer of his last 10 races in the series, with the model at least 5 points above that. 2024-26 across all three series, each race predicted from earlier races only: 320 of 446 hit (72%) — the model said 84% on those picks, so the number shown is the track record at that chance, not the raw chance. Many weekends (superspeedways, before qualifying) have none.</li>
         </ul>
       </div>
       <div className="card">

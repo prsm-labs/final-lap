@@ -1,6 +1,7 @@
 import { pct, raceTime, TYPE_ICON } from '../lib/data.js'
 import { openDriver } from '../lib/stores.js'
 import { Avatar, DriverCell, PickButton, Prob, Section } from '../components/ui.jsx'
+import PrismPicks from '../components/PrismPicks.jsx'
 
 // 🏁 Race Card -- this weekend's race, the locked-style Top Picks tiers, and Slap Shot-style cheat sheets.
 export function RaceHeader({ card }) {
@@ -64,7 +65,7 @@ function Sheet({ title, sub, rows, stat, label, prop = 'win' }) {
   )
 }
 
-export default function RaceCard({ card }) {
+export default function RaceCard({ card, series }) {
   const ds = card.drivers
   const by = (k) => [...ds].sort((a, b) => b[k] - a[k])
   const ss = card.race.ttype === 'ss'
@@ -76,10 +77,11 @@ export default function RaceCard({ card }) {
       <Section title="🏆 Top Picks" sub="One driver per tier. The win pick is the highest win chance; the rest are the best remaining drivers for each finish." />
       <TopPicks card={card} />
       <Section title="📋 Cheat Sheets" sub="Quick reads from the full projections" />
+      <PrismPicks card={card} series={series || card.series} />
       <div className="grid-cards">
         <Sheet title="🏁 Most likely winners" sub="Highest win chance" rows={by('win').slice(0, 8)} stat="win" label="Win chance" />
         <Sheet title="🥉 Podium chances" sub="Best chance of a top-3 finish" rows={by('top3').slice(0, 8)} stat="top3" label="Top-3 chance" prop="top3" />
-        <Sheet title="🔟 Top-10 locks" sub="Top-10 chance of 60% or better" rows={by('top10').filter((d) => d.top10 >= 0.6).slice(0, 10)} stat="top10" label="Top-10 chance" prop="top10" />
+        <Sheet title="🔟 Best top-10 chances" sub="Top-10 chance of 60% or better" rows={by('top10').filter((d) => d.top10 >= 0.6).slice(0, 10)} stat="top10" label="Top-10 chance" prop="top10" />
         <Sheet title="📍 Track aces" sub="Run much better at this track than their usual level" rows={by('top10').filter((d) => d.tags?.some((t) => t.key === 'track')).slice(0, 8)} stat="top10" label="Top-10 chance" prop="top10" />
         <Sheet title="🛣️ Track-type specialists" sub={`Rate well above their usual on ${card.race.type.toLowerCase()} tracks`} rows={by('top10').filter((d) => d.tags?.some((t) => t.key === 'type')).slice(0, 8)} stat="top10" label="Top-10 chance" prop="top10" />
         <Sheet title="🌪️ Chaos specialists" sub={`Finish well above expectations in races with the most cautions and wrecks${chaos ? ` — ${chaos.chaos} of ${chaos.n} races here since 2022 were chaos races` : ''}. Context only, not in the chances.`} rows={by('top10').filter((d) => d.tags?.some((t) => t.key === 'chaos')).slice(0, 8)} stat="top10" label="Top-10 chance" prop="top10" />
