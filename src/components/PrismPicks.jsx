@@ -25,14 +25,14 @@ export default function PrismPicks({ card, series }) {
         <span className="prism-gem" aria-hidden="true">💎</span>
         <div>
           <div className="prism-title">PRISM Picks</div>
-          <div className="muted small">This race's highest-hitting finishes that aren't the obvious ones</div>
+          <div className="muted small">This race's best looks on real finishes — not the ones a driver gets every week</div>
         </div>
       </div>
-      {picks.length === 0 && (
-        <div className="muted small">
-          None this race{card.stage !== 'post' ? ' yet — chances sharpen once qualifying sets the grid' : ''}. PRISM Picks only shows finishes at a {pct(d.rule.floor)}+ chance that have hit {share(bt.hits, bt.n)} of the time{card.race.ttype === 'ss' ? '; superspeedway packs rarely give anyone that kind of chance' : ''}.
-        </div>
-      )}
+      {picks.length === 0 && (race?.waiting
+        ? <div className="muted small"><b>Waiting for qualifying.</b> F1 picks post once the grid is set — before it, this rule hit only 57% in testing.</div>
+        : <div className="muted small">
+          None this race{card.stage !== 'post' ? ' yet — chances sharpen once qualifying sets the grid' : ''}. PRISM Picks only shows real finishes (ones the driver gets about half the time or less) at a {pct(d.rule.floor)}-{pct(d.rule.cap)} chance{card.race.ttype === 'ss' ? '; superspeedway packs rarely give anyone that kind of chance' : ''}.
+        </div>)}
       {picks.map((c, i) => {
         const x = byId.get(c.driver_id) || c
         return (
@@ -55,8 +55,7 @@ export default function PrismPicks({ card, series }) {
       <div className="prism-foot muted small">
         Track record ({g === 'f1' ? 'F1' : 'NASCAR, all three series'}): {bt.hits} of {bt.n} hit ({share(bt.hits, bt.n)}) over {bt.races} races, 2024-26, each race predicted from earlier races only
         {live.n ? ` · live: ${live.hits} of ${live.n} (${share(live.hits, live.n)})` : ''}.
-        {g === 'nascar' ? ' The model said 84% on those picks — its top-end finishing chances run high — so the number shown is the track record.' : ''}
-        {' '}Rule: top 3 / 5 / 10 at a {pct(d.rule.floor)}+ chance that the driver hit in {pct(d.rule.last_max)} or fewer of his last {d.rule.last_n} races (the every-week finishers are left out), with the model at least {Math.round(d.rule.margin * 100)} points above that; up to {d.rule.picks}, one per driver. Picks freeze at the start.
+        {' '}Rule: real finishes only — top 3 / 5 / 10 that the driver got in {pct(d.rule.last_max)} or fewer of his last {d.rule.last_n} races — where the model gives him {pct(d.rule.floor)} to {pct(d.rule.cap)}{g === 'f1' ? ', after qualifying' : ''}; up to {d.rule.picks}, one per driver. No sportsbook prices for motorsport in our odds feed. Picks freeze at the start.
       </div>
       {past.length > 0 && (
         <details className="prism-past">
