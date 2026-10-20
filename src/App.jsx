@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useJson } from './lib/data.js'
-import { SERIES, seriesStore, setSeries } from './lib/stores.js'
+import { SERIES, SPORTS, isF1, seriesStore, setSeries, setSport } from './lib/stores.js'
 import { RaceCtx } from './components/ui.jsx'
 import DriverSlideout from './components/DriverSlideout.jsx'
 import RaceCard from './tabs/RaceCard.jsx'
@@ -47,20 +47,28 @@ export default function App() {
           </div>
           <span className="badge">PRISM LABS</span>
         </header>
-        <div className="series-switch" role="tablist" aria-label="Series">
-          {SERIES.map((s) => (
-            <button key={s.key} role="tab" aria-selected={series === s.key} className={series === s.key ? 'active' : ''} onClick={() => setSeries(s.key)} title={s.full}>{s.label}</button>
-          ))}
+        <div className="sport-switch" role="tablist" aria-label="Motorsport">
+          {SPORTS.map((s) => {
+            const on = (s.key === 'f1') === isF1(series)
+            return <button key={s.key} role="tab" aria-selected={on} className={on ? 'active' : ''} onClick={() => setSport(s.key)}>{s.label}</button>
+          })}
         </div>
+        {!isF1(series) && (
+          <div className="series-switch" role="tablist" aria-label="Series">
+            {SERIES.map((s) => (
+              <button key={s.key} role="tab" aria-selected={series === s.key} className={series === s.key ? 'active' : ''} onClick={() => setSeries(s.key)} title={s.full}>{s.label}</button>
+            ))}
+          </div>
+        )}
         <nav className="tabs">
           {TABS.map((t) => <button key={t.key} className={tab === t.key ? 'active' : ''} onClick={() => setTab(t.key)}>{t.label}</button>)}
         </nav>
         <main className="content">
           {!card && <p className="muted">Loading…</p>}
-          {card && T.needsCard && !hasCard && <p className="muted">No upcoming {SERIES.find((s) => s.key === series)?.label} race on the schedule — the season is over. See the Schedule and Track Record tabs.</p>}
+          {card && T.needsCard && !hasCard && <p className="muted">No upcoming {isF1(series) ? 'F1' : SERIES.find((s) => s.key === series)?.label} race on the schedule — the season is over. See the Schedule and Track Record tabs.</p>}
           {card && (!T.needsCard || hasCard) && <T.C card={hasCard ? card : null} series={series} />}
         </main>
-        <footer className="footer">Final Lap · a PRISM Labs app · projections, not guarantees · data: NASCAR · no sportsbook odds</footer>
+        <footer className="footer">Final Lap · a PRISM Labs app · projections, not guarantees · data: {isF1(series) ? 'Jolpica / OpenF1 / ESPN' : 'NASCAR'} · no sportsbook odds</footer>
         <DriverSlideout />
       </div>
     </RaceCtx.Provider>

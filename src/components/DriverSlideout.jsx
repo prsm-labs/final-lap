@@ -1,11 +1,12 @@
 import { useContext, useEffect } from 'react'
 import { fx, ord, pct, useJson } from '../lib/data.js'
-import { closeDriver, seriesStore, slideStore } from '../lib/stores.js'
+import { closeDriver, isF1, seriesStore, slideStore } from '../lib/stores.js'
 import { Avatar, PickButton, RaceCtx, Tags } from './ui.jsx'
 
 // Driver slideout (Slap Shot's global slideout): this race's chances, finishing spread, loop-data rating by track type,
 // last 10 finishes, this-track history and the season line.
-const TYPES = [['ss', 'Superspeedway'], ['int', 'Intermediate'], ['short', 'Short Track'], ['road', 'Road / Street']]
+const NASCAR_TYPES = [['ss', 'Superspeedway'], ['int', 'Intermediate'], ['short', 'Short Track'], ['road', 'Road / Street']]
+const F1_TYPES = [['street', 'Street circuit'], ['fast', 'High-speed'], ['tech', 'High-downforce'], ['perm', 'Balanced']]
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const md = (s) => `${+s.slice(5, 7)}/${+s.slice(8, 10)}`                    // 2026-10-05 -> 10/5
@@ -13,7 +14,7 @@ const monYr = (s) => `${MON[+s.slice(5, 7) - 1]} '${s.slice(2, 4)}`          // 
 const longDate = (s) => `${MON[+s.slice(5, 7) - 1]} ${+s.slice(8, 10)}, ${s.slice(0, 4)}`
 
 // dates[i] = 'YYYY-MM-DD' or ['YYYY-MM-DD', track] (older data files have no dates: bars show without labels)
-function FinishBars({ list, dates, label, title, note }) {
+function FinishBars({ list, dates, label, title, note, floor = 40 }) {
   if (!list?.length) return null
   const at = (i) => { const v = dates?.[i]; return Array.isArray(v) ? v : v ? [v, null] : [null, null] }
   return (
@@ -25,7 +26,7 @@ function FinishBars({ list, dates, label, title, note }) {
           return (
             <div key={i} className="bar" title={`Finished ${ord(f)}${trk ? ` · ${trk}` : ''}${dt ? ` · ${longDate(dt)}` : ''}`}>
               <span className="bar-v">{f}</span>
-              <span className={`bar-fill ${f <= 10 ? 'hit' : ''}`} style={{ height: `${Math.max(4, ((41 - Math.min(f, 40)) / 40) * 80)}%` }} />
+              <span className={`bar-fill ${f <= 10 ? 'hit' : ''}`} style={{ height: `${Math.max(4, ((floor + 1 - Math.min(f, floor)) / floor) * 80)}%` }} />
             </div>
           )
         })}
@@ -57,6 +58,8 @@ export default function DriverSlideout() {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
   if (!d) return null
+  const f1 = isF1(series)
+  const TYPES = f1 ? F1_TYPES : NASCAR_TYPES
   const row = table?.drivers?.find((x) => x.driver_id === d.driver_id)
   const types = row?.types || {}
   const maxType = Math.max(60, ...Object.values(types).filter((v) => v != null))
@@ -91,18 +94,18 @@ export default function DriverSlideout() {
               </div>
             </>
           )}
-          <h3>Driver rating by track type <span className="muted small">(NASCAR loop data, last 3 seasons, this series)</span></h3>
+          <h3>Driver rating by track type <span className="muted small">{f1 ? '(qualifying + finish against the field, last 3 seasons)' : '(NASCAR loop data, last 3 seasons, this series)'}</span></h3>
           <div className="spread">
             {TYPES.map(([k, l]) => (
               <div key={k} className={`spread-row ${ctx?.ttype === k ? 'b' : ''}`}><span>{l}</span>
                 <span className="spread-bar"><span style={{ width: `${types[k] ? (types[k] / maxType) * 100 : 0}%` }} /></span><b>{fx(types[k], 0)}</b></div>
             ))}
           </div>
-          <p className="muted small">Driver rating sums speed, running position, laps led and finish every lap (max 150; ~100 = a top-5 car).</p>
+          <p className="muted small">{f1 ? 'Rating 0-100: where he qualified and finished against the field (100 = pole and the win every time).' : 'Driver rating sums speed, running position, laps led and finish every lap (max 150; ~100 = a top-5 car).'}</p>
           <div className="chart-grid">
-            <FinishBars list={d.last10} dates={d.last10_d} label={md} title="Last 10 races"
+            <FinishBars floor={f1 ? 22 : 40} list={d.last10} dates={d.last10_d} label={md} title="Last 10 races"
               note={d.last10?.length ? `${span(d.last10_d)}${d.last10_d ? ' · ' : ''}avg ${fx(d.last10.reduce((a, b) => a + b, 0) / d.last10.length)}` : ''} />
-            <FinishBars list={d.trk_fins} dates={d.trk_d} label={monYr} title="This track" note={d.trk_fins?.length ? `${d.trk_fins.length} starts since 2022` : 'no starts here'} />
+            <FinishBars floor={f1 ? 22 : 40} list={d.trk_fins} dates={d.trk_d} label={monYr} title="This track" note={d.trk_fins?.length ? `${d.trk_fins.length} starts since ${f1 ? 2021 : 2022}` : 'no starts here'} />
           </div>
           {d.chaos?.n > 0 && d.chaos.calm_n > 0 && (
             <p className="muted small" title="Chaos race = the series' top third of races by cautions + cars out in accidents (2022-26). Context only: tested as a model input and it added nothing.">
@@ -114,8 +117,8 @@ export default function DriverSlideout() {
             <>
               <h3>This season</h3>
               <div className="mini-scroll"><table className="mini">
-                <thead><tr><th>Starts</th><th>Wins</th><th>Top 5</th><th>Top 10</th><th>Avg fin</th><th>Rating</th><th>Laps led</th><th>Pts rank</th></tr></thead>
-                <tbody><tr><td>{row.starts}</td><td>{row.wins}</td><td>{row.top5}</td><td>{row.top10}</td><td>{fx(row.avg_finish)}</td><td>{fx(row.rating, 0)}</td><td>{row.led}</td><td>{row.pts_rank}</td></tr></tbody>
+                <thead><tr><th>Starts</th><th>Wins</th>{f1 && <th>Podiums</th>}<th>Top 5</th><th>Top 10</th><th>Avg fin</th><th>Rating</th>{f1 ? <th>Points</th> : <th>Laps led</th>}<th>Pts rank</th></tr></thead>
+                <tbody><tr><td>{row.starts}</td><td>{row.wins}</td>{f1 && <td>{row.top3}</td>}<td>{row.top5}</td><td>{row.top10}</td><td>{fx(row.avg_finish)}</td><td>{fx(row.rating, 0)}</td><td>{f1 ? row.points : row.led}</td><td>{row.pts_rank}</td></tr></tbody>
               </table></div>
             </>
           )}

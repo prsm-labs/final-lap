@@ -204,6 +204,9 @@ table.data-table th { position: sticky; }
 /* ---- Final Lap additions ---- */
 .brand-logo { width: 34px; height: 43px; object-fit: contain; }
 .avatar.photo { object-fit: cover; object-position: top; }
+.sport-switch { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 12px; padding: 3px; margin: 6px 0 4px; background: var(--surface2, var(--surface)); max-width: 320px; }
+.sport-switch button { flex: 1; border: 0; background: transparent; color: var(--muted); padding: 8px 14px; border-radius: 9px; cursor: pointer; font-weight: 800; letter-spacing: .06em; }
+.sport-switch button.active { background: var(--fg); color: var(--bg); }
 .series-switch { display: inline-flex; gap: 0; border: 1px solid var(--border); border-radius: 999px; padding: 3px; margin: 4px 0 8px; background: var(--surface); }
 .series-switch button { border: 0; background: transparent; color: var(--muted); padding: 6px 16px; border-radius: 999px; cursor: pointer; font-weight: 600; }
 .series-switch button.active { background: var(--accent); color: var(--accent-fg); }

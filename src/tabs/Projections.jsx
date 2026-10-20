@@ -1,11 +1,12 @@
 import { fx, ord, pct } from '../lib/data.js'
-import { matches, searchStore } from '../lib/stores.js'
+import { isF1, matches, searchStore } from '../lib/stores.js'
 import { Th, useSort } from '../lib/useSort.jsx'
 import { DriverCell, Finish, Prob, Section } from '../components/ui.jsx'
 import { RaceHeader } from './RaceCard.jsx'
 
 // 🔮 Projections -- every driver in the field: win / 2nd / 3rd / top 3 / top 5 / top 10, projected finish, the inputs.
-export default function Projections({ card }) {
+export default function Projections({ card, series }) {
+  const f1 = isF1(series)
   const q = searchStore.use()
   const rows = card.drivers.filter((d) => matches(d, q))
   const sort = useSort(rows, 'win')
@@ -31,10 +32,11 @@ export default function Projections({ card }) {
               <Th k="top5" label="Top 5" sort={sort} />
               <Th k="top10" label="Top 10" sort={sort} />
               <Th k="avg" label="Avg fin" sort={sort} title="Average finish across the simulated races (lower is better)" />
-              <Th k="rating" label="Rating" sort={sort} title="Driver rating (loop data), recent races weighted most" />
+              <Th k="rating" label="Rating" sort={sort} title={f1 ? 'Driver rating: qualifying + race finish against the field, recent races weighted most (0-100)' : 'Driver rating (loop data), recent races weighted most'} />
+              {f1 && <Th k="team_rating" label="Car" sort={sort} title="Car rating: the team's qualifying pace against the field, recent races weighted most (0-100); new 2026 rules cut the carry-over from 2025" />}
               <Th k="type_rating" label="Type" sort={sort} title="Driver rating on this kind of track" />
               <Th k="trk_rating" label="Track" sort={sort} title="Driver rating at this exact track" />
-              <Th k="prac" label="Prac" sort={sort} title="Final-practice speed rank (best lap) -- fills in after practice" />
+              <Th k="prac" label="Prac" sort={sort} title={f1 ? 'Best practice lap of the weekend, ranked against the field -- fills in after practice' : 'Final-practice speed rank (best lap) -- fills in after practice'} />
               <th title="Last 5 finishes, oldest to newest">Last 5</th>
             </tr>
           </thead>
@@ -51,6 +53,7 @@ export default function Projections({ card }) {
                 <td className="num"><Prob v={d.top10} strong={0.6} /></td>
                 <td className="num">{fx(d.avg)}</td>
                 <td className="num">{fx(d.rating, 0)}</td>
+                {f1 && <td className="num">{fx(d.team_rating, 0)}</td>}
                 <td className="num">{fx(d.type_rating, 0)}</td>
                 <td className="num">{fx(d.trk_rating, 0)}</td>
                 <td className="num">{d.prac ? ord(d.prac) : '—'}</td>

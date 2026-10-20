@@ -1,4 +1,4 @@
-import { useJson } from '../lib/data.js'
+import { SOURCE, useJson } from '../lib/data.js'
 import { Section } from '../components/ui.jsx'
 import { Lineup, Sessions } from '../components/weekend.jsx'
 import { RaceHeader } from './RaceCard.jsx'
@@ -12,7 +12,7 @@ export default function Weekend({ card, series }) {
   return (
     <div>
       <RaceHeader card={card} />
-      <Section title="📋 Lineup, practice & qualifying" sub="Straight from NASCAR's feed, refreshed with every update (9 AM, 1 PM, 6 PM ET). During a session, the Live tab shows it lap by lap." />
+      <Section title="📋 Lineup, practice & qualifying" sub={`Straight from ${SOURCE(series)}, refreshed with every update (9 AM, 1 PM, 6 PM ET). During a session, the Live tab shows it${series === 'f1' ? ' (running order)' : ' lap by lap'}.`} />
       <Lineup rows={w.lineup} status={w.lineup_status} race={w.race} />
       <Section title="⏱️ Practice & qualifying" />
       <Sessions sessions={w.sessions} race={w.race} />

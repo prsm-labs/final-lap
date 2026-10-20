@@ -16,9 +16,20 @@ export const SERIES = [
   { key: 'oreilly', label: "O'Reilly", full: "NASCAR O'Reilly Auto Parts Series" },
   { key: 'truck', label: 'Truck', full: 'NASCAR CRAFTSMAN Truck Series' },
 ]
+// 2026-10-20: motorsport toggle. F1 is one more "series" key ('f1') behind a NASCAR | F1 switch; the page always opens on
+// NASCAR (the last NASCAR series is remembered, F1 is not), per the user.
+export const SPORTS = [{ key: 'nascar', label: 'NASCAR' }, { key: 'f1', label: 'F1' }]
+export const isF1 = (series) => series === 'f1'
 const saved = (() => { try { return localStorage.getItem('finallap.series') } catch { return null } })()
-export const seriesStore = makeStore(SERIES.some((s) => s.key === saved) ? saved : 'cup')
-export const setSeries = (k) => { seriesStore.set(k); try { localStorage.setItem('finallap.series', k) } catch { /* ignore */ } }
+let lastNascar = SERIES.some((s) => s.key === saved) ? saved : 'cup'
+export const seriesStore = makeStore(lastNascar)
+export const setSeries = (k) => {
+  seriesStore.set(k)
+  if (k === 'f1') return
+  lastNascar = k
+  try { localStorage.setItem('finallap.series', k) } catch { /* ignore */ }
+}
+export const setSport = (sp) => seriesStore.set(sp === 'f1' ? 'f1' : lastNascar)
 
 export const slideStore = makeStore(null)          // driver shown in the slideout
 export const openDriver = (d) => slideStore.set(d)
@@ -28,5 +39,5 @@ export const searchStore = makeStore('')           // shared driver / team / car
 export function matches(d, q) {
   if (!q) return true
   const s = q.trim().toLowerCase()
-  return [d.name, d.team, d.make, d.car && `#${d.car}`, d.car].some((v) => String(v || '').toLowerCase().includes(s))
+  return [d.name, d.team, d.make, d.code, d.car && `#${d.car}`, d.car].some((v) => String(v || '').toLowerCase().includes(s))
 }

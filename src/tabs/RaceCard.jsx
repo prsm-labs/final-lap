@@ -8,7 +8,7 @@ export function RaceHeader({ card }) {
   return (
     <div className="race-head card">
       <div className="race-title">{TYPE_ICON[r.ttype]} {r.name}</div>
-      <div className="race-sub">{r.track} · {r.type}{r.length ? ` · ${r.length} mi` : ''}{r.laps ? ` · ${r.laps} laps` : ''}</div>
+      <div className="race-sub">{r.track}{r.locality ? `, ${r.locality}` : ''} · {r.type}{r.length ? ` · ${r.length} mi` : ''}{r.laps ? ` · ${r.laps} laps` : ''}{r.sprint ? ' · Sprint weekend' : ''}</div>
       <div className="race-sub muted">{raceTime(r.start)} your time{r.tv ? ` · ${r.tv}` : ''}{r.playoff ? ' · Playoffs' : ''}</div>
       <div className="race-meta">
         <span className={`chip ${card.stage === 'post' ? 'ok' : ''}`} title={card.stage === 'post' ? 'Starting spots are in the model' : 'Qualifying not run yet -- chances update once starting spots post'}>

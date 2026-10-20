@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { dayLabel, fx, pct, useJson } from '../lib/data.js'
+import { dayLabel, fx, pct, SOURCE, useJson } from '../lib/data.js'
 import { Finish, Pills, Section } from '../components/ui.jsx'
 
 // 📈 Track Record -- how Final Lap 2.0 has actually done. "Live" = picks frozen before the green flag; "Replay" = the 2026
@@ -64,7 +64,7 @@ export default function TrackRecord({ series }) {
   const bt = tr.backtest?.post || {}
   return (
     <div>
-      <Section title={`📈 ${tr.label} Track Record`} sub="Every number here is graded against official NASCAR results." />
+      <Section title={`📈 ${tr.label} Track Record`} sub={`Every number here is graded against official results (${SOURCE(series)}).`} />
       <Pills value={view} onChange={setView} options={[
         ['live', `Live (${tr.live?.races?.length || 0})`, 'Picks frozen before the green flag, graded after the race'],
         ['replay', `2026 replay (${tr.replay?.races?.length || 0})`, 'Races before launch, re-predicted using only what was known before each race'],

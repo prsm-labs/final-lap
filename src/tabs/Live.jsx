@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { dayLabel, fx, ord, pct, TYPE_ICON, useJson, useLive } from '../lib/data.js'
-import { openDriver } from '../lib/stores.js'
+import { dayLabel, fx, ord, pct, SOURCE, TYPE_ICON, useJson, useLive } from '../lib/data.js'
+import { isF1, openDriver } from '../lib/stores.js'
 import { Th, useSort } from '../lib/useSort.jsx'
 import { Avatar, Finish, Pills, Section } from '../components/ui.jsx'
 import { CsvButton, Lineup, Sessions } from '../components/weekend.jsx'
@@ -24,20 +24,25 @@ const RESULT_COLS = [['Fin', (d) => d.finish], ['Start', (d) => d.start], ['Car'
   ['Driver rating', (d) => d.rating], ['Avg pos', (d) => d.avg_ps], ['Fast laps', (d) => d.fast], ['Pass diff', (d) => d.pass_diff],
   ['Our win %', (d) => (d.win != null ? +(d.win * 100).toFixed(1) : null)], ['Our proj finish', (d) => d.proj]]
 
-function LiveTiming({ card }) {
-  const live = useLive(true, 15000)
+const fold = (s) => String(s || '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+
+function LiveTiming({ card, series }) {
+  const f1 = isF1(series)
+  const live = useLive(true, 15000, f1 ? '/api/f1live' : '/api/live')
   if (!live) return <p className="muted">Loading live timing…</p>
   if (live.error || !live.vehicles?.length) return <p className="muted">No live timing right now. This page fills in automatically once cars are on track. Pick a finished race above to see its results.</p>
-  const ours = live.race_id === card?.race?.race_id
-  const proj = new Map((card?.drivers || []).map((d) => [d.driver_id, d]))
+  // F1 (ESPN) has no driver ids: match our card by name; the session is ours when it's on this weekend
+  const ours = f1 ? !!card?.race && Math.abs(new Date(`${card.race.date}T12:00:00`) - Date.now()) < 4 * 86400e3 : live.race_id === card?.race?.race_id
+  const proj = new Map((card?.drivers || []).map((d) => [f1 ? fold(d.name) : d.driver_id, d]))
+  const projOf = (v) => proj.get(f1 ? fold(v.name) : v.driver_id)
   const done = live.flag_state === 9 || live.flag_state === 4
   const isRace = live.run_type === 3
   return (
     <div>
-      <Section title={`🔴 ${live.name || 'Live'}`} sub={`${live.track || ''} · ${isRace ? `Lap ${live.lap} of ${live.laps}` : 'Practice / qualifying'} · ${live.flag}${live.stage?.stage_num ? ` · Stage ${live.stage.stage_num}` : ''}`} />
+      <Section title={`🔴 ${live.name || 'Live'}`} sub={`${live.track || ''} · ${isRace ? (live.laps ? `Lap ${live.lap} of ${live.laps}` : live.lap ? `Lap ${live.lap}` : 'Race') : 'Practice / qualifying'} · ${live.flag}${live.stage?.stage_num ? ` · Stage ${live.stage.stage_num}` : ''}`} />
       <div className="race-meta">
         <span className={`chip flag-${String(live.flag).toLowerCase()}`}>{done ? '🏁 Finished' : `🚩 ${live.flag}`}</span>
-        {isRace && <span className="chip">{live.cautions ?? 0} cautions · {live.lead_changes ?? 0} lead changes · {live.leaders ?? 0} leaders</span>}
+        {isRace && !f1 && <span className="chip">{live.cautions ?? 0} cautions · {live.lead_changes ?? 0} lead changes · {live.leaders ?? 0} leaders</span>}
         {!ours && <span className="muted small">This is a different race from the card you're viewing — switch series at the top to see our picks for it.</span>}
       </div>
       <div className="pill-row">
@@ -48,7 +53,7 @@ function LiveTiming({ card }) {
           <thead>
             <tr>
               <th>Pos</th><th className="sticky">Driver</th>
-              {isRace
+              {f1 ? null : isRace
                 ? <><th>Start</th><th>Led</th><th>Avg pos</th><th>Pits</th></>
                 : <><th title="Best lap time this session">Best lap</th><th>Speed</th><th title="Most recent lap">Last lap</th><th>Laps</th></>}
               {ours && <><th title="Our pre-race win chance">Our win %</th><th title="Our projected finish">Proj</th>{isRace && <th title="Running position vs our projection">vs proj</th>}</>}
@@ -56,17 +61,17 @@ function LiveTiming({ card }) {
           </thead>
           <tbody>
             {live.vehicles.map((v) => {
-              const p = proj.get(v.driver_id)
+              const p = projOf(v)
               return (
-                <tr key={v.driver_id || v.car} className={p && p.rank <= 5 ? 'hl' : ''}>
+                <tr key={v.driver_id || v.car || v.name} className={p && p.rank <= 5 ? 'hl' : ''}>
                   <td className="num b">{v.pos}</td>
                   <td className="sticky">
                     <div className="player-cell" onClick={() => p && openDriver(p)}>
                       <Avatar d={p || { car: v.car }} size={24} />
-                      <span>{v.name} <span className="muted small">#{v.car}</span>{v.onTrack === false && <span className="tag tag-status">off track</span>}</span>
+                      <span>{v.name} {(v.car || p?.car) && <span className="muted small">#{v.car || p.car}</span>}{v.onTrack === false && <span className="tag tag-status">off track</span>}</span>
                     </div>
                   </td>
-                  {isRace ? <>
+                  {f1 ? null : isRace ? <>
                     <td className="num">{v.start || '—'}</td>
                     <td className="num">{v.led || 0}</td>
                     <td className="num">{fx(v.avgPos)}</td>
@@ -88,12 +93,13 @@ function LiveTiming({ card }) {
           </tbody>
         </table>
       </div>
-      <p className="muted small">Live timing from NASCAR (races, practice and qualifying), refreshed every 15 seconds.{isRace ? ' ▲ = running better than we projected.' : ' Official session results land on the Weekend tab after each session.'}</p>
+      <p className="muted small">{f1 ? 'Live running order from ESPN (practice, qualifying, sprint and the Grand Prix), refreshed every 15 seconds. Lap times land on the Weekend tab after each session (OpenF1).' : 'Live timing from NASCAR (races, practice and qualifying), refreshed every 15 seconds.'}{isRace ? ' ▲ = running better than we projected.' : f1 ? '' : ' Official session results land on the Weekend tab after each session.'}</p>
     </div>
   )
 }
 
 function Results({ series, raceId, card }) {
+  const f1 = isF1(series)
   const r = useJson(`results/${series}/${raceId}.json`)
   const field = new Map((card?.drivers || []).map((d) => [d.driver_id, d]))   // this week's card: full slideout with charts
   const sort = useSort(r?.drivers, 'finish', 'asc')
@@ -146,10 +152,16 @@ function Results({ series, raceId, card }) {
               <Th k="name" label="Driver" sort={sort} className="sticky" />
               <Th k="start" label="Start" sort={sort} />
               {Array.from({ length: nSt }, (_, i) => <th key={i} title={`Stage ${i + 1} finish`}>S{i + 1}</th>)}
-              <Th k="led" label="Led" sort={sort} title="Laps led" />
-              <Th k="rating" label="Rating" sort={sort} title="NASCAR driver rating (loop data, max 150)" />
-              <Th k="avg_ps" label="Avg pos" sort={sort} title="Average running position" />
-              <Th k="fast" label="Fast laps" sort={sort} title="Laps as the fastest car on track" />
+              {f1 ? <>
+                <Th k="q_pos" label="Qual" sort={sort} title="Qualifying position" />
+                {x.sprint ? <Th k="sprint" label="Sprint" sort={sort} title="Sprint finish" /> : null}
+                <Th k="points" label="Pts" sort={sort} title="Championship points" />
+              </> : <>
+                <Th k="led" label="Led" sort={sort} title="Laps led" />
+                <Th k="rating" label="Rating" sort={sort} title="NASCAR driver rating (loop data, max 150)" />
+                <Th k="avg_ps" label="Avg pos" sort={sort} title="Average running position" />
+                <Th k="fast" label="Fast laps" sort={sort} title="Laps as the fastest car on track" />
+              </>}
               <Th k="win" label="Our win %" sort={sort} title="Our pre-race win chance" />
               <Th k="proj" label="Proj" sort={sort} title="Our projected finish" />
               <th title="Finish vs our projection">vs proj</th>
@@ -168,20 +180,26 @@ function Results({ series, raceId, card }) {
                 </td>
                 <td className="num">{d.start || '—'}</td>
                 {Array.from({ length: nSt }, (_, i) => <td key={i} className="num">{d.stages?.[i] ?? '—'}</td>)}
-                <td className="num">{d.led || 0}</td>
-                <td className="num">{fx(d.rating, 1)}</td>
-                <td className="num">{fx(d.avg_ps, 1)}</td>
-                <td className="num">{d.fast ?? '—'}</td>
+                {f1 ? <>
+                  <td className="num">{d.q_pos ?? '—'}</td>
+                  {x.sprint ? <td className="num">{d.sprint ?? '—'}</td> : null}
+                  <td className="num">{d.points ?? 0}</td>
+                </> : <>
+                  <td className="num">{d.led || 0}</td>
+                  <td className="num">{fx(d.rating, 1)}</td>
+                  <td className="num">{fx(d.avg_ps, 1)}</td>
+                  <td className="num">{d.fast ?? '—'}</td>
+                </>}
                 <td className="num">{d.win != null ? pct(d.win, 1) : '—'}</td>
                 <td className="num">{d.proj ? ord(d.proj) : '—'}</td>
                 <td className="num"><Vs proj={d.proj} fin={d.finish} /></td>
-                <td className={d.status === 'Running' ? 'muted small' : 'small'}>{d.status}{d.status !== 'Running' ? ` (${d.laps})` : ''}</td>
+                <td className={d.status === 'Running' || d.status === 'Finished' || /^\+\d+ Laps?$/.test(d.status || '') ? 'muted small' : 'small'}>{d.status}{d.status !== 'Running' && d.status !== 'Finished' ? ` (${d.laps})` : ''}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="muted small">Official results and loop data from NASCAR. Highlighted rows = our top 5 projected finishers. ▲ = finished better than we projected. {r.source === 'replay' ? '"Replay" chances were never shown on the site — see Track Record.' : ''}</p>
+      <p className="muted small">{f1 ? 'Official results from Jolpica (F1).' : 'Official results and loop data from NASCAR.'} Highlighted rows = our top 5 projected finishers. ▲ = finished better than we projected. {r.source === 'replay' ? '"Replay" chances were never shown on the site — see Track Record.' : ''}</p>
       </>}
     </div>
   )
@@ -202,7 +220,7 @@ export default function Live({ card, series }) {
         </select>
         {cur !== 'live' && <button className="pill" onClick={() => setPick({ ...pick, [series]: 'live' })}>Back to live</button>}
       </div>
-      {cur === 'live' ? <LiveTiming card={card} /> : <Results key={`${series}:${cur}`} series={series} raceId={cur} card={card} />}
+      {cur === 'live' ? <LiveTiming card={card} series={series} /> : <Results key={`${series}:${cur}`} series={series} raceId={cur} card={card} />}
     </div>
   )
 }

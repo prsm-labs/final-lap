@@ -1,9 +1,55 @@
 import { fx, pct, useJson } from '../lib/data.js'
 import { Section } from '../components/ui.jsx'
 
-// 📌 About -- how Final Lap 2.0 works, in plain words, with the real tested numbers.
-export default function About() {
+// 📌 About -- how Final Lap 2.0 works, in plain words, with the real tested numbers. F1 has its own page (2026-10-20).
+function F1About() {
+  const m = useJson('f1/model.json')
+  const bt = m?.backtest?.post || {}
+  const pre = m?.backtest?.pre || {}
+  return (
+    <div className="about">
+      <Section title="📌 About Final Lap · F1" sub="Formula 1 projections for every Grand Prix — a PRISM Labs app" />
+      <div className="card">
+        <b>What it does</b>
+        <ul>
+          <li>For every driver in this weekend's Grand Prix: chance to win, finish 2nd, finish 3rd, podium (top 3), top 5, points (top 10), and an average projected finish.</li>
+          <li>Each race is simulated 20,000 times. Chances update after practice and again after qualifying, when the grid is known.</li>
+          <li>Picks are frozen at lights out and graded against the official results on the Track Record page.</li>
+        </ul>
+      </div>
+      <div className="card">
+        <b>What goes in (tested on 2024-2026 races, each season predicted from earlier seasons only)</b>
+        <ul>
+          <li><b>Starting grid</b> after qualifying: by far the strongest single input in F1.</li>
+          <li><b>Car rating</b>: the team's qualifying pace against the field, recent races weighted most. Last season counts for only ~10% once a new season starts, and the 2026 rule change cut it further — carrying old form over made every test season worse.</li>
+          <li><b>Driver rating</b>: where he qualified and finished against the field, recent races weighted most.</li>
+          <li><b>Practice pace</b>: best practice lap of the weekend, ranked against the field (before qualifying).</li>
+          <li>Tested inputs that didn't earn a place are listed in the Track Record notes and left out.</li>
+        </ul>
+      </div>
+      <div className="card">
+        <b>How it has done (each season predicted from earlier seasons only, after qualifying)</b>
+        <ul>
+          {Object.entries(bt).map(([y, b]) => (
+            <li key={y}><b>{y}</b>: favorite won {pct(b.fav_won)} of {b.races} races (we gave him {pct(b.fav_said)} on average); podium picks {fx(b.top3_hits, 1)} of 3 on the podium; top-10 picks {fx(b.top10_hits, 1)} of 10 scored points{pre[y] ? ` · before qualifying: favorite won ${pct(pre[y].fav_won)}, top-10 picks ${fx(pre[y].top10_hits, 1)} of 10` : ''}.</li>
+          ))}
+        </ul>
+        <div className="muted small">F1 is more predictable at the front than NASCAR (the fastest car usually starts and stays ahead), so favorites carry bigger chances here. The chances are meant to be honest: when we say 40%, that driver should win about 2 races in 5.</div>
+      </div>
+      <div className="card">
+        <b>Sources</b>
+        <ul>
+          <li>Calendar, results, qualifying and sprints: Jolpica (the open successor to the Ergast F1 database). Practice and qualifying lap times, driver numbers and photos: OpenF1. Live running order: ESPN.</li>
+          <li>No sportsbook odds are used anywhere.</li>
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+export default function About({ series }) {
   const m = useJson('model.json')
+  if (series === 'f1') return <F1About />
   const row = (k, l) => {
     const b = m?.backtest?.[k]?.post?.['2026']
     return b ? <li key={k}><b>{l}</b>: favorite won {pct(b.fav_won)} of {b.races} races (we gave him {pct(b.fav_said)} on average); top-5 picks {fx(b.top5_hits, 1)} of 5 finished top 5; top-10 picks {fx(b.top10_hits, 1)} of 10.</li> : null

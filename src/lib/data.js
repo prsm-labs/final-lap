@@ -17,16 +17,16 @@ export function useJson(path) {
   return data
 }
 
-export function useLive(enabled = true, everyMs = 15000) {
+export function useLive(enabled = true, everyMs = 15000, url = '/api/live') {
   const [live, setLive] = useState(null)
   useEffect(() => {
     if (!enabled) return undefined
     let alive = true
-    const load = () => fetch('/api/live').then((r) => (r.ok ? r.json() : null)).catch(() => null).then((d) => alive && setLive(d))
+    const load = () => fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null).then((d) => alive && setLive(d))
     load()
     const t = setInterval(load, everyMs)
     return () => { alive = false; clearInterval(t) }
-  }, [enabled, everyMs])
+  }, [enabled, everyMs, url])
   return live
 }
 
@@ -52,4 +52,6 @@ export const raceTime = (iso) => {
   return d.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
 }
 export const dayLabel = (date) => new Date(`${date}T12:00:00`).toLocaleDateString([], { month: 'short', day: 'numeric' })
-export const TYPE_ICON = { ss: '🌪️', int: '🏁', short: '🔩', road: '↪️' }
+export const TYPE_ICON = { ss: '🌪️', int: '🏁', short: '🔩', road: '↪️', street: '🏙️', fast: '💨', tech: '🌀', perm: '🏎️' }
+// where each sport's data comes from (labels on tabs / footer)
+export const SOURCE = (series) => (series === 'f1' ? 'F1 results (Jolpica) and session timing (OpenF1)' : "NASCAR's official feed")

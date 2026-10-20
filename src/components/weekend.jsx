@@ -17,22 +17,26 @@ export function Lineup({ rows, status, race, title = '📋 Starting lineup' }) {
   if (!rows?.length) return null
   const official = status === 'official starting lineup'
   const hasCc = rows.some((r) => r.crew_chief)
+  const hasMake = rows.some((r) => r.make)
+  const hasSpeed = rows.some((r) => r.qual_speed)
+  const hasQ = rows.some((r) => r.q1)          // F1: Q1 / Q2 / Q3 times
   return (
     <div className="card">
       <div className="cat-head">
         <span>{official ? title : status === 'entry list' ? '📋 Entry list' : '📋 Projected field'}</span>
-        <span className={`chip ${official ? 'ok' : ''}`}>{official ? 'Official (NASCAR)' : status === 'entry list' ? 'Official entry list · lineup after qualifying' : 'Not posted by NASCAR yet'}</span>
+        <span className={`chip ${official ? 'ok' : ''}`}>{official ? (hasQ ? 'Qualifying order (grid penalties apply at the race)' : 'Official (NASCAR)') : status === 'entry list' ? 'Official entry list · lineup after qualifying' : 'Not posted yet'}</span>
         <CsvButton name={slug(race?.date, race?.track, official ? 'starting lineup' : 'entry list')} rows={rows} cols={LINEUP_COLS} />
       </div>
       <div className="table-wrap">
         <table className="data-table">
-          <thead><tr><th>Start</th><th>Car</th><th className="sticky">Driver</th><th>Team</th><th>Make</th>{hasCc && <th>Crew chief</th>}<th>Qual speed</th></tr></thead>
+          <thead><tr><th>Start</th><th>Car</th><th className="sticky">Driver</th><th>Team</th>{hasMake && <th>Make</th>}{hasCc && <th>Crew chief</th>}{hasSpeed && <th>Qual speed</th>}{hasQ && <><th>Q1</th><th>Q2</th><th>Q3</th></>}</tr></thead>
           <tbody>
             {rows.map((r) => (
               <tr key={`${r.driver_id}-${r.car}`}>
                 <td className="num b">{r.start || '—'}</td><td className="num">#{r.car}</td><td className="sticky">{r.driver}</td>
-                <td className="small">{r.team || '—'}</td><td className="small">{r.make || '—'}</td>{hasCc && <td className="small">{r.crew_chief || '—'}</td>}
-                <td className="num">{r.qual_speed ? fx(r.qual_speed, 3) : '—'}</td>
+                <td className="small">{r.team || '—'}</td>{hasMake && <td className="small">{r.make || '—'}</td>}{hasCc && <td className="small">{r.crew_chief || '—'}</td>}
+                {hasSpeed && <td className="num">{r.qual_speed ? fx(r.qual_speed, 3) : '—'}</td>}
+                {hasQ && <><td className="num">{r.q1 || '—'}</td><td className="num">{r.q2 || '—'}</td><td className="num">{r.q3 || '—'}</td></>}
               </tr>
             ))}
           </tbody>
@@ -54,6 +58,9 @@ export function Sessions({ sessions, race }) {
     const practice = s.type === 'Practice'
     const long = practice && s.rows.some((r) => r.avg10)
     const fastest10 = long ? Math.min(...s.rows.map((r) => r.avg10 || 999)) : null
+    const hasSpeed = s.rows.some((r) => r.speed)
+    const hasGap = s.rows.some((r) => r.gap != null)     // F1 (OpenF1): gap to the fastest
+    const hasQ = s.rows.some((r) => r.q1)
     return (
       <div key={s.name} className="card">
         <div className="cat-head">
@@ -63,13 +70,16 @@ export function Sessions({ sessions, race }) {
         </div>
         <div className="table-wrap">
           <table className="data-table">
-            <thead><tr><th>Pos</th><th>Car</th><th className="sticky">Driver</th><th>Best lap</th><th>Speed</th><th>Laps</th>
+            <thead><tr><th>Pos</th><th>Car</th><th className="sticky">Driver</th><th>Best lap</th>{hasSpeed && <th>Speed</th>}{hasGap && <th>Gap</th>}{hasQ && <><th>Q1</th><th>Q2</th><th>Q3</th></>}<th>Laps</th>
               {long && <><th title="Fastest 5 laps in a row">5-lap</th><th title="Fastest 10 laps in a row: long-run speed">10-lap</th><th title="Average of every lap run">Overall</th></>}</tr></thead>
             <tbody>
               {s.rows.map((r) => (
                 <tr key={`${r.driver_id}-${r.car}`}>
                   <td className="num b">{r.pos}</td><td className="num">#{r.car}</td><td className="sticky">{r.driver}</td>
-                  <td className="num">{r.best ? fx(r.best, 3) : '—'}</td><td className="num">{r.speed ? fx(r.speed, 3) : '—'}</td><td className="num">{r.laps ?? '—'}</td>
+                  <td className="num">{r.best ? fx(r.best, 3) : '—'}</td>{hasSpeed && <td className="num">{r.speed ? fx(r.speed, 3) : '—'}</td>}
+                  {hasGap && <td className="num">{r.gap ? `+${fx(r.gap, 3)}` : r.pos === 1 ? '—' : r.status || '—'}</td>}
+                  {hasQ && <><td className="num">{r.q1 ? fx(r.q1, 3) : '—'}</td><td className="num">{r.q2 ? fx(r.q2, 3) : '—'}</td><td className="num">{r.q3 ? fx(r.q3, 3) : '—'}</td></>}
+                  <td className="num">{r.laps ?? '—'}</td>
                   {long && <>
                     <td className="num">{r.avg5 ? fx(r.avg5, 3) : '—'}</td>
                     <td className={`num ${r.avg10 && r.avg10 === fastest10 ? 'b' : ''}`}>{r.avg10 ? fx(r.avg10, 3) : '—'}</td>
