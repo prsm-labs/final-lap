@@ -268,3 +268,18 @@ td.fins { white-space: nowrap; }
   .series-switch button { padding: 6px 12px; }
   .spread-row { grid-template-columns: 80px 1fr 48px; }
 }
+
+/* 2026-10-20 live slideout (LiveRun) + this race's bar on the Last 10 chart */
+.today-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 4px; }
+.today-card.live { border-color: color-mix(in srgb, var(--good) 55%, var(--border)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--good) 25%, transparent); }
+.today-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.live-tag, .final-tag { font-size: 0.68rem; font-weight: 800; letter-spacing: .06em; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; }
+.live-tag { color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 55%, transparent); }
+.final-tag { color: var(--muted); border: 1px solid var(--border); }
+.court-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 6px var(--good); margin-right: 5px; animation: live-pulse 1.6s ease-in-out infinite; }
+@keyframes live-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .court-dot { animation: none; } }
+.tile.beat { border-color: color-mix(in srgb, var(--good) 60%, var(--border)); background: color-mix(in srgb, var(--good) 10%, var(--surface)); }
+.bar-fill.today { outline: 1.5px solid var(--fg); outline-offset: -1.5px; }
+.bar-fill.today.live { outline-color: var(--good); }
+.bar-v.today { color: var(--fg); font-weight: 700; }

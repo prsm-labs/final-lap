@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { fx, ord, pct, useJson } from '../lib/data.js'
+import { fx, ord, pct, useJson, useLive } from '../lib/data.js'
 import { closeDriver, isF1, seriesStore, slideStore } from '../lib/stores.js'
 import { Avatar, PickButton, RaceCtx, Tags } from './ui.jsx'
 
@@ -14,7 +14,7 @@ const monYr = (s) => `${MON[+s.slice(5, 7) - 1]} '${s.slice(2, 4)}`          // 
 const longDate = (s) => `${MON[+s.slice(5, 7) - 1]} ${+s.slice(8, 10)}, ${s.slice(0, 4)}`
 
 // dates[i] = 'YYYY-MM-DD' or ['YYYY-MM-DD', track] (older data files have no dates: bars show without labels)
-function FinishBars({ list, dates, label, title, note, floor = 40 }) {
+function FinishBars({ list, dates, label, title, note, floor = 40, liveLast = null }) {
   if (!list?.length) return null
   const at = (i) => { const v = dates?.[i]; return Array.isArray(v) ? v : v ? [v, null] : [null, null] }
   return (
@@ -24,9 +24,9 @@ function FinishBars({ list, dates, label, title, note, floor = 40 }) {
         {list.map((f, i) => {
           const [dt, trk] = at(i)
           return (
-            <div key={i} className="bar" title={`Finished ${ord(f)}${trk ? ` · ${trk}` : ''}${dt ? ` · ${longDate(dt)}` : ''}`}>
-              <span className="bar-v">{f}</span>
-              <span className={`bar-fill ${f <= 10 ? 'hit' : ''}`} style={{ height: `${Math.max(4, ((floor + 1 - Math.min(f, floor)) / floor) * 80)}%` }} />
+            <div key={i} className="bar" title={`${liveLast && i === list.length - 1 ? (liveLast === 'live' ? 'Running' : 'Finished') : 'Finished'} ${ord(f)}${trk ? ` · ${trk}` : ''}${dt ? ` · ${longDate(dt)}` : ''}`}>
+              <span className={`bar-v ${liveLast && i === list.length - 1 ? 'today' : ''}`}>{f}</span>
+              <span className={`bar-fill ${f <= 10 ? 'hit' : ''} ${liveLast && i === list.length - 1 ? `today ${liveLast}` : ''}`} style={{ height: `${Math.max(4, ((floor + 1 - Math.min(f, floor)) / floor) * 80)}%` }} />
             </div>
           )
         })}
@@ -47,10 +47,51 @@ const span = (dates) => {   // "Apr – Oct 2026" / "Sep 2025 – Oct 2026"
     : `${MON[+a.slice(5, 7) - 1]} ${a.slice(0, 4)} – ${MON[+b.slice(5, 7) - 1]} ${b.slice(0, 4)}`
 }
 
+// 2026-10-20 live slideout: while this race weekend's session is on track (NASCAR live feed / ESPN F1, 15 s), the driver's
+// running position, laps led, pit stops (practice / qualifying: best lap and speed); after the checkered flag his finish,
+// which also joins the Last 10 chart until the pipeline adds it. Polls only with the slideout open on race weekend.
+const foldName = (s) => String(s || '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+function useLiveRun(d, ctx, f1) {
+  const weekend = !!(d && ctx?.date && Math.abs(new Date(`${ctx.date}T12:00:00`) - Date.now()) < 3 * 86400e3)
+  const live = useLive(weekend, 15000, f1 ? '/api/f1live' : '/api/live')
+  if (!weekend || !live || live.error || !live.vehicles?.length) return null
+  const ours = f1 ? true : live.race_id === ctx.raceId
+  if (!ours) return null
+  const v = live.vehicles.find((x) => (f1 ? foldName(x.name) === foldName(d.name) : x.driver_id === d.driver_id))
+  if (!v) return null
+  const done = live.flag_state === 9 || live.flag_state === 4 || live.flag === 'Finished'
+  return { live, v, done, isRace: live.run_type === 3, field: live.vehicles.length }
+}
+function LiveRun({ r, d, f1 }) {
+  const { live, v, done, isRace } = r
+  const delta = isRace && d.proj_finish ? d.proj_finish - v.pos : null
+  const tiles = isRace
+    ? [[done ? 'FINISH' : 'RUNNING', ord(v.pos)], ['PROJ', ord(d.proj_finish)], ...(f1 ? [] : [['START', ord(v.start)], ['LED', v.led ?? 0], ['PITS', v.pits ?? 0], ['AVG POS', fx(v.avgPos)]])]
+    : [['POS', ord(v.pos)], ...(f1 ? [] : [['BEST LAP', v.best ? fx(v.best, 3) : '—'], ['SPEED', v.bestSpeed ? fx(v.bestSpeed, 2) : '—'], ['LAPS', v.laps ?? 0]])]
+  return (
+    <div className={`today-card ${done ? '' : 'live'}`}>
+      <div className="today-head">
+        {done ? <span className="final-tag">{isRace ? '🏁 FINAL' : 'SESSION OVER'}</span> : <span className="live-tag"><span className="court-dot" />LIVE</span>}
+        <b>{live.name}</b>
+        {!done && <span className="muted small">{isRace ? (live.laps ? `Lap ${live.lap}/${live.laps}` : live.lap ? `Lap ${live.lap}` : '') : 'Practice / qualifying'} · {live.flag}</span>}
+      </div>
+      <div className="stat-tiles">
+        {tiles.map(([l, val]) => <div key={l} className={`tile ${l === 'RUNNING' || l === 'FINISH' ? (delta > 0 ? 'beat' : '') : ''}`}><b>{val}</b><span>{l}</span></div>)}
+      </div>
+      <p className="muted small">
+        {isRace && delta != null ? `${delta > 0 ? `${fx(delta, 0)} spots better than` : delta < 0 ? `${fx(-delta, 0)} spots worse than` : 'Right on'} our projected finish. ` : ''}
+        {!f1 && v.status && v.status !== 0 && v.status !== 1 ? 'Out of the race / off track. ' : ''}
+        {done ? (isRace ? 'Final running order from the live feed (official results follow in the pipeline).' : 'Final session order.') : 'Updates every 15 seconds.'}
+      </p>
+    </div>
+  )
+}
+
 export default function DriverSlideout() {
   const d = slideStore.use()
   const series = seriesStore.use()
   const ctx = useContext(RaceCtx)
+  const run = useLiveRun(d, ctx, isF1(series))
   const table = useJson(`${series}/drivers.json`)
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && closeDriver()
@@ -78,6 +119,7 @@ export default function DriverSlideout() {
           <button className="slide-close" onClick={closeDriver} aria-label="Close">×</button>
         </header>
         <div className="slide-body">
+          {run && <><h3 style={{ marginTop: 0 }}>{run.isRace ? 'This race' : 'On track now'}</h3><LiveRun r={run} d={d} f1={f1} /><h3>Pre-race projection</h3></>}
           {d.win != null && (
             <>
               <div className="stat-tiles">
@@ -103,8 +145,17 @@ export default function DriverSlideout() {
           </div>
           <p className="muted small">{f1 ? 'Rating 0-100: where he qualified and finished against the field (100 = pole and the win every time).' : 'Driver rating sums speed, running position, laps led and finish every lap (max 150; ~100 = a top-5 car).'}</p>
           <div className="chart-grid">
-            <FinishBars floor={f1 ? 22 : 40} list={d.last10} dates={d.last10_d} label={md} title="Last 10 races"
-              note={d.last10?.length ? `${span(d.last10_d)}${d.last10_d ? ' · ' : ''}avg ${fx(d.last10.reduce((a, b) => a + b, 0) / d.last10.length)}` : ''} />
+            {(() => {
+              // this race's running / final position joins the chart until the pipeline's results include it
+              const lastD = d.last10_d?.length ? (Array.isArray(d.last10_d.at(-1)) ? d.last10_d.at(-1)[0] : d.last10_d.at(-1)) : null
+              const add = run?.isRace && ctx?.date && lastD !== ctx.date
+              const list = add ? [...(d.last10 || []), run.v.pos].slice(-10) : d.last10
+              const dates = add && d.last10_d ? [...d.last10_d, ctx.date].slice(-10) : d.last10_d
+              return (
+                <FinishBars floor={f1 ? 22 : 40} list={list} dates={dates} label={md} title={add ? 'Last 10 races + this one' : 'Last 10 races'} liveLast={add ? (run.done ? 'final' : 'live') : null}
+                  note={list?.length ? `${span(dates)}${dates ? ' · ' : ''}avg ${fx(list.reduce((a, b) => a + b, 0) / list.length)}` : ''} />
+              )
+            })()}
             <FinishBars floor={f1 ? 22 : 40} list={d.trk_fins} dates={d.trk_d} label={monYr} title="This track" note={d.trk_fins?.length ? `${d.trk_fins.length} starts since ${f1 ? 2021 : 2022}` : 'no starts here'} />
           </div>
           {d.chaos?.n > 0 && d.chaos.calm_n > 0 && (
