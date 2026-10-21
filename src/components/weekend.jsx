@@ -94,3 +94,52 @@ export function Sessions({ sessions, race }) {
     )
   })
 }
+
+// 2026-10-21 (user): every practice / qualifying / race start for the weekend, listed before they run (NASCAR's posted
+// weekend schedule; OpenF1's session list for F1). Times in ET like the rest of the app, plus the viewer's own time when
+// they aren't on Eastern.
+const ET_FMT = { weekday: 'short', month: 'short', day: 'numeric' }
+const TIME_FMT = { hour: 'numeric', minute: '2-digit' }
+const inWords = (ms) => {
+  const h = Math.round(ms / 3.6e6)
+  return h < 1 ? 'under an hour' : h < 48 ? `${h} h` : `${Math.round(h / 24)} days`
+}
+export function Schedule({ events, sessions, series }) {
+  if (!events?.length) return <p className="muted">{series === 'f1' ? 'No session times posted for this weekend yet.' : "NASCAR hasn't posted this weekend's schedule yet."}</p>
+  const now = Date.now()
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const local = tz && tz !== 'America/New_York'
+  const posted = new Set((sessions || []).map((s) => s.name))
+  const next = events.find((e) => Date.parse(e.utc) > now)
+  const noPractice = series !== 'f1' && !events.some((e) => e.type === 'Practice')
+  const status = (e) => {
+    if (posted.has(e.name)) return <span className="chip ok">Results below</span>
+    const t = Date.parse(e.utc)
+    if (t <= now) return <span className="chip ok">{e.type === 'Race' ? 'Green flag · Live tab' : 'Under way · Live tab'}</span>
+    return <span className={`chip ${e === next ? 'ok' : ''}`}>{e === next ? `Next · in ${inWords(t - now)}` : 'Upcoming'}</span>
+  }
+  return (
+    <div className="card">
+      <div className="cat-head"><span>🗓️ Weekend schedule</span><span className="muted small">times ET{local ? ' · your time below' : ''}</span></div>
+      <div className="table-wrap">
+        <table className="data-table">
+          <thead><tr><th className="sticky">Session</th><th>When (ET)</th><th>Notes</th></tr></thead>
+          <tbody>
+            {events.map((e) => {
+              const et = new Date(e.start), u = new Date(e.utc)
+              return (
+                <tr key={e.utc + e.name} className={e.type === 'Race' ? 'b' : ''}>
+                  <td className="sticky">{e.type === 'Practice' ? '🔧' : e.type === 'Qualifying' ? '⏱️' : '🏁'} {e.name}<div style={{ marginTop: 3 }}>{status(e)}</div></td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{et.toLocaleDateString([], ET_FMT)} · {et.toLocaleTimeString([], TIME_FMT)}
+                    {local && <div className="muted small">your time {u.toLocaleString([], { weekday: 'short', ...TIME_FMT })}</div>}</td>
+                  <td className="small muted">{e.notes || ''}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+      {noPractice && <p className="muted small">No practice on this weekend's schedule (NASCAR runs some tracks, like superspeedways, with qualifying only), so the model has no practice speeds to use.</p>}
+    </div>
+  )
+}
