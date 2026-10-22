@@ -1,4 +1,5 @@
 import { useContext, useEffect } from 'react'
+import ProfileLinks from './ProfileLinks.jsx'
 import { fx, ord, pct, useJson, useLive } from '../lib/data.js'
 import { closeDriver, isF1, seriesStore, slideStore } from '../lib/stores.js'
 import { Avatar, PickButton, RaceCtx, Tags } from './ui.jsx'
@@ -112,7 +113,7 @@ export default function DriverSlideout() {
         <header className="slide-head">
           <Avatar d={d} size={64} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <h2>{d.name}</h2>
+            <h2>{d.name}<ProfileLinks name={d.name} f1={f1} /></h2>
             <div className="muted">#{d.car || '—'} · {d.team || '—'}{d.make ? ` · ${d.make}` : ''}</div>
             <div className="slide-actions">{d.win != null && <PickButton d={d} />} <Tags d={d} /></div>
           </div>
