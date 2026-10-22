@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { pct, useJson } from '../lib/data.js'
 import { openDriver } from '../lib/stores.js'
 import { Avatar, PickButton } from './ui.jsx'
@@ -9,6 +10,7 @@ const RESULT = { hit: '✅', miss: '✗', void: 'void' }
 const share = (h, n) => (n ? `${Math.round((h / n) * 100)}%` : '—')
 
 export default function PrismPicks({ card, series }) {
+  const [open, setOpen] = useState(false)
   const d = useJson('prism_picks.json')
   if (!d || d.error || !card) return null
   const g = series === 'f1' ? 'f1' : 'nascar'
@@ -20,13 +22,15 @@ export default function PrismPicks({ card, series }) {
   const live = d.live[g]
   const past = d.races.filter((r) => r.series === series && r.race_id !== rid && r.picks.some((p) => p.result)).reverse()
   return (
-    <div className="card prism-card">
+    <div className={`card prism-card ${open ? 'open' : 'collapsed'}`}>
       <div className="prism-head">
         <span className="prism-gem" aria-hidden="true">💎</span>
         <div>
           <div className="prism-title">PRISM Picks</div>
           <div className="muted small">This race's best looks on real finishes — not the ones a driver gets every week</div>
         </div>
+        {/* 2026-10-22 (user): collapsed by default -- tap to expand */}
+        <button type="button" className="prism-toggle" aria-expanded={open} onClick={() => setOpen((v) => !v)}>{open ? '▴ Hide' : `▾ Show${picks.length ? ` ${picks.length} pick${picks.length === 1 ? '' : 's'}` : ''}`}</button>
       </div>
       {picks.length === 0 && (race?.waiting
         ? <div className="muted small"><b>Waiting for qualifying.</b> F1 picks post once the grid is set — before it, this rule hit only 57% in testing.</div>
