@@ -15,7 +15,7 @@ export default function Weekend({ card, series }) {
       <RaceHeader card={card} />
       <Section title="📋 Lineup, practice & qualifying" sub={`Straight from ${SOURCE(series)}, refreshed with every update (9 AM, 1 PM, 6 PM ET). During a session, the Live tab shows it${series === 'f1' ? ' (running order)' : ' lap by lap'}.`} />
       <Schedule events={w.schedule} sessions={w.sessions} series={series} />
-      <Lineup rows={w.lineup} status={w.lineup_status} race={w.race} />
+      <Lineup rows={w.lineup} status={w.lineup_status} race={w.race} proj={card?.drivers} />
       <Section title="⏱️ Practice & qualifying" />
       <Sessions sessions={w.sessions} race={w.race} />
     </div>
