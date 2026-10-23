@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T17:43+00:00",
+ "generated_at": "2026-10-23T22:03+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -329,24 +329,6 @@
    "tiers": {
     "mid": [
      {
-      "driver_id": 4107,
-      "name": "Ben Rhodes",
-      "car": "99",
-      "team": "ThorSport Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.4192,
-      "card": 0.378,
-      "last": [
-       10,
-       2
-      ],
-      "start": null,
-      "track": 0.397,
-      "trackN": 200
-     },
-     {
       "driver_id": 4296,
       "name": "Tyler Ankrum",
       "car": "18",
@@ -354,14 +336,32 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4069,
-      "card": 0.3562,
+      "chance": 0.4236,
+      "card": 0.3779,
       "last": [
        10,
-       2
+       3
       ],
       "start": null,
-      "track": 0.395,
+      "track": 0.398,
+      "trackN": 200
+     },
+     {
+      "driver_id": 3978,
+      "name": "Grant Enfinger",
+      "car": "9",
+      "team": "CR7 Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.4233,
+      "card": 0.3774,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.398,
       "trackN": 200
      },
      {
@@ -372,36 +372,18 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3261,
-      "card": 0.2815,
+      "chance": 0.3476,
+      "card": 0.3111,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.262,
+      "track": 0.267,
       "trackN": 138
      }
     ],
     "long": [
-     {
-      "driver_id": 4096,
-      "name": "Corey LaJoie",
-      "car": "10",
-      "team": "Kaulig Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.2472,
-      "card": 0.2235,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.214,
-      "trackN": 448
-     },
      {
       "driver_id": 4235,
       "name": "Ty Majeski",
@@ -410,8 +392,8 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.2273,
-      "card": 0.2194,
+      "chance": 0.2256,
+      "card": 0.2155,
       "last": [
        10,
        1
@@ -421,18 +403,36 @@
       "trackN": 448
      },
      {
-      "driver_id": 4503,
-      "name": "Giovanni Ruggiero",
-      "car": "17",
-      "team": "TRICON Garage",
-      "k": 3,
-      "prop": "top3",
-      "label": "Top 3 finish",
-      "chance": 0.2087,
-      "card": 0.1865,
+      "driver_id": 4487,
+      "name": "Brenden Queen",
+      "car": "12",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2165,
+      "card": 0.1957,
       "last": [
        10,
-       0
+       1
+      ],
+      "start": null,
+      "track": 0.212,
+      "trackN": 448
+     },
+     {
+      "driver_id": 4107,
+      "name": "Ben Rhodes",
+      "car": "99",
+      "team": "ThorSport Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.2084,
+      "card": 0.1835,
+      "last": [
+       10,
+       1
       ],
       "start": null,
       "track": 0.211,
@@ -440,7 +440,7 @@
      }
     ]
    },
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 5664,
