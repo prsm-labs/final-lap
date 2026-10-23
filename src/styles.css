@@ -298,3 +298,15 @@ td.fins { white-space: nowrap; }
 ::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 ::-webkit-scrollbar-button { display: none; }
+
+/* 🤝 Pairs (2026-10-23, Race Card) */
+.pair-card { display: grid; gap: 8px; }
+.pair-card.star { border-color: color-mix(in srgb, var(--accent) 65%, var(--border)); }
+.pair-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.pair-section { font-weight: 700; font-size: 0.82rem; }
+.pair-star { font-size: 0.7rem; font-weight: 800; letter-spacing: .04em; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent); border-radius: 999px; padding: 1px 8px; }
+.pair-leg { display: flex; align-items: center; gap: 10px; }
+.pair-leg-main { flex: 1 1 auto; min-width: 0; }
+.pair-name { font-weight: 700; cursor: pointer; }
+.pair-name:hover { color: var(--accent); }
+.pair-foot { border-top: 1px solid var(--border); padding-top: 8px; display: grid; gap: 4px; }

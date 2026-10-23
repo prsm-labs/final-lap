@@ -56,6 +56,30 @@ function Races({ races }) {
   )
 }
 
+// 2026-10-23 🤝 Pairs (Race Card): every board frozen at the green flag (live) or rebuilt from the 2026 replay, graded.
+const PAIR_BOARD = { balanced: '⚖️ Balanced', safest: '🛡️ Safest', front: '🏆 Front runners', spec: '📍 Specialists', dark: '🐎 Darkhorse',
+  'balanced:top3': '🥉 Top 3 only', 'balanced:top5': '🖐️ Top 5 only', 'balanced:top10': '🔟 Top 10 only' }
+function PairsRecord({ p, view }) {
+  const rows = Object.entries(p || {}).filter(([, x]) => x.n > 0)
+  if (!rows.length) return view === 'live' ? <p className="muted small">🤝 Pairs: none graded yet — the first board freezes at this weekend's green flag.</p> : null
+  const recent = p.balanced?.races?.slice(0, 12) || []
+  return (
+    <div className="grid-cards">
+      <div className="card"><div className="cheat-title">🤝 Pairs — both drivers had to finish where their leg said</div>
+        <div className="lines">{rows.map(([k, x]) => (
+          <div key={k}>{PAIR_BOARD[k] || k}: <b>{x.hits}/{x.n}</b> <span className="muted">exp {x.expected.toFixed(1)}{x.starN ? ` · ★ ${x.starHits}/${x.starN} (exp ${x.starExpected.toFixed(1)})` : ''}{x.void ? ` · ${x.void} void` : ''}</span></div>))}</div>
+        {view === 'replay' && <div className="muted small">Replay boards have no 📍 specialist tags (those come from the live card), so that mode is live-only.</div>}
+      </div>
+      {recent.length > 0 && (
+        <div className="card"><div className="cheat-title">Latest ⚖️ Balanced pairs</div>
+          <div className="lines">{recent.map((r, i) => (
+            <div key={i} className="small">{r.hit ? '✅' : '✗'} {dayLabel(r.date)} · {r.legs.map((l) => `${l.name} ${l.leg.replace('top', 'T')} (P${l.finish})`).join(' + ')} <span className="muted">{r.chancePct}%</span></div>))}</div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function TrackRecord({ series }) {
   const tr = useJson(`${series}/track_record.json`)
   const [view, setView] = useState('replay')
@@ -74,6 +98,7 @@ export default function TrackRecord({ series }) {
         : 'Replay: Final Lap 2.0 launched Oct 2026. For earlier 2026 races, the model was fit only on 2023-2025 and given only what was known before each race (after qualifying). It shows how the model would have done — it is not a record of picks shown at the time.'}</p>
       <Summary s={v?.summary} />
       <Races races={v?.races} />
+      <PairsRecord p={tr.pairs?.[view]} view={view} />
       {Object.keys(bt).length > 0 && (
         <div className="card">
           <div className="cheat-title">Backtest by season (after qualifying, each season predicted from earlier seasons only)</div>

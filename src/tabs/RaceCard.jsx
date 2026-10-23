@@ -2,6 +2,8 @@ import { pct, raceTime, TYPE_ICON } from '../lib/data.js'
 import { openDriver } from '../lib/stores.js'
 import { Avatar, DriverCell, PickButton, Prob, Section } from '../components/ui.jsx'
 import PrismPicks from '../components/PrismPicks.jsx'
+import Pairs from '../components/Pairs.jsx'
+import { isF1 } from '../lib/stores.js'
 
 // 🏁 Race Card -- this weekend's race, the locked-style Top Picks tiers, and Slap Shot-style cheat sheets.
 export function RaceHeader({ card }) {
@@ -87,6 +89,7 @@ export default function RaceCard({ card, series }) {
         <Sheet title="🌪️ Chaos specialists" sub={`Finish well above expectations in races with the most cautions and wrecks${chaos ? ` — ${chaos.chaos} of ${chaos.n} races here since 2022 were chaos races` : ''}. Context only, not in the chances.`} rows={by('top10').filter((d) => d.tags?.some((t) => t.key === 'chaos')).slice(0, 8)} stat="top10" label="Top-10 chance" prop="top10" />
         <Sheet title="🐎 Darkhorses" sub="Best win chance outside the top 8 favorites" rows={by('win').slice(8, 14)} stat="win" label="Win chance" />
       </div>
+      {!isF1(series || card.series) && <Pairs card={card} series={series || card.series} />}
     </div>
   )
 }
