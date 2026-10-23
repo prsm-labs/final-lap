@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { pct, useJson } from '../lib/data.js'
-import { buildPairs, fmtAmerican, LEG_FILTERS, LEGS, MODES, relText, STAR_TOP } from '../lib/pairs.js'
+import { buildPairs, fmtAmerican, LEG_FILTERS, LEGS, LEVELS, MODES, relText, STAR_TOP } from '../lib/pairs.js'
 import { openDriver, SERIES } from '../lib/stores.js'
 import { Avatar, PickButton, Section, Tags } from './ui.jsx'
 
@@ -46,6 +46,7 @@ function PairCard({ pr, series }) {
 
 export default function Pairs({ card, series }) {
   const [mode, setMode] = useState('balanced')
+  const [level, setLevel] = useState('all')
   const [leg, setLeg] = useState(null)
   const [stars, setStars] = useState(false)
   const cup = useJson('cup/next.json')
@@ -53,7 +54,8 @@ export default function Pairs({ card, series }) {
   const truck = useJson('truck/next.json')
   const t0 = Date.parse(card.race?.date)
   const others = [cup, xfin, truck].filter((c) => c?.race && c.series !== series && Math.abs(Date.parse(c.race.date) - t0) <= 3 * DAY)
-  const pairs = useMemo(() => buildPairs(card, { mode, leg, others }), [card, mode, leg, others.length]) // eslint-disable-line react-hooks/exhaustive-deps
+  const pairs = useMemo(() => buildPairs(card, { mode, leg, others, level }), [card, mode, leg, level, others.length]) // eslint-disable-line react-hooks/exhaustive-deps
+  const levelInfo = LEVELS.find((l) => l.key === level)
   const shown = stars ? pairs.filter((pr) => pr.starRank).sort((x, y) => x.starRank - y.starRank) : pairs
   const modes = MODES.filter((m) => m.key !== 'across' || others.length)
   return (
@@ -66,15 +68,19 @@ export default function Pairs({ card, series }) {
         while two top-5 legs (+7%) and a top-5 + top-10 (+8%) hit together <b>more</b> — strong cars run up front together. Two
         top-10s: no steady link. Teammates are no different. Held out, these beat treating the legs as independent in 5 of 6
         series-seasons. Win legs are left out. Pairs freeze with the pre-green snapshot and are graded in Track Record. Not a lock.
+        {' '}Levels: 🛡️ Safe (both hit 25%+), ⚖️ Mid-range (10-25%), 🌠 Long shot (3-10%) — the same legs and factors, so a long shot is priced as
+        honestly as a safe pair (each level's board is graded on the 2026 replay in Track Record); mid-range and long shots lead with ✨ two
+        cars that run up front together (top 5 + top 5 / top 10: +7-8%).
       </div>
+      <div className="pill-row">{LEVELS.map((l) => <button key={l.key} className={`pill ${level === l.key ? 'active' : ''}`} onClick={() => setLevel(l.key)} title={l.blurb}>{l.label}</button>)}</div>
       <div className="pill-row">{modes.map((m) => <button key={m.key} className={`pill ${mode === m.key ? 'active' : ''}`} onClick={() => setMode(m.key)}>{m.label}</button>)}</div>
       <div className="pill-row">
         {LEG_FILTERS.map((f) => <button key={String(f.key)} className={`pill ${leg === f.key ? 'active' : ''}`} onClick={() => setLeg(f.key)}>{f.label}</button>)}
         <button className={`pill ${stars ? 'active' : ''}`} onClick={() => setStars((v) => !v)}>★ Best {STAR_TOP}</button>
       </div>
-      <p className="muted small">{MODES.find((m) => m.key === mode)?.blurb}</p>
+      <p className="muted small">{level !== 'all' ? `${levelInfo.blurb} · ` : ''}{MODES.find((m) => m.key === mode)?.blurb}</p>
       <div className="grid-cards">
-        {shown.length === 0 && <p className="muted">No pairs for this mode clear an 8% both-hit chance on this card{card.race?.ttype === 'ss' ? ' — superspeedways spread the top-3 / top-5 chances too thin' : ''}.</p>}
+        {shown.length === 0 && <p className="muted">No pairs for this mode {level === 'all' ? 'clear an 8% both-hit chance' : 'land in this level\'s band'} on this card{card.race?.ttype === 'ss' ? ' — superspeedways spread the top-3 / top-5 chances too thin' : ''}.</p>}
         {shown.map((pr) => <PairCard key={pr.key} pr={pr} series={series} />)}
       </div>
     </>

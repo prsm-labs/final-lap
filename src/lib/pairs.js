@@ -19,6 +19,17 @@ export const LEGS = {
 const LEG_KEYS = Object.keys(LEGS)
 export const PAIR_CORR = { 'top3+top3': 0.71, 'top3+top5': 0.92, 'top10+top3': 0.92, 'top5+top5': 1.07, 'top10+top5': 1.08, 'top10+top10': 1 }
 
+// Levels (2026-10-23, user: mid-range + long-shot pairs, data-backed): All = the board as before (default, 8% floor); 🛡️ Safe =
+// both-hit 25%+; ⚖️ Mid-range = 10-25%; 🌠 Long shot = 3-10%. Same legs and measured factors at every level; every level's
+// Balanced board is also built on the 2026 replay cards and graded in Track Record (replay view). Mid / long lead with the
+// measured rise-together legs in one race: two top-5s (1.07) or a top 5 + top 10 (1.08) -- strong cars run up front together.
+export const LEVELS = [
+  { key: 'all', label: 'All levels', min: 0.08, max: 1.01, blurb: 'Every chance band from 8% — the board as before' },
+  { key: 'safe', label: '🛡️ Safe', min: 0.25, max: 1.01, blurb: 'Both-hit 25% or better' },
+  { key: 'mid', label: '⚖️ Mid-range', min: 0.1, max: 0.25, blurb: 'Both-hit 10-25% (about +300 to +900 fair)' },
+  { key: 'long', label: '🌠 Long shot', min: 0.03, max: 0.1, blurb: 'Both-hit 3-10% — the stars-align pairs (about +900 to +3200 fair)' },
+]
+export const LEVEL_KEYS = LEVELS.map((l) => l.key)
 export const MAX_PAIRS = 10
 export const STAR_TOP = 3
 const MIN_CHANCE = 0.08
@@ -80,7 +91,7 @@ function take(sorted, n, state) {
   const got = []
   for (const pr of sorted) {
     if (got.length >= n) break
-    if (state.keys.has(pr.key) || pr.chance < MIN_CHANCE) continue
+    if (state.keys.has(pr.key) || pr.chance < (state.min ?? MIN_CHANCE) || pr.chance >= (state.max ?? 1.01)) continue
     const ids = pr.legs.map((l) => `${l.series}:${l.d.driver_id}`)
     if (ids.some((id) => (state.uses.get(id) || 0) >= state.cap)) continue
     state.keys.add(pr.key)
@@ -102,13 +113,14 @@ function withStars(list, legs) {
 }
 
 // card: this race's card (next.json / a frozen snapshot); others: other NASCAR series' cards this weekend (for 🔀).
-export function buildPairs(card, { mode = 'balanced', leg = null, others = [] } = {}) {
+export function buildPairs(card, { mode = 'balanced', leg = null, others = [], level = 'all' } = {}) {
   if (!card?.drivers?.length) return []
   const winRank = new Map([...card.drivers].sort((a, b) => b.win - a.win).map((d, i) => [d.driver_id, i]))
   const dark = (d) => (winRank.get(d.driver_id) ?? 0) >= 8
   const legs = legsOf(card, leg, (d) => isSpec(d) || dark(d))
   const core = legs.filter((l) => [...card.drivers].sort((a, b) => b[l.leg] - a[l.leg]).slice(0, LEGS[l.leg].k).some((d) => d.driver_id === l.d.driver_id))
-  const state = { keys: new Set(), uses: new Map(), cap: MAX_PER_DRIVER[mode] ?? MAX_PER_DRIVER.default }
+  const LV = LEVELS.find((l) => l.key === level) || LEVELS[0]
+  const state = { keys: new Set(), uses: new Map(), cap: MAX_PER_DRIVER[mode] ?? MAX_PER_DRIVER.default, min: LV.min, max: LV.max }
   const tag = (list, section) => list.map((pr) => ({ ...pr, section }))
   const pairs = (f, ls = core) => allPairs(ls, ls, f)
   const combo = (c) => (a, b) => [a.leg, b.leg].sort().join('+') === c
@@ -122,7 +134,10 @@ export function buildPairs(card, { mode = 'balanced', leg = null, others = [] } 
     out = tag(take(allPairs(core, other, () => true), MAX_PAIRS, state), '🔀 Across series')
   } else if (leg) out = tag(take(pairs(() => true), MAX_PAIRS, state), `${LEGS[leg].emoji} ${LEGS[leg].short}`)
   else {
+    const together = level === 'mid' || level === 'long'
+      ? tag(take(pairs((a, b) => (PAIR_CORR[[a.leg, b.leg].sort().join('+')] ?? 1) > 1.03, legs), 2, state), '✨ Stars align: up front together') : []
     out = [
+      ...together,
       ...tag(take(pairs(combo('top10+top10')), 3, state), '🔟 Top 10s'),
       ...tag(take(pairs(combo('top10+top5')), 2, state), '🖐️ Top 5 + top 10'),
       ...tag(take(pairs(combo('top5+top5')), 1, state), '🖐️ Top 5s'),

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T16:03+00:00",
+ "generated_at": "2026-10-23T17:43+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -104,6 +104,190 @@
    ]
   }
  },
+ "tiers": {
+  "mid": {
+   "label": "Mid-range",
+   "rule": {
+    "label": "Mid-range",
+    "floor": 0.3,
+    "cap": 0.5,
+    "real": 0.35,
+    "rank": "chance",
+    "stat_cap": 2
+   },
+   "backtest": {
+    "n": 750,
+    "hits": 294,
+    "said": 0.4045,
+    "own": 0.2197,
+    "races": 257,
+    "seasons": {
+     "2024": [
+      223,
+      80
+     ],
+     "2025": [
+      274,
+      118
+     ],
+     "2026": [
+      253,
+      96
+     ]
+    },
+    "stats": {
+     "top10": [
+      365,
+      139
+     ],
+     "top3": [
+      157,
+      61
+     ],
+     "top5": [
+      184,
+      80
+     ],
+     "win": [
+      44,
+      14
+     ]
+    },
+    "series": {
+     "Cup": [
+      292,
+      103
+     ],
+     "O'Reilly": [
+      267,
+      113
+     ],
+     "Truck": [
+      191,
+      78
+     ]
+    },
+    "bands": [
+     [
+      0.3,
+      0.35,
+      138,
+      34
+     ],
+     [
+      0.35,
+      0.4,
+      226,
+      81
+     ],
+     [
+      0.4,
+      0.45,
+      200,
+      79
+     ],
+     [
+      0.45,
+      1.01,
+      186,
+      100
+     ]
+    ]
+   },
+   "live": {
+    "n": 0,
+    "hits": 0
+   }
+  },
+  "long": {
+   "label": "Long shots",
+   "rule": {
+    "label": "Long shots",
+    "floor": 0.1,
+    "cap": 0.25,
+    "real": 0.15,
+    "rank": "chance",
+    "stat_cap": 2
+   },
+   "backtest": {
+    "n": 768,
+    "hits": 146,
+    "said": 0.1998,
+    "own": 0.0658,
+    "races": 257,
+    "seasons": {
+     "2024": [
+      235,
+      46
+     ],
+     "2025": [
+      278,
+      55
+     ],
+     "2026": [
+      255,
+      45
+     ]
+    },
+    "stats": {
+     "top10": [
+      299,
+      57
+     ],
+     "top3": [
+      215,
+      40
+     ],
+     "top5": [
+      221,
+      40
+     ],
+     "win": [
+      33,
+      9
+     ]
+    },
+    "series": {
+     "Cup": [
+      300,
+      53
+     ],
+     "O'Reilly": [
+      271,
+      54
+     ],
+     "Truck": [
+      197,
+      39
+     ]
+    },
+    "bands": [
+     [
+      0.1,
+      0.15,
+      67,
+      7
+     ],
+     [
+      0.15,
+      0.2,
+      253,
+      44
+     ],
+     [
+      0.2,
+      1.01,
+      448,
+      95
+     ]
+    ]
+   },
+   "live": {
+    "n": 0,
+    "hits": 0
+   }
+  }
+ },
  "live": {
   "nascar": {
    "n": 0,
@@ -142,6 +326,120 @@
    "stage": "pre",
    "picks": [],
    "series": "truck",
+   "tiers": {
+    "mid": [
+     {
+      "driver_id": 4107,
+      "name": "Ben Rhodes",
+      "car": "99",
+      "team": "ThorSport Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.4192,
+      "card": 0.378,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.397,
+      "trackN": 200
+     },
+     {
+      "driver_id": 4296,
+      "name": "Tyler Ankrum",
+      "car": "18",
+      "team": "McAnally Hilgemann Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.4069,
+      "card": 0.3562,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.395,
+      "trackN": 200
+     },
+     {
+      "driver_id": 4312,
+      "name": "Chandler Smith",
+      "car": "38",
+      "team": "Front Row Motorsports",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.3261,
+      "card": 0.2815,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.262,
+      "trackN": 138
+     }
+    ],
+    "long": [
+     {
+      "driver_id": 4096,
+      "name": "Corey LaJoie",
+      "car": "10",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2472,
+      "card": 0.2235,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.214,
+      "trackN": 448
+     },
+     {
+      "driver_id": 4235,
+      "name": "Ty Majeski",
+      "car": "88",
+      "team": "ThorSport Racing",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.2273,
+      "card": 0.2194,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.212,
+      "trackN": 448
+     },
+     {
+      "driver_id": 4503,
+      "name": "Giovanni Ruggiero",
+      "car": "17",
+      "team": "TRICON Garage",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.2087,
+      "card": 0.1865,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.211,
+      "trackN": 448
+     }
+    ]
+   },
    "locked": false
   },
   {
@@ -171,6 +469,102 @@
     }
    ],
    "series": "oreilly",
+   "tiers": {
+    "mid": [
+     {
+      "driver_id": 4422,
+      "name": "Rajah Caruth",
+      "car": "88",
+      "team": "JR Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.4518,
+      "card": 0.4111,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.52,
+      "trackN": 186
+     },
+     {
+      "driver_id": 4217,
+      "name": "Harrison Burton",
+      "car": "24",
+      "team": "Sam Hunt Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3437,
+      "card": 0.3108,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.266,
+      "trackN": 138
+     }
+    ],
+    "long": [
+     {
+      "driver_id": 4449,
+      "name": "Leland Honeyman",
+      "car": "71",
+      "team": "DGM Racing x JIM",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2083,
+      "card": 0.2024,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.211,
+      "trackN": 448
+     },
+     {
+      "driver_id": 4376,
+      "name": "Blaine Perkins",
+      "car": "31",
+      "team": "Jordan Anderson Racing Bommarito Autosport",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2055,
+      "card": 0.1974,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.211,
+      "trackN": 448
+     },
+     {
+      "driver_id": 4085,
+      "name": "Brandon Jones",
+      "car": "20",
+      "team": "Joe Gibbs Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.2017,
+      "card": 0.1752,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.21,
+      "trackN": 448
+     }
+    ]
+   },
    "locked": false
   },
   {
@@ -182,6 +576,102 @@
    "stage": "pre",
    "picks": [],
    "series": "cup",
+   "tiers": {
+    "mid": [
+     {
+      "driver_id": 3989,
+      "name": "Chris Buescher",
+      "car": "17",
+      "team": "RFK Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.412,
+      "card": 0.3756,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.396,
+      "trackN": 200
+     },
+     {
+      "driver_id": 4001,
+      "name": "Ross Chastain",
+      "car": "1",
+      "team": "Trackhouse Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3841,
+      "card": 0.3357,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.36,
+      "trackN": 226
+     }
+    ],
+    "long": [
+     {
+      "driver_id": 4272,
+      "name": "Zane Smith",
+      "car": "38",
+      "team": "Front Row Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2472,
+      "card": 0.2311,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.214,
+      "trackN": 448
+     },
+     {
+      "driver_id": 4184,
+      "name": "William Byron",
+      "car": "24",
+      "team": "Hendrick Motorsports",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.2445,
+      "card": 0.2129,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.214,
+      "trackN": 448
+     },
+     {
+      "driver_id": 4013,
+      "name": "Ty Dillon",
+      "car": "10",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2268,
+      "card": 0.2185,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.212,
+      "trackN": 448
+     }
+    ]
+   },
    "locked": false
   },
   {

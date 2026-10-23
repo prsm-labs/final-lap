@@ -7,7 +7,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { buildPairs, LEGS, MODE_KEYS, pairRecord } from '../src/lib/pairs.js'
+import { buildPairs, LEGS, LEVEL_KEYS, MODE_KEYS, pairRecord } from '../src/lib/pairs.js'
 
 const app = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const force = process.argv.includes('--force')
@@ -18,6 +18,8 @@ const boards = (card) => {
   const b = {}
   for (const mode of MODE_KEYS.filter((m) => m !== 'across')) b[mode] = buildPairs(card, { mode }).map(pairRecord)
   for (const leg of Object.keys(LEGS)) b[`balanced:${leg}`] = buildPairs(card, { mode: 'balanced', leg }).map(pairRecord)
+  // 2026-10-23 levels: safe / mid-range / long-shot boards for every mode (plain mode keys stay the original "all" board)
+  for (const level of LEVEL_KEYS.filter((l) => l !== 'all')) for (const mode of MODE_KEYS.filter((m) => m !== 'across')) b[`${level}:${mode}`] = buildPairs(card, { mode, level }).map(pairRecord)
   return b
 }
 let n = 0

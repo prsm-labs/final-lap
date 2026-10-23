@@ -59,6 +59,9 @@ function Races({ races }) {
 // 2026-10-23 🤝 Pairs (Race Card): every board frozen at the green flag (live) or rebuilt from the 2026 replay, graded.
 const PAIR_BOARD = { balanced: '⚖️ Balanced', safest: '🛡️ Safest', front: '🏆 Front runners', spec: '📍 Specialists', dark: '🐎 Darkhorse',
   'balanced:top3': '🥉 Top 3 only', 'balanced:top5': '🖐️ Top 5 only', 'balanced:top10': '🔟 Top 10 only' }
+// 2026-10-23 pair levels: <level>:<mode> boards
+const PAIR_LEVEL = { safe: '🛡️ Safe', mid: '⚖️ Mid-range', long: '🌠 Long shot' }
+const pairBoard = (k) => PAIR_BOARD[k] || (PAIR_LEVEL[k.split(':')[0]] ? `${PAIR_LEVEL[k.split(':')[0]]} · ${PAIR_BOARD[k.split(':')[1]] || k.split(':')[1]}` : k)
 function PairsRecord({ p, view }) {
   const rows = Object.entries(p || {}).filter(([, x]) => x.n > 0)
   if (!rows.length) return view === 'live' ? <p className="muted small">🤝 Pairs: none graded yet — the first board freezes at this weekend's green flag.</p> : null
@@ -67,7 +70,7 @@ function PairsRecord({ p, view }) {
     <div className="grid-cards">
       <div className="card"><div className="cheat-title">🤝 Pairs — both drivers had to finish where their leg said</div>
         <div className="lines">{rows.map(([k, x]) => (
-          <div key={k}>{PAIR_BOARD[k] || k}: <b>{x.hits}/{x.n}</b> <span className="muted">exp {x.expected.toFixed(1)}{x.starN ? ` · ★ ${x.starHits}/${x.starN} (exp ${x.starExpected.toFixed(1)})` : ''}{x.void ? ` · ${x.void} void` : ''}</span></div>))}</div>
+          <div key={k}>{pairBoard(k)}: <b>{x.hits}/{x.n}</b> <span className="muted">exp {x.expected.toFixed(1)}{x.starN ? ` · ★ ${x.starHits}/${x.starN} (exp ${x.starExpected.toFixed(1)})` : ''}{x.void ? ` · ${x.void} void` : ''}</span></div>))}</div>
         {view === 'replay' && <div className="muted small">Replay boards have no 📍 specialist tags (those come from the live card), so that mode is live-only.</div>}
       </div>
       {recent.length > 0 && (
