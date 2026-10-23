@@ -290,3 +290,11 @@ td.fins { white-space: nowrap; }
 .prism-card .prism-head > div { flex: 1 1 0; min-width: 0; }  /* title takes the room, toggle stays on the right */
 .prism-toggle { margin-left: auto; background: transparent; border: 1px solid currentColor; border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 0.8rem; cursor: pointer; color: inherit; opacity: 0.85; }
 .prism-toggle:hover { opacity: 1; }
+
+/* 2026-10-22 (user: thin scrollbars that blend in, in the app's accent) -- every scroll area, page included */
+* { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 55%, transparent) transparent; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar-button { display: none; }
