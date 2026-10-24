@@ -48,11 +48,15 @@ export default function App() {
           </div>
           <span className="badge">PRISM LABS</span>
         </header>
-        <div className="sport-switch" role="tablist" aria-label="Motorsport">
-          {SPORTS.map((s) => {
-            const on = (s.key === 'f1') === isF1(series)
-            return <button key={s.key} role="tab" aria-selected={on} className={on ? 'active' : ''} onClick={() => setSport(s.key)}>{s.label}</button>
-          })}
+        {/* 2026-10-24 (user prototype): ☰ page menu first in the row under the logo, beside the NASCAR | F1 switch */}
+        <div className="master-bar tm-row">
+          <TabMenu tabs={TABS} tab={tab} setTab={setTab} />
+          <div className="sport-switch" role="tablist" aria-label="Motorsport">
+            {SPORTS.map((s) => {
+              const on = (s.key === 'f1') === isF1(series)
+              return <button key={s.key} role="tab" aria-selected={on} className={on ? 'active' : ''} onClick={() => setSport(s.key)}>{s.label}</button>
+            })}
+          </div>
         </div>
         {!isF1(series) && (
           <div className="series-switch" role="tablist" aria-label="Series">
@@ -61,8 +65,6 @@ export default function App() {
             ))}
           </div>
         )}
-        {/* 2026-10-24 (user): ☰ page menu replaces the scrolling tab bar */}
-        <TabMenu tabs={TABS} tab={tab} setTab={setTab} />
         <main className="content">
           {!card && <p className="muted">Loading…</p>}
           {card && T.needsCard && !hasCard && <p className="muted">No upcoming {isF1(series) ? 'F1' : SERIES.find((s) => s.key === series)?.label} race on the schedule — the season is over. See the Schedule and Track Record tabs.</p>}
