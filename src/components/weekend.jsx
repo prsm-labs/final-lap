@@ -145,6 +145,10 @@ export function Schedule({ events, sessions, series }) {
   const status = (e) => {
     if (posted.has(e.name)) return <span className="chip ok">Results below</span>
     const t = Date.parse(e.utc)
+    // 2026-10-24: a started session only reads "under way" for its usual length; after that it's finished and its
+    // results land with the next update (they were showing "Under way" for a day)
+    const runs = { Practice: 75, Qualifying: 90, Race: series === 'f1' ? 150 : 240 }[e.type] ?? 120
+    if (t <= now && now - t > runs * 60e3) return <span className="chip">Finished · results next update</span>
     if (t <= now) return <span className="chip ok">{e.type === 'Race' ? 'Green flag · Live tab' : 'Under way · Live tab'}</span>
     return <span className={`chip ${e === next ? 'ok' : ''}`}>{e === next ? `Next · in ${inWords(t - now)}` : 'Upcoming'}</span>
   }
