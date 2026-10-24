@@ -4,6 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0e0f13" />
+    <!-- 2026-10-23 moved to degenlabs.app (user). An old address sends the visitor to https://auto.degenlabs.app and carries this browser's
+         saved data (My Picks, filters, settings: localStorage) along in the URL hash once, so nothing is lost; the new address
+         reads it in, keeps anything it already has, and clears the hash. API routes (/api/...) on the old address keep working. -->
+    <script>
+      (function () {
+        var OLD = {'moto.thisisprism.app':1,'nascar.thisisprism.app':1,'lap.prsmlabs.app':1}, TO = 'auto.degenlabs.app', KEY = 'prism-migrate=';
+        try {
+          if (OLD[location.hostname]) {
+            var d = {}, s = '', i, k;
+            try { for (i = 0; i < localStorage.length; i++) { k = localStorage.key(i); d[k] = localStorage.getItem(k); } } catch (e) {}
+            try { s = JSON.stringify(d); } catch (e) {}
+            var hash = s && s.length > 2 && s.length < 60000 ? '#' + KEY + encodeURIComponent(s) : location.hash;
+            location.replace('https://' + TO + location.pathname + location.search + hash);
+            return;
+          }
+          var at = location.hash.indexOf(KEY);
+          if (at === 1) {
+            var o = JSON.parse(decodeURIComponent(location.hash.slice(1 + KEY.length)));
+            for (var key in o) { try { if (localStorage.getItem(key) === null) localStorage.setItem(key, o[key]); } catch (e) {} }
+            history.replaceState(null, '', location.pathname + location.search);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content="Final Lap — NASCAR Cup, O'Reilly and Truck projections: win, podium, top 5 and top 10 chances for every driver, with a real track record. A PRISM Labs app." />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -13,15 +37,15 @@
     <meta property="og:site_name" content="PRISM Labs" />
     <meta property="og:title" content="Final Lap · NASCAR · F1 · PRISM Labs" />
     <meta property="og:description" content="Win, podium, top 5 and top 10 chances for every Cup, O&#x27;Reilly, Truck and Formula 1 race." />
-    <meta property="og:url" content="https://moto.thisisprism.app/" />
-    <meta property="og:image" content="https://moto.thisisprism.app/og.png" />
+    <meta property="og:url" content="https://auto.degenlabs.app/" />
+    <meta property="og:image" content="https://auto.degenlabs.app/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Final Lap — Win, podium, top 5 and top 10 chances for every Cup, O&#x27;Reilly, Truck and Formula 1 race." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Final Lap · NASCAR · F1 · PRISM Labs" />
     <meta name="twitter:description" content="Win, podium, top 5 and top 10 chances for every Cup, O&#x27;Reilly, Truck and Formula 1 race." />
-    <meta name="twitter:image" content="https://moto.thisisprism.app/og.png" />
+    <meta name="twitter:image" content="https://auto.degenlabs.app/og.png" />
   </head>
   <body>
     <div id="root"></div>
