@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-24T16:06+00:00",
+ "generated_at": "2026-10-24T22:04+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -195,7 +195,7 @@
     ]
    },
    "live": {
-    "n": 3,
+    "n": 5,
     "hits": 1
    }
   },
@@ -283,14 +283,14 @@
     ]
    },
    "live": {
-    "n": 3,
-    "hits": 1
+    "n": 6,
+    "hits": 2
    }
   }
  },
  "live": {
   "nascar": {
-   "n": 0,
+   "n": 1,
    "hits": 0
   },
   "f1": {
@@ -305,7 +305,7 @@
   ],
   "oreilly": [
    "oreilly",
-   5664
+   5665
   ],
   "truck": [
    "truck",
@@ -477,7 +477,9 @@
      ],
      "start": null,
      "track": 0.57,
-     "trackN": 108
+     "trackN": 108,
+     "actual": 35,
+     "result": "miss"
     }
    ],
    "series": "oreilly",
@@ -499,7 +501,9 @@
       ],
       "start": null,
       "track": 0.52,
-      "trackN": 186
+      "trackN": 186,
+      "actual": 17,
+      "result": "miss"
      },
      {
       "driver_id": 4217,
@@ -517,7 +521,9 @@
       ],
       "start": null,
       "track": 0.264,
-      "trackN": 139
+      "trackN": 139,
+      "actual": 24,
+      "result": "miss"
      }
     ],
     "long": [
@@ -537,7 +543,9 @@
       ],
       "start": null,
       "track": 0.212,
-      "trackN": 451
+      "trackN": 451,
+      "actual": 36,
+      "result": "miss"
      },
      {
       "driver_id": 4376,
@@ -555,7 +563,9 @@
       ],
       "start": null,
       "track": 0.211,
-      "trackN": 451
+      "trackN": 451,
+      "actual": 7,
+      "result": "hit"
      },
      {
       "driver_id": 4085,
@@ -573,11 +583,13 @@
       ],
       "start": null,
       "track": 0.211,
-      "trackN": 451
+      "trackN": 451,
+      "actual": 9,
+      "result": "miss"
      }
     ]
    },
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 5631,
@@ -585,7 +597,7 @@
    "track": "Talladega Superspeedway",
    "start": "2026-10-25T14:00:00",
    "date": "2026-10-25",
-   "stage": "pre",
+   "stage": "post",
    "picks": [],
    "series": "cup",
    "tiers": {
@@ -598,15 +610,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.412,
-      "card": 0.3756,
+      "chance": 0.3859,
+      "card": 0.3406,
       "last": [
        10,
        1
       ],
-      "start": null,
-      "track": 0.397,
-      "trackN": 202
+      "start": 5.0,
+      "track": 0.361,
+      "trackN": 226
      },
      {
       "driver_id": 4001,
@@ -616,36 +628,18 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3841,
-      "card": 0.3357,
+      "chance": 0.376,
+      "card": 0.3307,
       "last": [
        10,
        2
       ],
-      "start": null,
-      "track": 0.36,
+      "start": 15.0,
+      "track": 0.359,
       "trackN": 226
      }
     ],
     "long": [
-     {
-      "driver_id": 4272,
-      "name": "Zane Smith",
-      "car": "38",
-      "team": "Front Row Motorsports",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.2472,
-      "card": 0.2311,
-      "last": [
-       10,
-       0
-      ],
-      "start": null,
-      "track": 0.215,
-      "trackN": 451
-     },
      {
       "driver_id": 4184,
       "name": "William Byron",
@@ -654,33 +648,51 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.2445,
-      "card": 0.2129,
+      "chance": 0.245,
+      "card": 0.2131,
       "last": [
        10,
        1
       ],
-      "start": null,
+      "start": 17.0,
       "track": 0.215,
-      "trackN": 451
+      "trackN": 454
      },
      {
-      "driver_id": 4013,
-      "name": "Ty Dillon",
-      "car": "10",
-      "team": "Kaulig Racing",
+      "driver_id": 4224,
+      "name": "Noah Gragson",
+      "car": "4",
+      "team": "Front Row Motorsports",
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2268,
-      "card": 0.2185,
+      "chance": 0.2432,
+      "card": 0.221,
+      "last": [
+       10,
+       1
+      ],
+      "start": 39.0,
+      "track": 0.215,
+      "trackN": 454
+     },
+     {
+      "driver_id": 4059,
+      "name": "Erik Jones",
+      "car": "43",
+      "team": "Legacy Motor Club",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2281,
+      "card": 0.2193,
       "last": [
        10,
        0
       ],
-      "start": null,
-      "track": 0.213,
-      "trackN": 451
+      "start": 29.0,
+      "track": 0.214,
+      "trackN": 454
      }
     ]
    },
@@ -714,13 +726,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.7304,
+     "chance": 0.7291,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.688,
+     "track": 0.687,
      "trackN": 76
     }
    ],
@@ -735,14 +747,14 @@
       "k": 1,
       "prop": "win",
       "label": "Win",
-      "chance": 0.4068,
-      "card": 0.4465,
+      "chance": 0.4058,
+      "card": 0.4433,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.396,
+      "track": 0.395,
       "trackN": 202
      },
      {
@@ -753,14 +765,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3992,
-      "card": 0.3422,
+      "chance": 0.3921,
+      "card": 0.3378,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.363,
+      "track": 0.361,
       "trackN": 226
      },
      {
@@ -771,14 +783,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3926,
-      "card": 0.3447,
+      "chance": 0.387,
+      "card": 0.3413,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.362,
+      "track": 0.361,
       "trackN": 226
      }
     ],
@@ -791,32 +803,32 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2141,
-      "card": 0.1914,
+      "chance": 0.2094,
+      "card": 0.1832,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.212,
-      "trackN": 451
+      "track": 0.213,
+      "trackN": 454
      },
      {
-      "driver_id": 4523,
-      "name": "Cole Butcher",
-      "car": "13",
-      "team": "ThorSport Racing",
+      "driver_id": 4487,
+      "name": "Brenden Queen",
+      "car": "12",
+      "team": "Kaulig Racing",
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1913,
-      "card": 0.1722,
+      "chance": 0.1964,
+      "card": 0.1604,
       "last": [
        10,
-       0
+       1
       ],
       "start": null,
-      "track": 0.175,
+      "track": 0.176,
       "trackN": 253
      },
      {
@@ -827,15 +839,174 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1837,
-      "card": 0.1616,
+      "chance": 0.1958,
+      "card": 0.1679,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.174,
+      "track": 0.176,
       "trackN": 253
+     }
+    ]
+   },
+   "locked": false
+  },
+  {
+   "race_id": 5665,
+   "name": "National Debt Relief 250",
+   "track": "Martinsville Speedway",
+   "start": "2026-10-31T16:00:00",
+   "date": "2026-10-31",
+   "stage": "pre",
+   "picks": [
+    {
+     "driver_id": 34,
+     "name": "Justin Allgaier",
+     "car": "7",
+     "team": "JR Motorsports",
+     "k": 3,
+     "prop": "top3",
+     "label": "Top 3 finish",
+     "chance": 0.7342,
+     "last": [
+      10,
+      2
+     ],
+     "start": null,
+     "track": 0.689,
+     "trackN": 76
+    },
+    {
+     "driver_id": 4327,
+     "name": "Sam Mayer",
+     "car": "41",
+     "team": "Haas Factory Team",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.6259,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.569,
+     "trackN": 109
+    },
+    {
+     "driver_id": 4463,
+     "name": "Jesse Love",
+     "car": "2",
+     "team": "Richard Childress Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.5512,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.555,
+     "trackN": 149
+    }
+   ],
+   "series": "oreilly",
+   "tiers": {
+    "mid": [
+     {
+      "driver_id": 4422,
+      "name": "Rajah Caruth",
+      "car": "88",
+      "team": "JR Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.424,
+      "card": 0.3865,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.398,
+      "trackN": 202
+     },
+     {
+      "driver_id": 4217,
+      "name": "Harrison Burton",
+      "car": "24",
+      "team": "Sam Hunt Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3342,
+      "card": 0.2933,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.261,
+      "trackN": 140
+     }
+    ],
+    "long": [
+     {
+      "driver_id": 4517,
+      "name": "Jake Finch",
+      "car": "9",
+      "team": "JR Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.1972,
+      "card": 0.1769,
+      "last": [
+       7,
+       0
+      ],
+      "start": null,
+      "track": 0.176,
+      "trackN": 253
+     },
+     {
+      "driver_id": 3884,
+      "name": "Ryan Sieg",
+      "car": "39",
+      "team": "RSS Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.1478,
+      "card": 0.1324,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.118,
+      "trackN": 67
+     },
+     {
+      "driver_id": 4406,
+      "name": "Taylor Gray",
+      "car": "54",
+      "team": "Joe Gibbs Racing",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.1319,
+      "card": 0.125,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.113,
+      "trackN": 67
      }
     ]
    },
