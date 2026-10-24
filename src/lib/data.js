@@ -6,6 +6,7 @@ export function useJson(path) {
   const [data, setData] = useState(() => cache.get(path) || null)
   useEffect(() => {
     let alive = true
+    if (!path) { setData(null); return undefined }   // 2026-10-24: no path = nothing to load
     if (cache.has(path)) { setData(cache.get(path)); return undefined }
     setData(null)
     fetch(`/data/${path}`, { cache: 'no-cache' })

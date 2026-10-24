@@ -239,6 +239,15 @@ table.data-table th { position: sticky; }
 .race-sub { font-size: 0.88rem; }
 .race-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin: 6px 0 4px; }
 .chip { display: inline-block; font-size: 0.74rem; border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px; }
+/* 2026-10-24 📅 race picker (CourtIQ's date bar) + past-race result chips */
+.date-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 0.82rem; }
+.date-pick { display: inline-flex; align-items: center; gap: 6px; }
+.date-pick select { background: var(--surface); color: var(--fg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font: inherit; cursor: pointer; }
+.date-bar.past .date-pick select { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.date-note .link { margin-left: 8px; }
+.res-chip { display: inline-block; font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
+.res-chip.hit { color: var(--good); }
+.res-chip.miss { color: var(--muted); }
 .chip.ok { border-color: color-mix(in srgb, var(--good) 55%, transparent); color: var(--good); }
 .flag-green { color: var(--good); border-color: var(--good); }
 .flag-caution { color: var(--accent); border-color: var(--accent); }

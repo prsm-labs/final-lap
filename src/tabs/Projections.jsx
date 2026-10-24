@@ -2,7 +2,7 @@ import { fx, ord, pct } from '../lib/data.js'
 import { isF1, matches, searchStore } from '../lib/stores.js'
 import { Th, useSort } from '../lib/useSort.jsx'
 import { DriverCell, Finish, Prob, Section } from '../components/ui.jsx'
-import { RaceHeader } from './RaceCard.jsx'
+import { RaceHeader, Result } from './RaceCard.jsx'
 
 // 🔮 Projections -- every driver in the field: win / 2nd / 3rd / top 3 / top 5 / top 10, projected finish, the inputs.
 export default function Projections({ card, series }) {
@@ -24,6 +24,7 @@ export default function Projections({ card, series }) {
           <thead>
             <tr>
               <Th k="name" label="Driver" sort={sort} className="sticky" />
+              {card.past && <Th k="finish" label="Finish" sort={sort} title="Real finish (✅ = top 10)" />}
               <Th k="start" label="Start" sort={sort} title="Starting spot (after qualifying)" />
               <Th k="win" label="Win" sort={sort} />
               <Th k="p2" label="2nd" sort={sort} title="Chance of finishing exactly 2nd" />
@@ -44,6 +45,7 @@ export default function Projections({ card, series }) {
             {sort.sorted.map((d) => (
               <tr key={d.driver_id}>
                 <td className="sticky"><DriverCell d={d} /></td>
+                {card.past && <td className="num"><Result d={d} k="top10" /></td>}
                 <td className="num">{d.start ? ord(d.start) : '—'}</td>
                 <td className="num"><Prob v={d.win} strong={0.15} /></td>
                 <td className="num">{pct(d.p2, 1)}</td>

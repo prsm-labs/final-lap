@@ -23,13 +23,16 @@ export const isF1 = (series) => series === 'f1'
 const saved = (() => { try { return localStorage.getItem('finallap.series') } catch { return null } })()
 let lastNascar = SERIES.some((s) => s.key === saved) ? saved : 'cup'
 export const seriesStore = makeStore(lastNascar)
+// 2026-10-24 📅 race picker: null = the next race, else a past race_id of the series on screen (cleared on a series switch)
+export const raceStore = makeStore(null)
 export const setSeries = (k) => {
+  raceStore.set(null)
   seriesStore.set(k)
   if (k === 'f1') return
   lastNascar = k
   try { localStorage.setItem('finallap.series', k) } catch { /* ignore */ }
 }
-export const setSport = (sp) => seriesStore.set(sp === 'f1' ? 'f1' : lastNascar)
+export const setSport = (sp) => { raceStore.set(null); seriesStore.set(sp === 'f1' ? 'f1' : lastNascar) }
 
 export const slideStore = makeStore(null)          // driver shown in the slideout
 export const openDriver = (d) => slideStore.set(d)
