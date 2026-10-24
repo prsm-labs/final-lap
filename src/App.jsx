@@ -12,6 +12,7 @@ import Schedule from './tabs/Schedule.jsx'
 import Drivers from './tabs/Drivers.jsx'
 import TrackRecord from './tabs/TrackRecord.jsx'
 import About from './tabs/About.jsx'
+import TabMenu from './components/TabMenu.jsx'
 
 // Final Lap 2.0 -- Slap Shot / CourtIQ layout for NASCAR: a series switcher, then Race Card (Top Picks + cheat sheets),
 // Projections, Weekend (lineup / practice / qualifying), Live, My Picks, Schedule, Drivers, Track Record, About.
@@ -60,9 +61,8 @@ export default function App() {
             ))}
           </div>
         )}
-        <nav className="tabs">
-          {TABS.map((t) => <button key={t.key} className={tab === t.key ? 'active' : ''} onClick={() => setTab(t.key)}>{t.label}</button>)}
-        </nav>
+        {/* 2026-10-24 (user): ☰ page menu replaces the scrolling tab bar */}
+        <TabMenu tabs={TABS} tab={tab} setTab={setTab} />
         <main className="content">
           {!card && <p className="muted">Loading…</p>}
           {card && T.needsCard && !hasCard && <p className="muted">No upcoming {isF1(series) ? 'F1' : SERIES.find((s) => s.key === series)?.label} race on the schedule — the season is over. See the Schedule and Track Record tabs.</p>}
