@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T22:03+00:00",
+ "generated_at": "2026-10-24T15:45+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -195,8 +195,8 @@
     ]
    },
    "live": {
-    "n": 0,
-    "hits": 0
+    "n": 3,
+    "hits": 1
    }
   },
   "long": {
@@ -283,8 +283,8 @@
     ]
    },
    "live": {
-    "n": 0,
-    "hits": 0
+    "n": 3,
+    "hits": 1
    }
   }
  },
@@ -309,7 +309,7 @@
   ],
   "truck": [
    "truck",
-   5689
+   5671
   ],
   "f1": [
    "f1",
@@ -344,7 +344,9 @@
       ],
       "start": null,
       "track": 0.398,
-      "trackN": 200
+      "trackN": 200,
+      "actual": 2,
+      "result": "hit"
      },
      {
       "driver_id": 3978,
@@ -362,7 +364,9 @@
       ],
       "start": null,
       "track": 0.398,
-      "trackN": 200
+      "trackN": 200,
+      "actual": 24,
+      "result": "miss"
      },
      {
       "driver_id": 4312,
@@ -380,7 +384,9 @@
       ],
       "start": null,
       "track": 0.267,
-      "trackN": 138
+      "trackN": 138,
+      "actual": 14,
+      "result": "miss"
      }
     ],
     "long": [
@@ -400,7 +406,9 @@
       ],
       "start": null,
       "track": 0.212,
-      "trackN": 448
+      "trackN": 448,
+      "actual": 4,
+      "result": "miss"
      },
      {
       "driver_id": 4487,
@@ -418,7 +426,9 @@
       ],
       "start": null,
       "track": 0.212,
-      "trackN": 448
+      "trackN": 448,
+      "actual": 7,
+      "result": "hit"
      },
      {
       "driver_id": 4107,
@@ -436,7 +446,9 @@
       ],
       "start": null,
       "track": 0.211,
-      "trackN": 448
+      "trackN": 448,
+      "actual": 17,
+      "result": "miss"
      }
     ]
    },
@@ -504,8 +516,8 @@
        2
       ],
       "start": null,
-      "track": 0.266,
-      "trackN": 138
+      "track": 0.264,
+      "trackN": 139
      }
     ],
     "long": [
@@ -524,8 +536,8 @@
        0
       ],
       "start": null,
-      "track": 0.211,
-      "trackN": 448
+      "track": 0.212,
+      "trackN": 451
      },
      {
       "driver_id": 4376,
@@ -543,7 +555,7 @@
       ],
       "start": null,
       "track": 0.211,
-      "trackN": 448
+      "trackN": 451
      },
      {
       "driver_id": 4085,
@@ -560,8 +572,8 @@
        1
       ],
       "start": null,
-      "track": 0.21,
-      "trackN": 448
+      "track": 0.211,
+      "trackN": 451
      }
     ]
    },
@@ -593,8 +605,8 @@
        1
       ],
       "start": null,
-      "track": 0.396,
-      "trackN": 200
+      "track": 0.397,
+      "trackN": 202
      },
      {
       "driver_id": 4001,
@@ -631,8 +643,8 @@
        0
       ],
       "start": null,
-      "track": 0.214,
-      "trackN": 448
+      "track": 0.215,
+      "trackN": 451
      },
      {
       "driver_id": 4184,
@@ -649,8 +661,8 @@
        1
       ],
       "start": null,
-      "track": 0.214,
-      "trackN": 448
+      "track": 0.215,
+      "trackN": 451
      },
      {
       "driver_id": 4013,
@@ -667,8 +679,8 @@
        0
       ],
       "start": null,
-      "track": 0.212,
-      "trackN": 448
+      "track": 0.213,
+      "trackN": 451
      }
     ]
    },
@@ -684,6 +696,149 @@
    "picks": [],
    "series": "f1",
    "waiting": "until qualifying",
+   "locked": false
+  },
+  {
+   "race_id": 5671,
+   "name": "Black's Tire 200 presented by Down East Heating & Air Conditioning",
+   "track": "Martinsville Speedway",
+   "start": "2026-10-30T18:00:00",
+   "date": "2026-10-30",
+   "stage": "pre",
+   "picks": [
+    {
+     "driver_id": 4235,
+     "name": "Ty Majeski",
+     "car": "88",
+     "team": "ThorSport Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.7304,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.688,
+     "trackN": 76
+    }
+   ],
+   "series": "truck",
+   "tiers": {
+    "mid": [
+     {
+      "driver_id": 4446,
+      "name": "Layne Riggs",
+      "car": "34",
+      "team": "Front Row Motorsports",
+      "k": 1,
+      "prop": "win",
+      "label": "Win",
+      "chance": 0.4068,
+      "card": 0.4465,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.396,
+      "trackN": 202
+     },
+     {
+      "driver_id": 4296,
+      "name": "Tyler Ankrum",
+      "car": "18",
+      "team": "McAnally Hilgemann Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3992,
+      "card": 0.3422,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.363,
+      "trackN": 226
+     },
+     {
+      "driver_id": 4107,
+      "name": "Ben Rhodes",
+      "car": "99",
+      "team": "ThorSport Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3926,
+      "card": 0.3447,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.362,
+      "trackN": 226
+     }
+    ],
+    "long": [
+     {
+      "driver_id": 4096,
+      "name": "Corey LaJoie",
+      "car": "10",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2141,
+      "card": 0.1914,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.212,
+      "trackN": 451
+     },
+     {
+      "driver_id": 4523,
+      "name": "Cole Butcher",
+      "car": "13",
+      "team": "ThorSport Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.1913,
+      "card": 0.1722,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.175,
+      "trackN": 253
+     },
+     {
+      "driver_id": 4093,
+      "name": "Daniel Hemric",
+      "car": "19",
+      "team": "McAnally Hilgemann Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.1837,
+      "card": 0.1616,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.174,
+      "trackN": 253
+     }
+    ]
+   },
    "locked": false
   }
  ]
