@@ -42,7 +42,7 @@ export default function App() {
       <div className="app">
         <header className="header">
           <div className="brand">
-            <img src="/logo.png" alt="" className="brand-logo" />
+            {/* 2026-10-23 new logo (waving flag): dark tile, accent tile in light mode */}<picture><source media="(prefers-color-scheme: light)" srcSet="/logo-accent.svg" /><img src="/logo-dark.svg" alt="" className="brand-logo" /></picture>
             <span className="brand-name">Final <b>Lap</b></span>
           </div>
           <span className="badge">PRISM LABS</span>

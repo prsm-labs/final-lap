@@ -226,7 +226,7 @@ table.data-table th { position: sticky; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 /* ---- Final Lap additions ---- */
-.brand-logo { width: 34px; height: 43px; object-fit: contain; }
+.brand-logo { width: 34px; height: 34px; object-fit: contain; display: block; }  /* 2026-10-23 square tile logo */
 .avatar.photo { object-fit: cover; object-position: top; }
 .sport-switch { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 12px; padding: 3px; margin: 6px 0 4px; background: var(--surface2, var(--surface)); max-width: 320px; }
 .sport-switch button { flex: 1; border: 0; background: transparent; color: var(--muted); padding: 8px 14px; border-radius: 9px; cursor: pointer; font-weight: 800; letter-spacing: .06em; }
