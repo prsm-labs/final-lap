@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react'
 // 2026-10-25 (user: the same filter panel in every app -- tags, listed Top / PRISM Pick, open / close): Projections' driver
 // filters, drawn by components/FilterPanel.jsx. Within a group a driver needs any of the options chosen; tags match all (or
 // any); across groups he has to pass every one. The driver search stays the shared searchStore.
-const DEFAULTS = { minWin: null, minTop10: null, top: [], prism: [], tags: [], tagsMode: 'all', make: [] }
+const DEFAULTS = { minWin: null, minTop10: null, top: [], prism: [], tags: [], tagsNot: [], tagsMode: 'all', make: [] }
 let state = { ...DEFAULTS }
 const listeners = new Set()
 export const setDriverFilter = (k, v) => { state = { ...state, [k]: v }; listeners.forEach((fn) => fn()) }
