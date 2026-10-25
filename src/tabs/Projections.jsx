@@ -1,4 +1,6 @@
-import { fx, ord, pct } from '../lib/data.js'
+import { fx, ord, pct, useJson } from '../lib/data.js'
+import FilterPanel, { applyGroups, withCounts } from '../components/FilterPanel.jsx'
+import { clearDriverFilters, driverGroups, setDriverFilter, useDriverFilters } from '../lib/driverFilters.js'
 import { isF1, matches, searchStore } from '../lib/stores.js'
 import { Th, useSort } from '../lib/useSort.jsx'
 import { DriverCell, Finish, Prob, Section } from '../components/ui.jsx'
@@ -8,7 +10,12 @@ import { RaceHeader, Result } from './RaceCard.jsx'
 export default function Projections({ card, series }) {
   const f1 = isF1(series)
   const q = searchStore.use()
-  const rows = card.drivers.filter((d) => matches(d, q))
+  // 2026-10-25 filter panel (lib/driverFilters.js): Top / PRISM Picks, tags, make, chance floors
+  const df = useDriverFilters()
+  const prism = useJson('prism_picks.json')
+  const groups = driverGroups(card, prism, series)
+  const base = card.drivers.filter((d) => matches(d, q))
+  const rows = applyGroups(base, groups, df)
   const sort = useSort(rows, 'win')
   const last5 = (d) => (d.last10 || []).slice(-5)
   return (
@@ -17,8 +24,9 @@ export default function Projections({ card, series }) {
       <Section title="🔮 Projections" sub="Every driver, 20,000 simulated races. Click a header to sort, a driver for the full breakdown." />
       <div className="filters-row card filters">
         <input className="search" placeholder="Search driver, team, make or #car" value={q} onChange={(e) => searchStore.set(e.target.value)} />
-        <span className="muted small">{rows.length} of {card.drivers.length} drivers</span>
       </div>
+      <FilterPanel groups={withCounts(groups, base)} value={df} onChange={setDriverFilter} onClear={clearDriverFilters}
+        shown={rows.length} total={card.drivers.length} noun="drivers" />
       <div className="table-wrap">
         <table className="data-table">
           <thead>

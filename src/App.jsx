@@ -14,6 +14,7 @@ import Drivers from './tabs/Drivers.jsx'
 import TrackRecord from './tabs/TrackRecord.jsx'
 import About from './tabs/About.jsx'
 import TabMenu from './components/TabMenu.jsx'
+import AppRefresh from './components/AppRefresh.jsx'
 import RaceBar from './components/RaceBar.jsx'
 
 // Final Lap 2.0 -- Slap Shot / CourtIQ layout for NASCAR: a series switcher, then Race Card (Top Picks + cheat sheets),
@@ -54,7 +55,8 @@ export default function App() {
             {/* 2026-10-23 new logo (waving flag): dark tile, accent tile in light mode */}<picture><source media="(prefers-color-scheme: light)" srcSet="/logo-accent.svg" /><img src="/logo-dark.svg" alt="" className="brand-logo" /></picture>
             <span className="brand-name">Final <b>Lap</b></span>
           </div>
-          <span className="badge">PRISM LABS</span>
+          {/* 2026-10-25 (user): app refresh button -- reloads the page with fresh data */}
+          <div className="hdr-right"><AppRefresh /><span className="badge">PRISM LABS</span></div>
         </header>
         {/* 2026-10-24 (user prototype): ☰ page menu first in the row under the logo, beside the NASCAR | F1 switch */}
         <div className="master-bar tm-row">
