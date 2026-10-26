@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-25T22:07+00:00",
+ "generated_at": "2026-10-26T11:11+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -313,7 +313,7 @@
   ],
   "f1": [
    "f1",
-   202618
+   202619
   ]
  },
  "races": [
@@ -1162,6 +1162,18 @@
      }
     ]
    },
+   "locked": false
+  },
+  {
+   "race_id": 202619,
+   "name": "Mexico City Grand Prix",
+   "track": "Autódromo Hermanos Rodríguez",
+   "start": "2026-11-01T15:00:00",
+   "date": "2026-11-01",
+   "stage": "pre",
+   "picks": [],
+   "series": "f1",
+   "waiting": "until qualifying",
    "locked": false
   }
  ]
