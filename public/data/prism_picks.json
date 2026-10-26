@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-26T16:04+00:00",
+ "generated_at": "2026-10-26T22:02+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -735,14 +735,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.7234,
+     "chance": 0.6518,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.685,
-     "trackN": 76
+     "track": 0.644,
+     "trackN": 87
     }
    ],
    "series": "truck",
@@ -756,26 +756,8 @@
       "k": 1,
       "prop": "win",
       "label": "Win",
-      "chance": 0.4075,
-      "card": 0.4486,
-      "last": [
-       10,
-       3
-      ],
-      "start": null,
-      "track": 0.396,
-      "trackN": 202
-     },
-     {
-      "driver_id": 4296,
-      "name": "Tyler Ankrum",
-      "car": "18",
-      "team": "McAnally Hilgemann Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.3974,
-      "card": 0.3411,
+      "chance": 0.3968,
+      "card": 0.4159,
       "last": [
        10,
        3
@@ -785,25 +767,61 @@
       "trackN": 228
      },
      {
-      "driver_id": 4107,
-      "name": "Ben Rhodes",
-      "car": "99",
-      "team": "ThorSport Racing",
+      "driver_id": 4312,
+      "name": "Chandler Smith",
+      "car": "38",
+      "team": "Front Row Motorsports",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.3483,
+      "card": 0.3175,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.264,
+      "trackN": 140
+     },
+     {
+      "driver_id": 4296,
+      "name": "Tyler Ankrum",
+      "car": "18",
+      "team": "McAnally Hilgemann Racing",
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3735,
-      "card": 0.333,
+      "chance": 0.3368,
+      "card": 0.2878,
       "last": [
        10,
-       1
+       3
       ],
       "start": null,
-      "track": 0.36,
-      "trackN": 228
+      "track": 0.261,
+      "trackN": 140
      }
     ],
     "long": [
+     {
+      "driver_id": 4459,
+      "name": "William Sawalich",
+      "car": "5",
+      "team": "TRICON Garage",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.1959,
+      "card": 0.1828,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.176,
+      "trackN": 253
+     },
      {
       "driver_id": 4096,
       "name": "Corey LaJoie",
@@ -812,32 +830,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2089,
-      "card": 0.1823,
+      "chance": 0.1869,
+      "card": 0.1573,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.213,
-      "trackN": 457
-     },
-     {
-      "driver_id": 4487,
-      "name": "Brenden Queen",
-      "car": "12",
-      "team": "Kaulig Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.1986,
-      "card": 0.1643,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.176,
+      "track": 0.175,
       "trackN": 253
      },
      {
@@ -848,14 +848,14 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1823,
-      "card": 0.1609,
+      "chance": 0.151,
+      "card": 0.1403,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.174,
+      "track": 0.17,
       "trackN": 253
      }
     ]
@@ -878,13 +878,13 @@
      "k": 3,
      "prop": "top3",
      "label": "Top 3 finish",
-     "chance": 0.7317,
+     "chance": 0.7263,
      "last": [
       10,
       2
      ],
      "start": null,
-     "track": 0.688,
+     "track": 0.686,
      "trackN": 76
     },
     {
@@ -895,31 +895,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6215,
+     "chance": 0.6185,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.568,
+     "track": 0.567,
      "trackN": 109
-    },
-    {
-     "driver_id": 4463,
-     "name": "Jesse Love",
-     "car": "2",
-     "team": "Richard Childress Racing",
-     "k": 10,
-     "prop": "top10",
-     "label": "Top 10 finish",
-     "chance": 0.5507,
-     "last": [
-      10,
-      5
-     ],
-     "start": null,
-     "track": 0.555,
-     "trackN": 149
     }
    ],
    "series": "oreilly",
@@ -933,14 +916,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4218,
-      "card": 0.3825,
+      "chance": 0.418,
+      "card": 0.3758,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.398,
+      "track": 0.397,
       "trackN": 202
      },
      {
@@ -951,36 +934,18 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3341,
-      "card": 0.2929,
+      "chance": 0.3319,
+      "card": 0.2878,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.261,
+      "track": 0.26,
       "trackN": 140
      }
     ],
     "long": [
-     {
-      "driver_id": 4517,
-      "name": "Jake Finch",
-      "car": "9",
-      "team": "JR Motorsports",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.1965,
-      "card": 0.1757,
-      "last": [
-       7,
-       0
-      ],
-      "start": null,
-      "track": 0.176,
-      "trackN": 253
-     },
      {
       "driver_id": 3884,
       "name": "Ryan Sieg",
@@ -989,29 +954,47 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1496,
-      "card": 0.1368,
+      "chance": 0.1464,
+      "card": 0.1289,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.119,
+      "track": 0.118,
       "trackN": 67
      },
      {
-      "driver_id": 4133,
-      "name": "Austin Hill",
-      "car": "21",
-      "team": "Richard Childress Racing",
+      "driver_id": 4406,
+      "name": "Taylor Gray",
+      "car": "54",
+      "team": "Joe Gibbs Racing",
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1331,
-      "card": 0.1132,
+      "chance": 0.1318,
+      "card": 0.1231,
       "last": [
        10,
-       1
+       0
+      ],
+      "start": null,
+      "track": 0.113,
+      "trackN": 67
+     },
+     {
+      "driver_id": 4085,
+      "name": "Brandon Jones",
+      "car": "20",
+      "team": "Joe Gibbs Racing",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.1318,
+      "card": 0.1215,
+      "last": [
+       10,
+       0
       ],
       "start": null,
       "track": 0.113,
@@ -1037,13 +1020,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.5595,
+     "chance": 0.5645,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.557,
+     "track": 0.558,
      "trackN": 149
     }
    ],
@@ -1058,8 +1041,8 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.4767,
-      "card": 0.5413,
+      "chance": 0.477,
+      "card": 0.5423,
       "last": [
        10,
        3
@@ -1069,21 +1052,21 @@
       "trackN": 187
      },
      {
-      "driver_id": 3859,
-      "name": "Joey Logano",
-      "car": "22",
-      "team": "Team Penske",
+      "driver_id": 1361,
+      "name": "Denny Hamlin",
+      "car": "11",
+      "team": "Joe Gibbs Racing",
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3548,
-      "card": 0.37,
+      "chance": 0.3602,
+      "card": 0.3926,
       "last": [
        10,
-       2
+       1
       ],
       "start": null,
-      "track": 0.357,
+      "track": 0.358,
       "trackN": 228
      },
      {
@@ -1094,14 +1077,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3173,
-      "card": 0.2662,
+      "chance": 0.3225,
+      "card": 0.2713,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.257,
+      "track": 0.258,
       "trackN": 140
      }
     ],
@@ -1114,8 +1097,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2051,
-      "card": 0.1757,
+      "chance": 0.2019,
+      "card": 0.1701,
       "last": [
        10,
        1
@@ -1132,32 +1115,32 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.2005,
-      "card": 0.1737,
+      "chance": 0.1954,
+      "card": 0.1674,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.213,
-      "trackN": 457
+      "track": 0.176,
+      "trackN": 253
      },
      {
-      "driver_id": 4231,
-      "name": "Todd Gilliland",
-      "car": "34",
-      "team": "Front Row Motorsports",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.1816,
-      "card": 0.156,
+      "driver_id": 4062,
+      "name": "Chase Elliott",
+      "car": "9",
+      "team": "Hendrick Motorsports",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.1675,
+      "card": 0.162,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.174,
+      "track": 0.172,
       "trackN": 253
      }
     ]
