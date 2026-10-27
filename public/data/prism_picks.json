@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-26T22:02+00:00",
+ "generated_at": "2026-10-27T05:44+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -878,7 +878,7 @@
      "k": 3,
      "prop": "top3",
      "label": "Top 3 finish",
-     "chance": 0.7263,
+     "chance": 0.7254,
      "last": [
       10,
       2
@@ -895,13 +895,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6185,
+     "chance": 0.6121,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.567,
+     "track": 0.566,
      "trackN": 109
     }
    ],
@@ -917,7 +917,7 @@
       "prop": "top10",
       "label": "Top 10 finish",
       "chance": 0.418,
-      "card": 0.3758,
+      "card": 0.3759,
       "last": [
        10,
        2
@@ -934,8 +934,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3319,
-      "card": 0.2878,
+      "chance": 0.3312,
+      "card": 0.2862,
       "last": [
        10,
        2
@@ -954,32 +954,14 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1464,
-      "card": 0.1289,
+      "chance": 0.1466,
+      "card": 0.1294,
       "last": [
        10,
        1
       ],
       "start": null,
       "track": 0.118,
-      "trackN": 67
-     },
-     {
-      "driver_id": 4406,
-      "name": "Taylor Gray",
-      "car": "54",
-      "team": "Joe Gibbs Racing",
-      "k": 3,
-      "prop": "top3",
-      "label": "Top 3 finish",
-      "chance": 0.1318,
-      "card": 0.1231,
-      "last": [
-       10,
-       0
-      ],
-      "start": null,
-      "track": 0.113,
       "trackN": 67
      },
      {
@@ -990,8 +972,26 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1318,
-      "card": 0.1215,
+      "chance": 0.1319,
+      "card": 0.1251,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.113,
+      "trackN": 67
+     },
+     {
+      "driver_id": 4406,
+      "name": "Taylor Gray",
+      "car": "54",
+      "team": "Joe Gibbs Racing",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.1319,
+      "card": 0.1244,
       "last": [
        10,
        0
