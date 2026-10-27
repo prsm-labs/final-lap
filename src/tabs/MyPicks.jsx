@@ -3,12 +3,15 @@ import { dayLabel, pct } from '../lib/data.js'
 import { clearPicks, PICK_TYPES, removePick, usePicks } from '../lib/picks.js'
 import { openDriver } from '../lib/stores.js'
 import { Avatar, Section } from '../components/ui.jsx'
+import PicksLive from '../components/PicksLive.jsx'
 
 // ⭐ My Picks (Slap Shot / CourtIQ layout): every driver tagged with ＋, grouped by race and category, and the chance we gave
 // when picked. Saved in this browser only. (No Gambly: it doesn't take motorsport props yet.)
-export default function MyPicks({ card }) {
+export default function MyPicks({ card, series }) {
   const picks = usePicks()
   const [confirm, setConfirm] = useState(false)
+  // 2026-10-26 (user): 📡 Live = this race's picks vs our projected finish, live; By race = the old list
+  const [view, setView] = useState('live')
   const now = new Map((card?.drivers || []).map((d) => [d.driver_id, d]))
   const list = Object.values(picks).sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.ts.localeCompare(b.ts))
   const races = [...new Map(list.map((k) => [`${k.series}:${k.raceId}`, k])).values()]
@@ -22,8 +25,14 @@ export default function MyPicks({ card }) {
           </button>
         </div>
       )}
+      {list.length > 0 && (
+        <div className="pill-row">
+          {[['live', '📡 Live'], ['race', '🗂 By race']].map(([k, l]) => <button key={k} className={`pill ${view === k ? 'active' : ''}`} onClick={() => setView(k)}>{l}</button>)}
+        </div>
+      )}
       {list.length === 0 && <p className="muted">No picks yet. Tap ＋ next to any driver on the Race Card, Projections or a driver's card.</p>}
-      {races.map((r) => {
+      {view === 'live' && list.length > 0 && <PicksLive card={card} series={series} picks={list} />}
+      {(view === 'race' || !list.length) && races.map((r) => {
         const rows = list.filter((k) => k.series === r.series && k.raceId === r.raceId)
         return (
           <div key={`${r.series}:${r.raceId}`} className="card">

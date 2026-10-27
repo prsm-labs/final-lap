@@ -79,6 +79,10 @@ thead th.sticky { z-index: 3; background: var(--surface2); }
 td.num { font-variant-numeric: tabular-nums; }
 td.soft, .soft { color: var(--good); }
 td.tough, .tough { color: var(--bad); }
+/* 2026-10-26 My Picks 📡 Live table (components/PicksLive.jsx) */
+.pl-summary { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.82rem; margin-bottom: 8px; }
+.pl-sub { display: block; font-size: 0.68rem; color: var(--muted); white-space: nowrap; font-weight: 400; }
+.pl-name { display: flex; flex-direction: column; white-space: nowrap; }
 
 .player-cell { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .player-cell-main { min-width: 0; }
