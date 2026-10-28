@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import ViewPicker from './ViewPicker.jsx'
 import { createPortal } from 'react-dom'
 import { pct } from '../lib/data.js'
 import { PICK_TYPE, PICK_TYPES, pickId, removePick, setPick, usePicks } from '../lib/picks.js'
@@ -100,14 +101,9 @@ export function Section({ title, sub, children }) {
   )
 }
 
+// 2026-10-28: rows of 4+ views become a dropdown on phones (ViewPicker); shorter rows and wider screens keep the pills
 export function Pills({ options, value, onChange }) {
-  return (
-    <div className="pill-row">
-      {options.map(([k, label, title]) => (
-        <button key={String(k)} title={title} className={`pill ${value === k ? 'active' : ''}`} onClick={() => onChange(k)}>{label}</button>
-      ))}
-    </div>
-  )
+  return <ViewPicker options={options} value={value} onChange={onChange} />
 }
 
 export function Finish({ n }) {
