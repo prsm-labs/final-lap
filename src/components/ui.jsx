@@ -44,6 +44,7 @@ export function Prob({ v, strong = 0.5 }) {
 // Gambly buttons removed 2026-10-18: Gambly doesn't take motorsport props yet. lib/gambly.js is kept for when it does.
 
 const MENU_W = 180
+const pageZoom = () => parseFloat(getComputedStyle(document.documentElement).zoom) || 1 // 2026-10-28 big-screen zoom (CSS --z)
 export function PickButton({ d, prop = 'win' }) {
   const ctx = useContext(RaceCtx)
   const picks = usePicks()
@@ -66,9 +67,11 @@ export function PickButton({ d, prop = 'win' }) {
   const toggle = (e) => {
     e.stopPropagation()
     if (pos) return setPos(null)
-    const r = btn.current.getBoundingClientRect()
+    // measured in window pixels; the menu is placed in page pixels (they differ by the big-screen zoom)
+    const z = pageZoom(), b = btn.current.getBoundingClientRect()
+    const r = { left: b.left / z, top: b.top / z, bottom: b.bottom / z }, W = window.innerWidth / z, H = window.innerHeight / z
     const h = (PICK_TYPES.length + (cur ? 2 : 1)) * 30 + 12
-    setPos({ left: Math.min(Math.max(8, r.left), window.innerWidth - MENU_W - 8), top: r.bottom + 4 + h <= window.innerHeight ? r.bottom + 4 : Math.max(8, r.top - 4 - h) })
+    setPos({ left: Math.min(Math.max(8, r.left), W - MENU_W - 8), top: r.bottom + 4 + h <= H ? r.bottom + 4 : Math.max(8, r.top - 4 - h) })
   }
   return (
     <span className="pick-wrap" onClick={(e) => e.stopPropagation()}>

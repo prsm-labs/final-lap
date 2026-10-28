@@ -68,7 +68,7 @@ button { font: inherit; }
 .race-picker select { flex: 1 1 240px; min-width: 0; max-width: 100%; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font-size: 0.85rem; }
 .search { flex: 1 1 220px; min-width: 0; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; }
 
-.table-wrap { overflow: auto; max-height: max(380px, calc(100dvh - 160px)); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; }
+.table-wrap { overflow: auto; max-height: max(380px, calc(100dvh / var(--z, 1) - 160px)); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; }
 table { border-collapse: collapse; width: 100%; font-size: 0.83rem; }
 th, td { padding: 7px 9px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
 thead th { position: sticky; top: 0; background: var(--surface2); z-index: 2; font-weight: 600; font-size: 0.75rem; color: var(--muted); }
@@ -214,7 +214,7 @@ table.data-table th { position: sticky; }
 .col-resize { position: absolute; top: 0; right: -3px; width: 8px; height: 100%; cursor: col-resize; z-index: 4; touch-action: none; }
 .col-resize:hover, .col-resize.active { background: color-mix(in srgb, var(--accent) 45%, transparent); }
 .col-gear { border: 0; background: transparent; cursor: pointer; padding: 0 4px 0 0; font-size: 0.75rem; }
-.col-chooser { position: fixed; z-index: 3000; width: min(280px, calc(100vw - 16px)); max-height: 70vh; overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); font-size: 0.8rem; }
+.col-chooser { position: fixed; z-index: 3000; width: min(280px, calc(100vw - 16px)); max-height: calc(70vh / var(--z, 1)); overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); font-size: 0.8rem; }
 .col-chooser-head { font-weight: 700; margin-bottom: 6px; }
 .col-chooser-list { display: grid; gap: 4px; }
 .col-chooser-list label { display: flex; gap: 6px; align-items: center; }
@@ -323,3 +323,31 @@ td.fins { white-space: nowrap; }
 .pair-name { font-weight: 700; cursor: pointer; }
 .pair-name:hover { color: var(--accent); }
 .pair-foot { border-top: 1px solid var(--border); padding-top: 8px; display: grid; gap: 4px; }
+
+/* 2026-10-28 big screens (user: on a 1920 monitor at 100% scaling the apps only filled the middle -- had to zoom the
+   browser to 150%; users shouldn't need settings). Wide windows zoom the whole page so it fills the width: --z = window
+   width / 1340 (the 1280 page + gutters + scrollbar), in 5% steps from 1.10, capped at 2.0. Under 1474 px (phones,
+   tablets, laptops) nothing changes. Media queries read the real window width, so the zoom never feeds back. Anything
+   sized to the window height (vh / dvh) divides by --z, and code that places pop-ups from measured positions divides by
+   pageZoom() -- otherwise both come out --z times too big / too far. */
+:root { --z: 1; }
+@media (min-width: 1475px) { :root { --z: 1.10; } }
+@media (min-width: 1541px) { :root { --z: 1.15; } }
+@media (min-width: 1608px) { :root { --z: 1.20; } }
+@media (min-width: 1675px) { :root { --z: 1.25; } }
+@media (min-width: 1742px) { :root { --z: 1.30; } }
+@media (min-width: 1810px) { :root { --z: 1.35; } }
+@media (min-width: 1876px) { :root { --z: 1.40; } }
+@media (min-width: 1943px) { :root { --z: 1.45; } }
+@media (min-width: 2010px) { :root { --z: 1.50; } }
+@media (min-width: 2077px) { :root { --z: 1.55; } }
+@media (min-width: 2144px) { :root { --z: 1.60; } }
+@media (min-width: 2211px) { :root { --z: 1.65; } }
+@media (min-width: 2278px) { :root { --z: 1.70; } }
+@media (min-width: 2345px) { :root { --z: 1.75; } }
+@media (min-width: 2412px) { :root { --z: 1.80; } }
+@media (min-width: 2479px) { :root { --z: 1.85; } }
+@media (min-width: 2546px) { :root { --z: 1.90; } }
+@media (min-width: 2613px) { :root { --z: 1.95; } }
+@media (min-width: 2680px) { :root { --z: 2.00; } }
+html { zoom: var(--z); }
