@@ -1,0 +1,64 @@
+/* 🎬 Race Sim replay (2026-10-30). Broadcast-dark panel like the other apps' Game Sim shell; uses --accent / --border. */
+.rs { --rs-bg: #0d1117; --rs-card: #151b23; --rs-line: rgba(255,255,255,.08); --rs-fg: #e9edf2; --rs-mut: #8b96a5;
+  background: radial-gradient(120% 90% at 50% 0%, #18202b 0%, var(--rs-bg) 60%); color: var(--rs-fg); border-radius: 14px;
+  padding: 12px; border: 1px solid var(--border); margin: 8px 0 14px; }
+.rs-top { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.rs-bug { display: grid; grid-template-columns: auto auto 1fr; align-items: center; width: 100%; max-width: 760px; background: var(--rs-card);
+  border-radius: 10px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,.35); }
+.rs-lap { display: flex; align-items: baseline; gap: 6px; padding: 8px 14px; background: #10151c; font-variant-numeric: tabular-nums; }
+.rs-lap span { color: var(--rs-mut); font-size: .75rem; font-weight: 700; letter-spacing: .08em; }
+.rs-lap b { font-size: 1.9rem; font-weight: 900; line-height: 1; }
+.rs-flag { padding: 0 14px; align-self: stretch; display: flex; align-items: center; font-weight: 900; font-style: italic; letter-spacing: .04em; }
+.rs-flag-green { background: #1f9d4c; color: #fff; }
+.rs-flag-caution, .rs-flag-safety { background: #f4c542; color: #1a1400; }
+.rs-flag-checkered { background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 14px 14px; color: #111; text-shadow: 0 0 4px #fff, 0 0 4px #fff; }
+.rs-stage { padding: 0 12px; text-align: right; font-weight: 700; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rs-wp { position: relative; width: 100%; max-width: 760px; background: var(--rs-card); border-radius: 10px; padding: 16px 12px 6px; }
+.rs-wp svg { width: 100%; height: 56px; display: block; }
+.rs-wp-label { position: absolute; top: 3px; left: 50%; transform: translateX(-50%); font-size: .62rem; letter-spacing: .14em; color: var(--rs-mut); font-weight: 700; }
+.rs-wp-keys { display: flex; flex-wrap: wrap; gap: 4px 14px; justify-content: center; font-size: .8rem; margin-top: 4px; }
+.rs-wp-keys i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.rs-mid { display: grid; grid-template-columns: 230px 1fr; gap: 12px; margin-top: 12px; align-items: start; }
+.rs-board { background: var(--rs-card); border-radius: 10px; padding: 8px 10px; border-top: 3px solid var(--accent); font-size: .82rem; }
+.rs-board-h { font-weight: 800; font-size: .95rem; padding-bottom: 6px; border-bottom: 1px solid var(--rs-line); margin-bottom: 4px; }
+.rs-row { display: grid; grid-template-columns: 18px 28px 1fr 28px 30px; align-items: center; gap: 6px; padding: 2px 0; }
+.rs-leader .rs-name { font-weight: 800; }
+.rs-pos { color: var(--rs-mut); font-variant-numeric: tabular-nums; text-align: right; }
+.rs-car { border-radius: 4px; color: #111; font-weight: 900; font-size: .72rem; text-align: center; padding: 1px 0; }
+.rs-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rs-ch { font-size: .7rem; font-weight: 800; }
+.rs-ch.up { color: #3ccf74; } .rs-ch.dn { color: #ff6b5e; }
+.rs-led { text-align: right; font-variant-numeric: tabular-nums; color: var(--rs-mut); font-weight: 600; }
+.rs-out { color: var(--rs-mut); font-size: .7rem; margin-top: 6px; }
+.rs-surface { min-width: 0; perspective: 900px; overflow: hidden; }
+.rs-tilt { transform: rotateX(38deg); transform-origin: 50% 60%; }
+.rs-track { width: 100%; display: block; overflow: visible; }
+.rs-asphalt { fill: #1c3b26; stroke: #3a3f47; stroke-width: 34; stroke-linejoin: round; }
+.rs-lane { fill: none; stroke: rgba(255,255,255,.18); stroke-width: 1; stroke-dasharray: 6 8; }
+.rs-sf { stroke: #fff; stroke-width: 4; stroke-dasharray: 3 3; }
+.rs-num { fill: #111; font-size: 7.5px; font-weight: 900; text-anchor: middle; pointer-events: none; }
+.rs-tag { fill: #fff; font-size: 11px; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: #0d1117; stroke-width: 3px; }
+.rs-play { display: flex; align-items: center; gap: 12px; margin: 12px auto 0; max-width: 900px; min-height: 46px; background: var(--rs-card);
+  border-radius: 10px; padding: 6px 12px; transition: box-shadow .3s; }
+.rs-play-caution { box-shadow: 0 0 0 2px #f4c542, 0 0 18px rgba(244,197,66,.35); }
+.rs-play-finish, .rs-play-stage { box-shadow: 0 0 0 2px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 35%, transparent); }
+.rs-chip { flex: none; font-weight: 900; font-style: italic; color: #f4c542; border-left: 3px solid #f4c542; padding: 2px 8px; font-size: .95rem; }
+.rs-text { font-size: .95rem; font-weight: 600; }
+.rs-log { max-width: 900px; margin: 6px auto 0; font-size: .78rem; color: var(--rs-mut); display: grid; gap: 2px; }
+.rs-log b { color: var(--rs-fg); margin-right: 4px; }
+.rs-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; justify-content: center; margin-top: 10px; }
+.rs-ctrl button { background: #1d2530; color: var(--rs-fg); border: 1px solid var(--rs-line); border-radius: 8px; padding: 6px 10px; font-size: .85rem; cursor: pointer; }
+.rs-ctrl button:hover { border-color: var(--accent); }
+.rs-ctrl .rs-play-btn { background: var(--accent); color: var(--accent-fg, #111); border-color: var(--accent); min-width: 44px; font-weight: 800; }
+.rs-speed { display: inline-flex; gap: 2px; }
+.rs-speed button { padding: 6px 8px; }
+.rs-speed button.on { background: color-mix(in srgb, var(--accent) 35%, #1d2530); border-color: var(--accent); }
+.rs-ctrl input[type=range] { flex: 1 1 180px; max-width: 360px; accent-color: var(--accent); }
+.rs-count { color: var(--rs-mut); font-size: .78rem; font-variant-numeric: tabular-nums; min-width: 6ch; }
+.rs-foot { text-align: right; color: var(--rs-mut); font-size: .7rem; margin-top: 8px; }
+@media (max-width: 760px) {
+  .rs-mid { grid-template-columns: 1fr; }
+  .rs-surface { order: -1; }
+  .rs-stage { font-size: .78rem; }
+  .rs-lap b { font-size: 1.5rem; }
+}

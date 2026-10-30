@@ -6,6 +6,7 @@ import { RaceCtx } from './components/ui.jsx'
 import DriverSlideout from './components/DriverSlideout.jsx'
 import RaceCard from './tabs/RaceCard.jsx'
 import Projections from './tabs/Projections.jsx'
+import RaceSim from './tabs/RaceSim.jsx'
 import Weekend from './tabs/Weekend.jsx'
 import Live from './tabs/Live.jsx'
 import MyPicks from './tabs/MyPicks.jsx'
@@ -22,6 +23,7 @@ import RaceBar from './components/RaceBar.jsx'
 const TABS = [
   { key: 'card', label: '🏁 Race Card', C: RaceCard, needsCard: true },
   { key: 'proj', label: '🔮 Projections', C: Projections, needsCard: true },
+  { key: 'racesim', label: '🎬 Race Sim', C: RaceSim },  // 2026-10-30: 15,000 lap-by-lap races + replay
   { key: 'weekend', label: '📋 Weekend', C: Weekend, needsCard: true },
   { key: 'live', label: '🔴 Live', C: Live },
   { key: 'picks', label: '⭐ My Picks', C: MyPicks },
