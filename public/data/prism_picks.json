@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-30T16:03+00:00",
+ "generated_at": "2026-10-30T22:03+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -725,46 +725,46 @@
    "track": "Martinsville Speedway",
    "start": "2026-10-30T18:00:00",
    "date": "2026-10-30",
-   "stage": "pre",
+   "stage": "post",
    "picks": [
     {
-     "driver_id": 4235,
-     "name": "Ty Majeski",
-     "car": "88",
-     "team": "ThorSport Racing",
-     "k": 10,
-     "prop": "top10",
-     "label": "Top 10 finish",
-     "chance": 0.6518,
+     "driver_id": 4446,
+     "name": "Layne Riggs",
+     "car": "34",
+     "team": "Front Row Motorsports",
+     "k": 3,
+     "prop": "top3",
+     "label": "Top 3 finish",
+     "chance": 0.5969,
      "last": [
       10,
       5
      ],
-     "start": null,
-     "track": 0.644,
-     "trackN": 87
+     "start": 2.0,
+     "track": 0.565,
+     "trackN": 149
     }
    ],
    "series": "truck",
    "tiers": {
     "mid": [
      {
-      "driver_id": 4446,
-      "name": "Layne Riggs",
-      "car": "34",
-      "team": "Front Row Motorsports",
-      "k": 1,
-      "prop": "win",
-      "label": "Win",
-      "chance": 0.3968,
-      "card": 0.4159,
+      "driver_id": 4552,
+      "name": "Tristan McKee",
+      "car": "77",
+      "team": "Spire Motorsports",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.4979,
+      "card": 0.4139,
       "last": [
-       10,
-       3
+       4,
+       1
       ],
-      "start": null,
-      "track": 0.363,
-      "trackN": 228
+      "start": 1.0,
+      "track": 0.525,
+      "trackN": 187
      },
      {
       "driver_id": 4312,
@@ -774,33 +774,33 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3483,
-      "card": 0.3175,
+      "chance": 0.4756,
+      "card": 0.5467,
       "last": [
        10,
        2
       ],
-      "start": null,
-      "track": 0.264,
-      "trackN": 140
+      "start": 3.0,
+      "track": 0.522,
+      "trackN": 187
      },
      {
-      "driver_id": 4296,
-      "name": "Tyler Ankrum",
-      "car": "18",
-      "team": "McAnally Hilgemann Racing",
+      "driver_id": 4107,
+      "name": "Ben Rhodes",
+      "car": "99",
+      "team": "ThorSport Racing",
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3368,
-      "card": 0.2878,
+      "chance": 0.4566,
+      "card": 0.4212,
       "last": [
        10,
-       3
+       1
       ],
-      "start": null,
-      "track": 0.261,
-      "trackN": 140
+      "start": 4.0,
+      "track": 0.518,
+      "trackN": 187
      }
     ],
     "long": [
@@ -812,55 +812,55 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1959,
-      "card": 0.1828,
+      "chance": 0.1991,
+      "card": 0.1867,
       "last": [
        10,
        0
       ],
-      "start": null,
+      "start": 18.0,
       "track": 0.176,
       "trackN": 253
      },
      {
-      "driver_id": 4096,
-      "name": "Corey LaJoie",
-      "car": "10",
-      "team": "Kaulig Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.1869,
-      "card": 0.1573,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.175,
-      "trackN": 253
-     },
-     {
-      "driver_id": 4093,
-      "name": "Daniel Hemric",
-      "car": "19",
+      "driver_id": 4296,
+      "name": "Tyler Ankrum",
+      "car": "18",
       "team": "McAnally Hilgemann Racing",
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.151,
-      "card": 0.1403,
+      "chance": 0.1683,
+      "card": 0.154,
       "last": [
        10,
        1
       ],
-      "start": null,
-      "track": 0.17,
+      "start": 9.0,
+      "track": 0.172,
       "trackN": 253
+     },
+     {
+      "driver_id": 4235,
+      "name": "Ty Majeski",
+      "car": "88",
+      "team": "ThorSport Racing",
+      "k": 1,
+      "prop": "win",
+      "label": "Win",
+      "chance": 0.1244,
+      "card": 0.1107,
+      "last": [
+       10,
+       0
+      ],
+      "start": 6.0,
+      "track": 0.11,
+      "trackN": 67
      }
     ]
    },
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 5665,
@@ -868,25 +868,8 @@
    "track": "Martinsville Speedway",
    "start": "2026-10-31T16:00:00",
    "date": "2026-10-31",
-   "stage": "pre",
+   "stage": "post",
    "picks": [
-    {
-     "driver_id": 34,
-     "name": "Justin Allgaier",
-     "car": "7",
-     "team": "JR Motorsports",
-     "k": 3,
-     "prop": "top3",
-     "label": "Top 3 finish",
-     "chance": 0.7254,
-     "last": [
-      10,
-      2
-     ],
-     "start": null,
-     "track": 0.686,
-     "trackN": 76
-    },
     {
      "driver_id": 4327,
      "name": "Sam Mayer",
@@ -895,13 +878,47 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6121,
+     "chance": 0.7089,
      "last": [
       10,
       5
      ],
-     "start": null,
-     "track": 0.566,
+     "start": 14.0,
+     "track": 0.681,
+     "trackN": 76
+    },
+    {
+     "driver_id": 4463,
+     "name": "Jesse Love",
+     "car": "2",
+     "team": "Richard Childress Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.6321,
+     "last": [
+      10,
+      5
+     ],
+     "start": 8.0,
+     "track": 0.571,
+     "trackN": 109
+    },
+    {
+     "driver_id": 4467,
+     "name": "Carson Kvapil",
+     "car": "1",
+     "team": "JR Motorsports",
+     "k": 3,
+     "prop": "top3",
+     "label": "Top 3 finish",
+     "chance": 0.6252,
+     "last": [
+      10,
+      5
+     ],
+     "start": 1.0,
+     "track": 0.569,
      "trackN": 109
     }
    ],
@@ -916,15 +933,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.418,
-      "card": 0.3759,
+      "chance": 0.4629,
+      "card": 0.4218,
       "last": [
        10,
        2
       ],
-      "start": null,
-      "track": 0.397,
-      "trackN": 202
+      "start": 2.0,
+      "track": 0.519,
+      "trackN": 187
      },
      {
       "driver_id": 4217,
@@ -934,34 +951,70 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3312,
-      "card": 0.2862,
+      "chance": 0.3375,
+      "card": 0.3009,
       "last": [
        10,
        2
       ],
-      "start": null,
-      "track": 0.26,
+      "start": 17.0,
+      "track": 0.261,
+      "trackN": 140
+     },
+     {
+      "driver_id": 34,
+      "name": "Justin Allgaier",
+      "car": "7",
+      "team": "JR Motorsports",
+      "k": 1,
+      "prop": "win",
+      "label": "Win",
+      "chance": 0.3159,
+      "card": 0.3382,
+      "last": [
+       10,
+       0
+      ],
+      "start": 3.0,
+      "track": 0.257,
       "trackN": 140
      }
     ],
     "long": [
      {
-      "driver_id": 3884,
-      "name": "Ryan Sieg",
-      "car": "39",
-      "team": "RSS Racing",
+      "driver_id": 4406,
+      "name": "Taylor Gray",
+      "car": "54",
+      "team": "Joe Gibbs Racing",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.1517,
+      "card": 0.1582,
+      "last": [
+       10,
+       0
+      ],
+      "start": 10.0,
+      "track": 0.17,
+      "trackN": 253
+     },
+     {
+      "driver_id": 4414,
+      "name": "Dean Thompson",
+      "car": "26",
+      "team": "Sam Hunt Racing",
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1466,
-      "card": 0.1294,
+      "chance": 0.1336,
+      "card": 0.1281,
       "last": [
        10,
-       1
+       0
       ],
-      "start": null,
-      "track": 0.118,
+      "start": 15.0,
+      "track": 0.113,
       "trackN": 67
      },
      {
@@ -972,31 +1025,13 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1319,
-      "card": 0.1251,
+      "chance": 0.132,
+      "card": 0.1316,
       "last": [
        10,
        0
       ],
-      "start": null,
-      "track": 0.113,
-      "trackN": 67
-     },
-     {
-      "driver_id": 4406,
-      "name": "Taylor Gray",
-      "car": "54",
-      "team": "Joe Gibbs Racing",
-      "k": 3,
-      "prop": "top3",
-      "label": "Top 3 finish",
-      "chance": 0.1319,
-      "card": 0.1244,
-      "last": [
-       10,
-       0
-      ],
-      "start": null,
+      "start": 12.0,
       "track": 0.113,
       "trackN": 67
      }
