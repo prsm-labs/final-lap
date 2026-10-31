@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-30T22:03+00:00",
+ "generated_at": "2026-10-31T11:04+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -195,8 +195,8 @@
     ]
    },
    "live": {
-    "n": 7,
-    "hits": 2
+    "n": 10,
+    "hits": 5
    }
   },
   "long": {
@@ -283,15 +283,15 @@
     ]
    },
    "live": {
-    "n": 9,
+    "n": 12,
     "hits": 3
    }
   }
  },
  "live": {
   "nascar": {
-   "n": 1,
-   "hits": 0
+   "n": 2,
+   "hits": 1
   },
   "f1": {
    "n": 0,
@@ -309,7 +309,7 @@
   ],
   "truck": [
    "truck",
-   5671
+   5670
   ],
   "f1": [
    "f1",
@@ -742,7 +742,9 @@
      ],
      "start": 2.0,
      "track": 0.565,
-     "trackN": 149
+     "trackN": 149,
+     "actual": 3,
+     "result": "hit"
     }
    ],
    "series": "truck",
@@ -764,7 +766,9 @@
       ],
       "start": 1.0,
       "track": 0.525,
-      "trackN": 187
+      "trackN": 187,
+      "actual": 5,
+      "result": "hit"
      },
      {
       "driver_id": 4312,
@@ -782,7 +786,9 @@
       ],
       "start": 3.0,
       "track": 0.522,
-      "trackN": 187
+      "trackN": 187,
+      "actual": 1,
+      "result": "hit"
      },
      {
       "driver_id": 4107,
@@ -800,7 +806,9 @@
       ],
       "start": 4.0,
       "track": 0.518,
-      "trackN": 187
+      "trackN": 187,
+      "actual": 2,
+      "result": "hit"
      }
     ],
     "long": [
@@ -820,7 +828,9 @@
       ],
       "start": 18.0,
       "track": 0.176,
-      "trackN": 253
+      "trackN": 253,
+      "actual": 9,
+      "result": "miss"
      },
      {
       "driver_id": 4296,
@@ -838,7 +848,9 @@
       ],
       "start": 9.0,
       "track": 0.172,
-      "trackN": 253
+      "trackN": 253,
+      "actual": 7,
+      "result": "miss"
      },
      {
       "driver_id": 4235,
@@ -856,7 +868,9 @@
       ],
       "start": 6.0,
       "track": 0.11,
-      "trackN": 67
+      "trackN": 67,
+      "actual": 4,
+      "result": "miss"
      }
     ]
    },
@@ -940,8 +954,8 @@
        2
       ],
       "start": 2.0,
-      "track": 0.519,
-      "trackN": 187
+      "track": 0.526,
+      "trackN": 190
      },
      {
       "driver_id": 4217,
@@ -958,7 +972,7 @@
        2
       ],
       "start": 17.0,
-      "track": 0.261,
+      "track": 0.262,
       "trackN": 140
      },
      {
@@ -996,8 +1010,8 @@
        0
       ],
       "start": 10.0,
-      "track": 0.17,
-      "trackN": 253
+      "track": 0.169,
+      "trackN": 255
      },
      {
       "driver_id": 4414,
@@ -1014,8 +1028,8 @@
        0
       ],
       "start": 15.0,
-      "track": 0.113,
-      "trackN": 67
+      "track": 0.112,
+      "trackN": 68
      },
      {
       "driver_id": 4085,
@@ -1032,8 +1046,8 @@
        0
       ],
       "start": 12.0,
-      "track": 0.113,
-      "trackN": 67
+      "track": 0.112,
+      "trackN": 68
      }
     ]
    },
@@ -1061,8 +1075,8 @@
       5
      ],
      "start": null,
-     "track": 0.558,
-     "trackN": 149
+     "track": 0.561,
+     "trackN": 150
     }
    ],
    "series": "cup",
@@ -1083,8 +1097,8 @@
        3
       ],
       "start": null,
-      "track": 0.522,
-      "trackN": 187
+      "track": 0.528,
+      "trackN": 190
      },
      {
       "driver_id": 1361,
@@ -1119,7 +1133,7 @@
        3
       ],
       "start": null,
-      "track": 0.258,
+      "track": 0.259,
       "trackN": 140
      }
     ],
@@ -1157,8 +1171,8 @@
        1
       ],
       "start": null,
-      "track": 0.176,
-      "trackN": 253
+      "track": 0.175,
+      "trackN": 255
      },
      {
       "driver_id": 4062,
@@ -1175,8 +1189,8 @@
        1
       ],
       "start": null,
-      "track": 0.172,
-      "trackN": 253
+      "track": 0.171,
+      "trackN": 255
      }
     ]
    },
@@ -1192,6 +1206,166 @@
    "picks": [],
    "series": "f1",
    "waiting": "until qualifying",
+   "locked": false
+  },
+  {
+   "race_id": 5670,
+   "name": "NASCAR CRAFTSMAN Truck Series Championship Race",
+   "track": "Homestead-Miami Speedway",
+   "start": "2026-11-06T19:30:00",
+   "date": "2026-11-06",
+   "stage": "pre",
+   "picks": [
+    {
+     "driver_id": 4427,
+     "name": "Kaden Honeycutt",
+     "car": "11",
+     "team": "TRICON Garage",
+     "k": 3,
+     "prop": "top3",
+     "label": "Top 3 finish",
+     "chance": 0.6559,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.646,
+     "trackN": 87
+    },
+    {
+     "driver_id": 4504,
+     "name": "Brent Crews",
+     "car": "1",
+     "team": "TRICON Garage",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.5947,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.567,
+     "trackN": 150
+    }
+   ],
+   "series": "truck",
+   "tiers": {
+    "mid": [
+     {
+      "driver_id": 4342,
+      "name": "Tanner Gray",
+      "car": "15",
+      "team": "TRICON Garage",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.4117,
+      "card": 0.3751,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.397,
+      "trackN": 202
+     },
+     {
+      "driver_id": 4107,
+      "name": "Ben Rhodes",
+      "car": "99",
+      "team": "ThorSport Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.4072,
+      "card": 0.3568,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.396,
+      "trackN": 202
+     },
+     {
+      "driver_id": 4446,
+      "name": "Layne Riggs",
+      "car": "34",
+      "team": "Front Row Motorsports",
+      "k": 1,
+      "prop": "win",
+      "label": "Win",
+      "chance": 0.4007,
+      "card": 0.428,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.395,
+      "trackN": 202
+     }
+    ],
+    "long": [
+     {
+      "driver_id": 4093,
+      "name": "Daniel Hemric",
+      "car": "19",
+      "team": "McAnally Hilgemann Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.2485,
+      "card": 0.2144,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.216,
+      "trackN": 457
+     },
+     {
+      "driver_id": 4096,
+      "name": "Corey LaJoie",
+      "car": "10",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2199,
+      "card": 0.2016,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.214,
+      "trackN": 457
+     },
+     {
+      "driver_id": 4487,
+      "name": "Brenden Queen",
+      "car": "12",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2021,
+      "card": 0.1704,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.213,
+      "trackN": 457
+     }
+    ]
+   },
    "locked": false
   }
  ]
