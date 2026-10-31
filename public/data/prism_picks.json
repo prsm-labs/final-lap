@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-31T16:03+00:00",
+ "generated_at": "2026-10-31T22:04+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1051,7 +1051,7 @@
      }
     ]
    },
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 5632,
@@ -1059,23 +1059,57 @@
    "track": "Martinsville Speedway",
    "start": "2026-11-01T14:00:00",
    "date": "2026-11-01",
-   "stage": "pre",
+   "stage": "post",
    "picks": [
     {
-     "driver_id": 4184,
-     "name": "William Byron",
-     "car": "24",
+     "driver_id": 1361,
+     "name": "Denny Hamlin",
+     "car": "11",
+     "team": "Joe Gibbs Racing",
+     "k": 3,
+     "prop": "top3",
+     "label": "Top 3 finish",
+     "chance": 0.7255,
+     "last": [
+      10,
+      1
+     ],
+     "start": 1.0,
+     "track": 0.686,
+     "trackN": 76
+    },
+    {
+     "driver_id": 4368,
+     "name": "Ty Gibbs",
+     "car": "54",
+     "team": "Joe Gibbs Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.7096,
+     "last": [
+      10,
+      4
+     ],
+     "start": 2.0,
+     "track": 0.681,
+     "trackN": 76
+    },
+    {
+     "driver_id": 4062,
+     "name": "Chase Elliott",
+     "car": "9",
      "team": "Hendrick Motorsports",
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.5658,
+     "chance": 0.5898,
      "last": [
       10,
-      5
+      3
      ],
-     "start": null,
-     "track": 0.561,
+     "start": 9.0,
+     "track": 0.566,
      "trackN": 150
     }
    ],
@@ -1090,32 +1124,32 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.4771,
-      "card": 0.5425,
+      "chance": 0.3581,
+      "card": 0.3698,
       "last": [
        10,
        3
       ],
-      "start": null,
-      "track": 0.528,
-      "trackN": 190
+      "start": 13.0,
+      "track": 0.358,
+      "trackN": 228
      },
      {
-      "driver_id": 1361,
-      "name": "Denny Hamlin",
-      "car": "11",
-      "team": "Joe Gibbs Racing",
+      "driver_id": 3859,
+      "name": "Joey Logano",
+      "car": "22",
+      "team": "Team Penske",
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3612,
-      "card": 0.393,
+      "chance": 0.3522,
+      "card": 0.3488,
       "last": [
        10,
-       1
+       2
       ],
-      "start": null,
-      "track": 0.358,
+      "start": 5.0,
+      "track": 0.357,
       "trackN": 228
      },
      {
@@ -1126,18 +1160,54 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3232,
-      "card": 0.272,
+      "chance": 0.3395,
+      "card": 0.2941,
       "last": [
        10,
        3
       ],
-      "start": null,
-      "track": 0.259,
+      "start": 16.0,
+      "track": 0.262,
       "trackN": 140
      }
     ],
     "long": [
+     {
+      "driver_id": 4070,
+      "name": "Ryan Preece",
+      "car": "60",
+      "team": "RFK Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.2134,
+      "card": 0.1898,
+      "last": [
+       10,
+       1
+      ],
+      "start": 6.0,
+      "track": 0.214,
+      "trackN": 457
+     },
+     {
+      "driver_id": 4231,
+      "name": "Todd Gilliland",
+      "car": "34",
+      "team": "Front Row Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2029,
+      "card": 0.1719,
+      "last": [
+       10,
+       1
+      ],
+      "start": 22.0,
+      "track": 0.213,
+      "trackN": 457
+     },
      {
       "driver_id": 3989,
       "name": "Chris Buescher",
@@ -1146,50 +1216,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2023,
-      "card": 0.1708,
+      "chance": 0.1759,
+      "card": 0.1546,
       "last": [
        10,
        1
       ],
-      "start": null,
-      "track": 0.213,
-      "trackN": 457
-     },
-     {
-      "driver_id": 4025,
-      "name": "Bubba Wallace",
-      "car": "23",
-      "team": "23XI Racing",
-      "k": 5,
-      "prop": "top5",
-      "label": "Top 5 finish",
-      "chance": 0.1958,
-      "card": 0.1679,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.175,
-      "trackN": 255
-     },
-     {
-      "driver_id": 4062,
-      "name": "Chase Elliott",
-      "car": "9",
-      "team": "Hendrick Motorsports",
-      "k": 3,
-      "prop": "top3",
-      "label": "Top 3 finish",
-      "chance": 0.1675,
-      "card": 0.162,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.171,
+      "start": 18.0,
+      "track": 0.172,
       "trackN": 255
      }
     ]
