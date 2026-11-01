@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-01T11:02+00:00",
+ "generated_at": "2026-11-01T16:06+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1264,7 +1264,7 @@
      "k": 5,
      "prop": "top5",
      "label": "Top 5 finish",
-     "chance": 0.7124,
+     "chance": 0.7127,
      "last": [
       10,
       5
@@ -1293,14 +1293,14 @@
      "k": 3,
      "prop": "top3",
      "label": "Top 3 finish",
-     "chance": 0.6526,
+     "chance": 0.6281,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.645,
-     "trackN": 87
+     "track": 0.569,
+     "trackN": 111
     },
     {
      "driver_id": 4504,
@@ -1310,7 +1310,7 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.5922,
+     "chance": 0.5933,
      "last": [
       10,
       5
@@ -1331,8 +1331,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.408,
-      "card": 0.3686,
+      "chance": 0.4074,
+      "card": 0.3676,
       "last": [
        10,
        1
@@ -1349,14 +1349,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4059,
-      "card": 0.3545,
+      "chance": 0.4024,
+      "card": 0.3482,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.396,
+      "track": 0.395,
       "trackN": 202
      },
      {
@@ -1367,14 +1367,14 @@
       "k": 1,
       "prop": "win",
       "label": "Win",
-      "chance": 0.3986,
-      "card": 0.4215,
+      "chance": 0.3977,
+      "card": 0.4189,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.364,
+      "track": 0.363,
       "trackN": 228
      }
     ],
@@ -1387,8 +1387,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2159,
-      "card": 0.1946,
+      "chance": 0.2158,
+      "card": 0.1945,
       "last": [
        10,
        1
@@ -1405,8 +1405,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2024,
-      "card": 0.1709,
+      "chance": 0.2023,
+      "card": 0.1708,
       "last": [
        10,
        1
@@ -1423,8 +1423,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1888,
-      "card": 0.1641,
+      "chance": 0.1916,
+      "card": 0.1655,
       "last": [
        10,
        1
@@ -1446,23 +1446,6 @@
    "stage": "pre",
    "picks": [
     {
-     "driver_id": 34,
-     "name": "Justin Allgaier",
-     "car": "7",
-     "team": "JR Motorsports",
-     "k": 3,
-     "prop": "top3",
-     "label": "Top 3 finish",
-     "chance": 0.6201,
-     "last": [
-      10,
-      2
-     ],
-     "start": null,
-     "track": 0.567,
-     "trackN": 111
-    },
-    {
      "driver_id": 4463,
      "name": "Jesse Love",
      "car": "2",
@@ -1470,13 +1453,30 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.619,
+     "chance": 0.6189,
      "last": [
       10,
       5
      ],
      "start": null,
      "track": 0.567,
+     "trackN": 111
+    },
+    {
+     "driver_id": 34,
+     "name": "Justin Allgaier",
+     "car": "7",
+     "team": "JR Motorsports",
+     "k": 3,
+     "prop": "top3",
+     "label": "Top 3 finish",
+     "chance": 0.6175,
+     "last": [
+      10,
+      2
+     ],
+     "start": null,
+     "track": 0.566,
      "trackN": 111
     },
     {
@@ -1487,7 +1487,7 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6025,
+     "chance": 0.6058,
      "last": [
       10,
       4
@@ -1508,8 +1508,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.4894,
-      "card": 0.3941,
+      "chance": 0.4922,
+      "card": 0.3989,
       "last": [
        10,
        3
@@ -1526,8 +1526,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4028,
-      "card": 0.3489,
+      "chance": 0.4033,
+      "card": 0.3498,
       "last": [
        10,
        2
@@ -1544,8 +1544,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3085,
-      "card": 0.2625,
+      "chance": 0.3073,
+      "card": 0.2613,
       "last": [
        10,
        2
@@ -1564,8 +1564,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1972,
-      "card": 0.1769,
+      "chance": 0.1966,
+      "card": 0.1758,
       "last": [
        7,
        0
@@ -1582,14 +1582,14 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1388,
-      "card": 0.1206,
+      "chance": 0.1363,
+      "card": 0.1179,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.112,
+      "track": 0.111,
       "trackN": 70
      },
      {
@@ -1600,8 +1600,8 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1175,
-      "card": 0.1053,
+      "chance": 0.1177,
+      "card": 0.1055,
       "last": [
        10,
        0
