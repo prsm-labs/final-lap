@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-01T16:06+00:00",
+ "generated_at": "2026-11-01T22:03+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1246,7 +1246,7 @@
      }
     ]
    },
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 202619,
@@ -1275,7 +1275,7 @@
     }
    ],
    "series": "f1",
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 5670,
