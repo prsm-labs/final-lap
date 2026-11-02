@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-02T16:02+00:00",
+ "generated_at": "2026-11-02T22:02+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1304,28 +1304,28 @@
    "start": "2026-11-06T19:30:00",
    "date": "2026-11-06",
    "stage": "pre",
-   "picks": [
-    {
-     "driver_id": 4504,
-     "name": "Brent Crews",
-     "car": "1",
-     "team": "TRICON Garage",
-     "k": 10,
-     "prop": "top10",
-     "label": "Top 10 finish",
-     "chance": 0.5907,
-     "last": [
-      10,
-      5
-     ],
-     "start": null,
-     "track": 0.568,
-     "trackN": 151
-    }
-   ],
+   "picks": [],
    "series": "truck",
    "tiers": {
     "mid": [
+     {
+      "driver_id": 3978,
+      "name": "Grant Enfinger",
+      "car": "9",
+      "team": "CR7 Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.4724,
+      "card": 0.4257,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.525,
+      "trackN": 191
+     },
      {
       "driver_id": 4342,
       "name": "Tanner Gray",
@@ -1334,33 +1334,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4077,
-      "card": 0.3681,
+      "chance": 0.3298,
+      "card": 0.2983,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.396,
-      "trackN": 202
-     },
-     {
-      "driver_id": 4107,
-      "name": "Ben Rhodes",
-      "car": "99",
-      "team": "ThorSport Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.4044,
-      "card": 0.3518,
-      "last": [
-       10,
-       2
-      ],
-      "start": null,
-      "track": 0.395,
-      "trackN": 202
+      "track": 0.255,
+      "trackN": 143
      },
      {
       "driver_id": 4446,
@@ -1370,18 +1352,54 @@
       "k": 1,
       "prop": "win",
       "label": "Win",
-      "chance": 0.4007,
-      "card": 0.4278,
+      "chance": 0.3279,
+      "card": 0.266,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.395,
-      "trackN": 202
+      "track": 0.255,
+      "trackN": 143
      }
     ],
     "long": [
+     {
+      "driver_id": 3914,
+      "name": "Parker Kligerman",
+      "car": "25",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2269,
+      "card": 0.211,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.214,
+      "trackN": 459
+     },
+     {
+      "driver_id": 4093,
+      "name": "Daniel Hemric",
+      "car": "19",
+      "team": "McAnally Hilgemann Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.2012,
+      "card": 0.1746,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.212,
+      "trackN": 459
+     },
      {
       "driver_id": 4503,
       "name": "Giovanni Ruggiero",
@@ -1390,51 +1408,15 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.2473,
-      "card": 0.218,
+      "chance": 0.1903,
+      "card": 0.1759,
       "last": [
        10,
        0
       ],
       "start": null,
-      "track": 0.215,
-      "trackN": 459
-     },
-     {
-      "driver_id": 4096,
-      "name": "Corey LaJoie",
-      "car": "10",
-      "team": "Kaulig Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.2194,
-      "card": 0.2008,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.213,
-      "trackN": 459
-     },
-     {
-      "driver_id": 4487,
-      "name": "Brenden Queen",
-      "car": "12",
-      "team": "Kaulig Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.2049,
-      "card": 0.1754,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.212,
-      "trackN": 459
+      "track": 0.172,
+      "trackN": 257
      }
     ]
    },
@@ -1456,13 +1438,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.625,
+     "chance": 0.6086,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.568,
+     "track": 0.564,
      "trackN": 111
     },
     {
@@ -1473,14 +1455,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6135,
+     "chance": 0.5976,
      "last": [
       10,
       4
      ],
      "start": null,
-     "track": 0.565,
-     "trackN": 111
+     "track": 0.57,
+     "trackN": 151
     },
     {
      "driver_id": 34,
@@ -1490,7 +1472,7 @@
      "k": 5,
      "prop": "top5",
      "label": "Top 5 finish",
-     "chance": 0.5597,
+     "chance": 0.5591,
      "last": [
       10,
       5
@@ -1511,8 +1493,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.4919,
-      "card": 0.398,
+      "chance": 0.4911,
+      "card": 0.3958,
       "last": [
        10,
        3
@@ -1529,15 +1511,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4002,
-      "card": 0.3456,
+      "chance": 0.3893,
+      "card": 0.3389,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.394,
-      "trackN": 202
+      "track": 0.359,
+      "trackN": 230
      },
      {
       "driver_id": 4419,
@@ -1547,35 +1529,35 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3017,
-      "card": 0.2569,
+      "chance": 0.3043,
+      "card": 0.259,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.249,
+      "track": 0.25,
       "trackN": 143
      }
     ],
     "long": [
      {
-      "driver_id": 4517,
-      "name": "Jake Finch",
-      "car": "9",
-      "team": "JR Motorsports",
+      "driver_id": 4416,
+      "name": "Nicholas Sanchez",
+      "car": "87",
+      "team": "Peterson Racing Group",
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1949,
-      "card": 0.1727,
+      "chance": 0.2186,
+      "card": 0.1994,
       "last": [
-       7,
-       0
+       10,
+       1
       ],
       "start": null,
-      "track": 0.173,
-      "trackN": 257
+      "track": 0.213,
+      "trackN": 459
      },
      {
       "driver_id": 4301,
@@ -1585,14 +1567,14 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1366,
-      "card": 0.1182,
+      "chance": 0.1334,
+      "card": 0.1164,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.111,
+      "track": 0.11,
       "trackN": 70
      },
      {
@@ -1603,8 +1585,8 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1319,
-      "card": 0.1244,
+      "chance": 0.1318,
+      "card": 0.1199,
       "last": [
        10,
        0
@@ -1633,14 +1615,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6588,
+     "chance": 0.6381,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.647,
-     "trackN": 87
+     "track": 0.572,
+     "trackN": 111
     },
     {
      "driver_id": 4065,
@@ -1650,14 +1632,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6564,
+     "chance": 0.6363,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.646,
-     "trackN": 87
+     "track": 0.571,
+     "trackN": 111
     },
     {
      "driver_id": 4228,
@@ -1667,13 +1649,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.62,
+     "chance": 0.6059,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.567,
+     "track": 0.564,
      "trackN": 111
     }
    ],
@@ -1688,33 +1670,15 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3881,
-      "card": 0.4032,
+      "chance": 0.3757,
+      "card": 0.3985,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.359,
+      "track": 0.357,
       "trackN": 230
-     },
-     {
-      "driver_id": 4045,
-      "name": "Alex Bowman",
-      "car": "48",
-      "team": "Hendrick Motorsports",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.345,
-      "card": 0.3073,
-      "last": [
-       10,
-       3
-      ],
-      "start": null,
-      "track": 0.259,
-      "trackN": 143
      },
      {
       "driver_id": 4326,
@@ -1724,36 +1688,36 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3447,
-      "card": 0.3065,
+      "chance": 0.3409,
+      "card": 0.2974,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.259,
+      "track": 0.258,
+      "trackN": 143
+     },
+     {
+      "driver_id": 4045,
+      "name": "Alex Bowman",
+      "car": "48",
+      "team": "Hendrick Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3403,
+      "card": 0.296,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.258,
       "trackN": 143
      }
     ],
     "long": [
-     {
-      "driver_id": 1816,
-      "name": "Brad Keselowski",
-      "car": "6",
-      "team": "RFK Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.2224,
-      "card": 0.2158,
-      "last": [
-       10,
-       0
-      ],
-      "start": null,
-      "track": 0.213,
-      "trackN": 459
-     },
      {
       "driver_id": 4025,
       "name": "Bubba Wallace",
@@ -1762,14 +1726,32 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.2194,
-      "card": 0.2061,
+      "chance": 0.208,
+      "card": 0.1957,
       "last": [
        10,
        0
       ],
       "start": null,
-      "track": 0.213,
+      "track": 0.212,
+      "trackN": 459
+     },
+     {
+      "driver_id": 1816,
+      "name": "Brad Keselowski",
+      "car": "6",
+      "team": "RFK Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2055,
+      "card": 0.1975,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.212,
       "trackN": 459
      },
      {
@@ -1780,8 +1762,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1904,
-      "card": 0.1706,
+      "chance": 0.19,
+      "card": 0.1699,
       "last": [
        10,
        0
