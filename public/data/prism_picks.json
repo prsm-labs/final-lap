@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-01T22:03+00:00",
+ "generated_at": "2026-11-02T11:03+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -195,7 +195,7 @@
     ]
    },
    "live": {
-    "n": 13,
+    "n": 16,
     "hits": 5
    }
   },
@@ -283,25 +283,25 @@
     ]
    },
    "live": {
-    "n": 15,
+    "n": 18,
     "hits": 3
    }
   }
  },
  "live": {
   "nascar": {
-   "n": 5,
-   "hits": 3
+   "n": 8,
+   "hits": 5
   },
   "f1": {
-   "n": 0,
+   "n": 1,
    "hits": 0
   }
  },
  "next": {
   "cup": [
    "cup",
-   5632
+   5601
   ],
   "oreilly": [
    "oreilly",
@@ -313,7 +313,7 @@
   ],
   "f1": [
    "f1",
-   202619
+   202620
   ]
  },
  "races": [
@@ -1094,7 +1094,9 @@
      ],
      "start": 1.0,
      "track": 0.689,
-     "trackN": 77
+     "trackN": 77,
+     "actual": 6,
+     "result": "miss"
     },
     {
      "driver_id": 4368,
@@ -1111,7 +1113,9 @@
      ],
      "start": 2.0,
      "track": 0.684,
-     "trackN": 77
+     "trackN": 77,
+     "actual": 3,
+     "result": "hit"
     },
     {
      "driver_id": 4062,
@@ -1128,7 +1132,9 @@
      ],
      "start": 9.0,
      "track": 0.566,
-     "trackN": 150
+     "trackN": 150,
+     "actual": 2,
+     "result": "hit"
     }
    ],
    "series": "cup",
@@ -1150,7 +1156,9 @@
       ],
       "start": 13.0,
       "track": 0.358,
-      "trackN": 228
+      "trackN": 228,
+      "actual": 35,
+      "result": "miss"
      },
      {
       "driver_id": 3859,
@@ -1168,7 +1176,9 @@
       ],
       "start": 5.0,
       "track": 0.357,
-      "trackN": 228
+      "trackN": 228,
+      "actual": 18,
+      "result": "miss"
      },
      {
       "driver_id": 4001,
@@ -1186,7 +1196,9 @@
       ],
       "start": 16.0,
       "track": 0.259,
-      "trackN": 142
+      "trackN": 142,
+      "actual": 11,
+      "result": "miss"
      }
     ],
     "long": [
@@ -1206,7 +1218,9 @@
       ],
       "start": 6.0,
       "track": 0.214,
-      "trackN": 457
+      "trackN": 457,
+      "actual": 23,
+      "result": "miss"
      },
      {
       "driver_id": 4231,
@@ -1224,7 +1238,9 @@
       ],
       "start": 22.0,
       "track": 0.213,
-      "trackN": 457
+      "trackN": 457,
+      "actual": 15,
+      "result": "miss"
      },
      {
       "driver_id": 3989,
@@ -1242,7 +1258,9 @@
       ],
       "start": 18.0,
       "track": 0.171,
-      "trackN": 256
+      "trackN": 256,
+      "actual": 24,
+      "result": "miss"
      }
     ]
    },
@@ -1271,7 +1289,9 @@
      ],
      "start": 2,
      "track": 0.787,
-     "trackN": 13
+     "trackN": 13,
+     "actual": 6,
+     "result": "miss"
     }
    ],
    "series": "f1",
@@ -1293,13 +1313,13 @@
      "k": 3,
      "prop": "top3",
      "label": "Top 3 finish",
-     "chance": 0.6281,
+     "chance": 0.6233,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.569,
+     "track": 0.568,
      "trackN": 111
     },
     {
@@ -1310,14 +1330,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.5933,
+     "chance": 0.5887,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.566,
-     "trackN": 150
+     "track": 0.568,
+     "trackN": 151
     }
    ],
    "series": "truck",
@@ -1331,29 +1351,11 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4074,
-      "card": 0.3676,
+      "chance": 0.4052,
+      "card": 0.3638,
       "last": [
        10,
        1
-      ],
-      "start": null,
-      "track": 0.396,
-      "trackN": 202
-     },
-     {
-      "driver_id": 4107,
-      "name": "Ben Rhodes",
-      "car": "99",
-      "team": "ThorSport Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.4024,
-      "card": 0.3482,
-      "last": [
-       10,
-       2
       ],
       "start": null,
       "track": 0.395,
@@ -1367,15 +1369,33 @@
       "k": 1,
       "prop": "win",
       "label": "Win",
-      "chance": 0.3977,
-      "card": 0.4189,
+      "chance": 0.3995,
+      "card": 0.4242,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.363,
-      "trackN": 228
+      "track": 0.361,
+      "trackN": 230
+     },
+     {
+      "driver_id": 4107,
+      "name": "Ben Rhodes",
+      "car": "99",
+      "team": "ThorSport Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.389,
+      "card": 0.3387,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.359,
+      "trackN": 230
      }
     ],
     "long": [
@@ -1387,15 +1407,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2158,
-      "card": 0.1945,
+      "chance": 0.2148,
+      "card": 0.1926,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.214,
-      "trackN": 457
+      "track": 0.213,
+      "trackN": 459
      },
      {
       "driver_id": 4487,
@@ -1405,15 +1425,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2023,
-      "card": 0.1708,
+      "chance": 0.2067,
+      "card": 0.1784,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.213,
-      "trackN": 457
+      "track": 0.212,
+      "trackN": 459
      },
      {
       "driver_id": 4296,
@@ -1423,15 +1443,15 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1916,
-      "card": 0.1655,
+      "chance": 0.1966,
+      "card": 0.1689,
       "last": [
        10,
        1
       ],
       "start": null,
       "track": 0.173,
-      "trackN": 256
+      "trackN": 257
      }
     ]
    },
@@ -1453,13 +1473,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6189,
+     "chance": 0.625,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.567,
+     "track": 0.568,
      "trackN": 111
     },
     {
@@ -1470,7 +1490,7 @@
      "k": 3,
      "prop": "top3",
      "label": "Top 3 finish",
-     "chance": 0.6175,
+     "chance": 0.6176,
      "last": [
       10,
       2
@@ -1487,13 +1507,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6058,
+     "chance": 0.6135,
      "last": [
       10,
       4
      ],
      "start": null,
-     "track": 0.563,
+     "track": 0.565,
      "trackN": 111
     }
    ],
@@ -1508,8 +1528,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.4922,
-      "card": 0.3989,
+      "chance": 0.4919,
+      "card": 0.398,
       "last": [
        10,
        3
@@ -1526,14 +1546,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4033,
-      "card": 0.3498,
+      "chance": 0.4002,
+      "card": 0.3456,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.395,
+      "track": 0.394,
       "trackN": 202
      },
      {
@@ -1544,15 +1564,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3073,
-      "card": 0.2613,
+      "chance": 0.3017,
+      "card": 0.2569,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.252,
-      "trackN": 142
+      "track": 0.249,
+      "trackN": 143
      }
     ],
     "long": [
@@ -1564,15 +1584,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1966,
-      "card": 0.1758,
+      "chance": 0.1949,
+      "card": 0.1727,
       "last": [
        7,
        0
       ],
       "start": null,
-      "track": 0.174,
-      "trackN": 256
+      "track": 0.173,
+      "trackN": 257
      },
      {
       "driver_id": 4301,
@@ -1582,8 +1602,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1363,
-      "card": 0.1179,
+      "chance": 0.1366,
+      "card": 0.1182,
       "last": [
        10,
        1
@@ -1593,25 +1613,214 @@
       "trackN": 70
      },
      {
-      "driver_id": 4406,
-      "name": "Taylor Gray",
-      "car": "54",
+      "driver_id": 3884,
+      "name": "Ryan Sieg",
+      "car": "39",
+      "team": "RSS Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.131,
+      "card": 0.1159,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.109,
+      "trackN": 70
+     }
+    ]
+   },
+   "locked": false
+  },
+  {
+   "race_id": 5601,
+   "name": "NASCAR Championship Race",
+   "track": "Homestead-Miami Speedway",
+   "start": "2026-11-08T15:00:00",
+   "date": "2026-11-08",
+   "stage": "pre",
+   "picks": [
+    {
+     "driver_id": 4023,
+     "name": "Ryan Blaney",
+     "car": "12",
+     "team": "Team Penske",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.6571,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.646,
+     "trackN": 87
+    },
+    {
+     "driver_id": 4065,
+     "name": "Tyler Reddick",
+     "car": "45",
+     "team": "23XI Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.656,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.646,
+     "trackN": 87
+    },
+    {
+     "driver_id": 4228,
+     "name": "Chase Briscoe",
+     "car": "19",
+     "team": "Joe Gibbs Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.6248,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.568,
+     "trackN": 111
+    }
+   ],
+   "series": "cup",
+   "tiers": {
+    "mid": [
+     {
+      "driver_id": 1361,
+      "name": "Denny Hamlin",
+      "car": "11",
       "team": "Joe Gibbs Racing",
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1177,
-      "card": 0.1055,
+      "chance": 0.3971,
+      "card": 0.4066,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.36,
+      "trackN": 230
+     },
+     {
+      "driver_id": 4326,
+      "name": "Carson Hocevar",
+      "car": "77",
+      "team": "Spire Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3445,
+      "card": 0.3061,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.258,
+      "trackN": 143
+     },
+     {
+      "driver_id": 4045,
+      "name": "Alex Bowman",
+      "car": "48",
+      "team": "Hendrick Motorsports",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.3445,
+      "card": 0.3061,
+      "last": [
+       10,
+       3
+      ],
+      "start": null,
+      "track": 0.258,
+      "trackN": 143
+     }
+    ],
+    "long": [
+     {
+      "driver_id": 1816,
+      "name": "Brad Keselowski",
+      "car": "6",
+      "team": "RFK Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.2224,
+      "card": 0.2158,
       "last": [
        10,
        0
       ],
       "start": null,
-      "track": 0.104,
-      "trackN": 70
+      "track": 0.213,
+      "trackN": 459
+     },
+     {
+      "driver_id": 4025,
+      "name": "Bubba Wallace",
+      "car": "23",
+      "team": "23XI Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.2188,
+      "card": 0.2055,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.213,
+      "trackN": 459
+     },
+     {
+      "driver_id": 3774,
+      "name": "AJ Allmendinger",
+      "car": "16",
+      "team": "Kaulig Racing",
+      "k": 10,
+      "prop": "top10",
+      "label": "Top 10 finish",
+      "chance": 0.1886,
+      "card": 0.1673,
+      "last": [
+       10,
+       0
+      ],
+      "start": null,
+      "track": 0.172,
+      "trackN": 257
      }
     ]
    },
+   "locked": false
+  },
+  {
+   "race_id": 202620,
+   "name": "Brazilian Grand Prix",
+   "track": "Autódromo José Carlos Pace",
+   "start": "2026-11-08T12:00:00",
+   "date": "2026-11-08",
+   "stage": "pre",
+   "picks": [],
+   "series": "f1",
+   "waiting": "until qualifying",
    "locked": false
   }
  ]
