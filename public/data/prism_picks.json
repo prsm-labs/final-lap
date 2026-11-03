@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-03T11:03+00:00",
+ "generated_at": "2026-11-03T16:03+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1316,14 +1316,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4724,
-      "card": 0.4257,
+      "chance": 0.4661,
+      "card": 0.4212,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.525,
+      "track": 0.524,
       "trackN": 191
      },
      {
@@ -1334,8 +1334,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3298,
-      "card": 0.2983,
+      "chance": 0.3279,
+      "card": 0.2938,
       "last": [
        10,
        1
@@ -1352,8 +1352,8 @@
       "k": 1,
       "prop": "win",
       "label": "Win",
-      "chance": 0.3279,
-      "card": 0.266,
+      "chance": 0.3273,
+      "card": 0.2654,
       "last": [
        10,
        3
@@ -1372,14 +1372,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2269,
-      "card": 0.211,
+      "chance": 0.2237,
+      "card": 0.2082,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.214,
+      "track": 0.213,
       "trackN": 459
      },
      {
@@ -1390,15 +1390,15 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.2012,
-      "card": 0.1746,
+      "chance": 0.1999,
+      "card": 0.173,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.212,
-      "trackN": 459
+      "track": 0.174,
+      "trackN": 257
      },
      {
       "driver_id": 4503,
@@ -1408,8 +1408,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1903,
-      "card": 0.1759,
+      "chance": 0.1887,
+      "card": 0.174,
       "last": [
        10,
        0
