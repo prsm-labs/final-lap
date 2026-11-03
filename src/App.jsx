@@ -15,6 +15,8 @@ import Drivers from './tabs/Drivers.jsx'
 import TrackRecord from './tabs/TrackRecord.jsx'
 import About from './tabs/About.jsx'
 import TabMenu from './components/TabMenu.jsx'
+import { OfflineBanner, OfflineMenuButton } from './components/Offline.jsx'
+import offlineConfig from './lib/offlineConfig.js'
 import AppRefresh from './components/AppRefresh.jsx'
 import RaceBar from './components/RaceBar.jsx'
 
@@ -60,9 +62,11 @@ export default function App() {
           {/* 2026-10-25 (user): app refresh button -- reloads the page with fresh data */}
           <div className="hdr-right"><AppRefresh /><span className="badge">PRISM LABS</span></div>
         </header>
+        {/* 2026-11-02 (user): ☰ > 📦 Offline & data (save a time-stamped offline copy, download the numbers); banner while on the copy */}
+        <OfflineBanner />
         {/* 2026-10-24 (user prototype): ☰ page menu first in the row under the logo, beside the NASCAR | F1 switch */}
         <div className="master-bar tm-row">
-          <TabMenu tabs={TABS} tab={tab} setTab={setTab} />
+          <TabMenu tabs={TABS} tab={tab} setTab={setTab} footer={(close) => <OfflineMenuButton config={offlineConfig} onOpen={close} />} />
           <RaceBar series={series} card={next} />
           <div className="sport-switch" role="tablist" aria-label="Motorsport">
             {SPORTS.map((s) => {
