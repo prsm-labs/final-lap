@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-05T16:05+00:00",
+ "generated_at": "2026-11-05T22:02+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1316,14 +1316,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4764,
-      "card": 0.4285,
+      "chance": 0.4725,
+      "card": 0.4258,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.526,
+      "track": 0.525,
       "trackN": 191
      },
      {
@@ -1334,8 +1334,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3266,
-      "card": 0.2907,
+      "chance": 0.326,
+      "card": 0.2892,
       "last": [
        10,
        1
@@ -1372,8 +1372,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2347,
-      "card": 0.2158,
+      "chance": 0.2332,
+      "card": 0.2149,
       "last": [
        10,
        1
@@ -1390,8 +1390,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1991,
-      "card": 0.172,
+      "chance": 0.1986,
+      "card": 0.1713,
       "last": [
        10,
        1
@@ -1408,8 +1408,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1881,
-      "card": 0.1732,
+      "chance": 0.1874,
+      "card": 0.1724,
       "last": [
        10,
        0
