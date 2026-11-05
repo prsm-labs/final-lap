@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T22:02+00:00",
+ "generated_at": "2026-11-05T11:02+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1316,14 +1316,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4661,
-      "card": 0.4212,
+      "chance": 0.4764,
+      "card": 0.4285,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.524,
+      "track": 0.526,
       "trackN": 191
      },
      {
@@ -1334,8 +1334,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3279,
-      "card": 0.2938,
+      "chance": 0.3266,
+      "card": 0.2907,
       "last": [
        10,
        1
@@ -1352,14 +1352,14 @@
       "k": 1,
       "prop": "win",
       "label": "Win",
-      "chance": 0.3273,
-      "card": 0.2654,
+      "chance": 0.3246,
+      "card": 0.2627,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.255,
+      "track": 0.254,
       "trackN": 143
      }
     ],
@@ -1372,14 +1372,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2237,
-      "card": 0.2082,
+      "chance": 0.2347,
+      "card": 0.2158,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.213,
+      "track": 0.214,
       "trackN": 459
      },
      {
@@ -1390,8 +1390,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1999,
-      "card": 0.173,
+      "chance": 0.1991,
+      "card": 0.172,
       "last": [
        10,
        1
@@ -1408,8 +1408,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1887,
-      "card": 0.174,
+      "chance": 0.1881,
+      "card": 0.1732,
       "last": [
        10,
        0
@@ -1438,13 +1438,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6086,
+     "chance": 0.6036,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.564,
+     "track": 0.563,
      "trackN": 111
     },
     {
@@ -1455,14 +1455,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.5976,
+     "chance": 0.6021,
      "last": [
       10,
       4
      ],
      "start": null,
-     "track": 0.57,
-     "trackN": 151
+     "track": 0.563,
+     "trackN": 111
     },
     {
      "driver_id": 34,
@@ -1472,13 +1472,13 @@
      "k": 5,
      "prop": "top5",
      "label": "Top 5 finish",
-     "chance": 0.5591,
+     "chance": 0.5553,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.562,
+     "track": 0.561,
      "trackN": 151
     }
    ],
@@ -1493,14 +1493,14 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.4911,
-      "card": 0.3958,
+      "chance": 0.4855,
+      "card": 0.3911,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.528,
+      "track": 0.527,
       "trackN": 191
      },
      {
@@ -1511,33 +1511,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3893,
-      "card": 0.3389,
+      "chance": 0.3955,
+      "card": 0.3427,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.359,
+      "track": 0.36,
       "trackN": 230
-     },
-     {
-      "driver_id": 4419,
-      "name": "Parker Retzlaff",
-      "car": "99",
-      "team": "Viking Motorsports",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.3043,
-      "card": 0.259,
-      "last": [
-       10,
-       2
-      ],
-      "start": null,
-      "track": 0.25,
-      "trackN": 143
      }
     ],
     "long": [
@@ -1549,8 +1531,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2186,
-      "card": 0.1994,
+      "chance": 0.2192,
+      "card": 0.2004,
       "last": [
        10,
        1
@@ -1567,14 +1549,14 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1334,
-      "card": 0.1164,
+      "chance": 0.1362,
+      "card": 0.1177,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.11,
+      "track": 0.111,
       "trackN": 70
      },
      {
@@ -1585,8 +1567,8 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1318,
-      "card": 0.1199,
+      "chance": 0.1317,
+      "card": 0.1192,
       "last": [
        10,
        0
@@ -1615,7 +1597,7 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.646,
+     "chance": 0.6468,
      "last": [
       10,
       5
@@ -1632,13 +1614,13 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.642,
+     "chance": 0.6462,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.573,
+     "track": 0.574,
      "trackN": 111
     },
     {
@@ -1649,7 +1631,7 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6129,
+     "chance": 0.6101,
      "last": [
       10,
       5
@@ -1670,15 +1652,15 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3855,
-      "card": 0.4022,
+      "chance": 0.4,
+      "card": 0.4077,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.359,
-      "trackN": 230
+      "track": 0.394,
+      "trackN": 202
      },
      {
       "driver_id": 4045,
@@ -1688,8 +1670,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3425,
-      "card": 0.3012,
+      "chance": 0.3414,
+      "card": 0.2987,
       "last": [
        10,
        3
@@ -1706,14 +1688,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3102,
-      "card": 0.2706,
+      "chance": 0.3143,
+      "card": 0.2746,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.251,
+      "track": 0.252,
       "trackN": 143
      }
     ],
@@ -1744,8 +1726,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2074,
-      "card": 0.2009,
+      "chance": 0.2089,
+      "card": 0.2035,
       "last": [
        10,
        0
@@ -1762,8 +1744,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1913,
-      "card": 0.1722,
+      "chance": 0.1923,
+      "card": 0.1739,
       "last": [
        10,
        0
