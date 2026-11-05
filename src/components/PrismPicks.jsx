@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { pct, useJson } from '../lib/data.js'
 import { openDriver } from '../lib/stores.js'
 import { Avatar, PickButton } from './ui.jsx'
+import ViewPicker from './ViewPicker.jsx'
 
 // 💎 PRISM Picks (2026-10-20, final-lap-2/build_prism_picks.py -> public/data/prism_picks.json): this race's few finishing
 // props with the highest tested hit rates that aren't the obvious ones (drivers who are there every week are left out).
@@ -47,8 +48,9 @@ export default function PrismPicks({ card, series }) {
         <button type="button" className="prism-toggle" aria-expanded={open} onClick={() => setOpen((v) => !v)}>{open ? '▴ Hide' : `▾ Show${count('safe') + count('mid') + count('long') ? ` ${count('safe') + count('mid') + count('long')} picks` : ''}`}</button>
       </div>
       {g !== 'f1' && d.tiers && (
-        <div className="pill-row" style={{ margin: '8px 0 4px' }}>
-          {LEVELS.map((x) => <button key={x.key} type="button" className={`pill ${level === x.key ? 'active' : ''}`} onClick={() => setLevel(x.key)}>{x.label}{count(x.key) ? ` · ${count(x.key)}` : ''}</button>)}
+        <div className="vp-row prism-levels" style={{ margin: '8px 0 4px' }}>
+          {/* 2026-11-05: the level is one choice -> a dropdown */}
+          <ViewPicker select compact label="Level" value={level} onChange={setLevel} options={LEVELS.map((x) => [x.key, `${x.label}${count(x.key) ? ` · ${count(x.key)}` : ''}`])} />
         </div>
       )}
       {picks.length === 0 && tier && <div className="muted small">{race && !race.tiers ? 'Pick levels started 10/23/2026.' : `None at this level this race — it only shows looks like the ones that have hit ${share(bt.hits, bt.n)} of the time.`}</div>}

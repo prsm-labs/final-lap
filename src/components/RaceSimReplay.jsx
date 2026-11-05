@@ -192,7 +192,10 @@ export default function RaceSimReplay({ sim }) {
         <button onClick={() => go(idx + 1)} aria-label="Next">▶▏</button>
         <button onClick={nextEvent}>{f1 ? 'Next event' : 'Next caution'}</button>
         <button onClick={() => go(n - 1)} aria-label="Jump to the finish">⏭</button>
-        <span className="rs-speed">{[1, 2, 4, 8].map((s) => <button key={s} className={speed === s ? 'on' : ''} onClick={() => setSpeed(s)}>{s}x</button>)}</span>
+        {/* 2026-11-05: speed is one choice -> a small dropdown */}
+        <select className="rs-speed-sel" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} aria-label="Replay speed">
+          {[1, 2, 4, 8].map((s) => <option key={s} value={s}>{s}x</option>)}
+        </select>
         <input type="range" min={0} max={n - 1} value={idx} onChange={(e) => go(+e.target.value)} aria-label="Scrub through the race" />
         <span className="rs-count">{idx + 1}/{n}</span>
       </div>

@@ -3,6 +3,7 @@ import { pct, useJson } from '../lib/data.js'
 import { buildPairs, fmtAmerican, LEG_FILTERS, LEGS, LEVELS, MODES, relText, STAR_TOP } from '../lib/pairs.js'
 import { openDriver, SERIES } from '../lib/stores.js'
 import { Avatar, PickButton, Section, Tags } from './ui.jsx'
+import ViewPicker from './ViewPicker.jsx'
 
 // 🤝 Pairs on the Race Card (2026-10-23, user: CourtIQ / Slap Shot / Six Points have a Pairs page) -- lib/pairs.js.
 const DAY = 86400000
@@ -72,10 +73,11 @@ export default function Pairs({ card, series }) {
         honestly as a safe pair (each level's board is graded on the 2026 replay in Track Record); mid-range and long shots lead with ✨ two
         cars that run up front together (top 5 + top 5 / top 10: +7-8%).
       </div>
-      <div className="pill-row">{LEVELS.map((l) => <button key={l.key} className={`pill ${level === l.key ? 'active' : ''}`} onClick={() => setLevel(l.key)} title={l.blurb}>{l.label}</button>)}</div>
-      <div className="pill-row">{modes.map((m) => <button key={m.key} className={`pill ${mode === m.key ? 'active' : ''}`} onClick={() => setMode(m.key)}>{m.label}</button>)}</div>
-      <div className="pill-row">
-        {LEG_FILTERS.map((f) => <button key={String(f.key)} className={`pill ${leg === f.key ? 'active' : ''}`} onClick={() => setLeg(f.key)}>{f.label}</button>)}
+      {/* 2026-11-05 (user: dropdowns, not rows of single-choice buttons): level · sort · finishes; ★ Best stays an on / off button */}
+      <div className="vp-row">
+        <ViewPicker select compact label="Level" options={LEVELS.map((l) => [l.key, l.label])} value={level} onChange={setLevel} />
+        <ViewPicker select compact label="Sort" options={modes.map((m) => [m.key, m.label])} value={mode} onChange={setMode} />
+        <ViewPicker select compact label="Finishes" options={LEG_FILTERS.map((f) => [f.key, f.label])} value={leg} onChange={setLeg} />
         <button className={`pill ${stars ? 'active' : ''}`} onClick={() => setStars((v) => !v)}>★ Best {STAR_TOP}</button>
       </div>
       <p className="muted small">{level !== 'all' ? `${levelInfo.blurb} · ` : ''}{MODES.find((m) => m.key === mode)?.blurb}</p>

@@ -62,3 +62,5 @@
   .rs-stage { font-size: .78rem; }
   .rs-lap b { font-size: 1.5rem; }
 }
+/* 2026-11-05 speed dropdown (was four buttons) */
+.rs-speed-sel { font: inherit; font-size: 13px; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--border, #2a2f3a); background: var(--surface2, var(--surface, transparent)); color: inherit; cursor: pointer; }
