@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-06T16:03+00:00",
+ "generated_at": "2026-11-06T22:02+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1303,8 +1303,26 @@
    "track": "Homestead-Miami Speedway",
    "start": "2026-11-06T19:30:00",
    "date": "2026-11-06",
-   "stage": "pre",
-   "picks": [],
+   "stage": "post",
+   "picks": [
+    {
+     "driver_id": 4416,
+     "name": "Nicholas Sanchez",
+     "car": "77",
+     "team": "Spire Motorsports",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.6464,
+     "last": [
+      10,
+      4
+     ],
+     "start": 1.0,
+     "track": 0.574,
+     "trackN": 111
+    }
+   ],
    "series": "truck",
    "tiers": {
     "mid": [
@@ -1316,15 +1334,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4725,
-      "card": 0.4258,
+      "chance": 0.442,
+      "card": 0.4041,
       "last": [
        10,
        3
       ],
-      "start": null,
-      "track": 0.525,
-      "trackN": 191
+      "start": 13.0,
+      "track": 0.401,
+      "trackN": 202
      },
      {
       "driver_id": 4342,
@@ -1334,32 +1352,14 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.326,
-      "card": 0.2892,
+      "chance": 0.3332,
+      "card": 0.3063,
       "last": [
        10,
        1
       ],
-      "start": null,
-      "track": 0.255,
-      "trackN": 143
-     },
-     {
-      "driver_id": 4446,
-      "name": "Layne Riggs",
-      "car": "34",
-      "team": "Front Row Motorsports",
-      "k": 1,
-      "prop": "win",
-      "label": "Win",
-      "chance": 0.3246,
-      "card": 0.2627,
-      "last": [
-       10,
-       3
-      ],
-      "start": null,
-      "track": 0.254,
+      "start": 8.0,
+      "track": 0.256,
       "trackN": 143
      }
     ],
@@ -1372,33 +1372,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2332,
-      "card": 0.2149,
+      "chance": 0.2152,
+      "card": 0.1933,
       "last": [
        10,
        1
       ],
-      "start": null,
-      "track": 0.214,
+      "start": 23.0,
+      "track": 0.213,
       "trackN": 459
-     },
-     {
-      "driver_id": 4093,
-      "name": "Daniel Hemric",
-      "car": "19",
-      "team": "McAnally Hilgemann Racing",
-      "k": 5,
-      "prop": "top5",
-      "label": "Top 5 finish",
-      "chance": 0.1986,
-      "card": 0.1713,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.174,
-      "trackN": 257
      },
      {
       "driver_id": 4503,
@@ -1408,14 +1390,32 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1874,
-      "card": 0.1724,
+      "chance": 0.1909,
+      "card": 0.1767,
       "last": [
        10,
        0
       ],
-      "start": null,
-      "track": 0.172,
+      "start": 7.0,
+      "track": 0.173,
+      "trackN": 257
+     },
+     {
+      "driver_id": 4093,
+      "name": "Daniel Hemric",
+      "car": "19",
+      "team": "McAnally Hilgemann Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.1669,
+      "card": 0.1533,
+      "last": [
+       10,
+       1
+      ],
+      "start": 16.0,
+      "track": 0.169,
       "trackN": 257
      }
     ]
@@ -1431,23 +1431,6 @@
    "stage": "pre",
    "picks": [
     {
-     "driver_id": 4463,
-     "name": "Jesse Love",
-     "car": "2",
-     "team": "Richard Childress Racing",
-     "k": 10,
-     "prop": "top10",
-     "label": "Top 10 finish",
-     "chance": 0.6036,
-     "last": [
-      10,
-      5
-     ],
-     "start": null,
-     "track": 0.563,
-     "trackN": 111
-    },
-    {
      "driver_id": 4133,
      "name": "Austin Hill",
      "car": "21",
@@ -1455,31 +1438,31 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6021,
+     "chance": 0.6339,
      "last": [
       10,
       4
      ],
      "start": null,
-     "track": 0.563,
+     "track": 0.571,
      "trackN": 111
     },
     {
-     "driver_id": 34,
-     "name": "Justin Allgaier",
-     "car": "7",
-     "team": "JR Motorsports",
-     "k": 5,
-     "prop": "top5",
-     "label": "Top 5 finish",
-     "chance": 0.5553,
+     "driver_id": 4463,
+     "name": "Jesse Love",
+     "car": "2",
+     "team": "Richard Childress Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.6276,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.561,
-     "trackN": 151
+     "track": 0.569,
+     "trackN": 111
     }
    ],
    "series": "oreilly",
@@ -1490,18 +1473,18 @@
       "name": "Sam Mayer",
       "car": "41",
       "team": "Haas Factory Team",
-      "k": 5,
-      "prop": "top5",
-      "label": "Top 5 finish",
-      "chance": 0.4855,
-      "card": 0.3911,
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.4199,
+      "card": 0.4136,
       "last": [
        10,
-       3
+       2
       ],
       "start": null,
-      "track": 0.527,
-      "trackN": 191
+      "track": 0.398,
+      "trackN": 202
      },
      {
       "driver_id": 4422,
@@ -1511,36 +1494,36 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3955,
-      "card": 0.3427,
+      "chance": 0.4184,
+      "card": 0.3765,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.36,
+      "track": 0.397,
+      "trackN": 202
+     },
+     {
+      "driver_id": 34,
+      "name": "Justin Allgaier",
+      "car": "7",
+      "team": "JR Motorsports",
+      "k": 3,
+      "prop": "top3",
+      "label": "Top 3 finish",
+      "chance": 0.3651,
+      "card": 0.3928,
+      "last": [
+       10,
+       2
+      ],
+      "start": null,
+      "track": 0.356,
       "trackN": 230
      }
     ],
     "long": [
-     {
-      "driver_id": 4416,
-      "name": "Nicholas Sanchez",
-      "car": "87",
-      "team": "Peterson Racing Group",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.2192,
-      "card": 0.2004,
-      "last": [
-       10,
-       1
-      ],
-      "start": null,
-      "track": 0.213,
-      "trackN": 459
-     },
      {
       "driver_id": 4301,
       "name": "Anthony Alfredo",
@@ -1549,15 +1532,15 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1362,
-      "card": 0.1177,
+      "chance": 0.1865,
+      "card": 0.163,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.111,
-      "trackN": 70
+      "track": 0.172,
+      "trackN": 257
      },
      {
       "driver_id": 4406,
@@ -1567,14 +1550,32 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1317,
-      "card": 0.1192,
+      "chance": 0.1486,
+      "card": 0.1569,
       "last": [
        10,
        0
       ],
       "start": null,
-      "track": 0.109,
+      "track": 0.115,
+      "trackN": 70
+     },
+     {
+      "driver_id": 3884,
+      "name": "Ryan Sieg",
+      "car": "39",
+      "team": "RSS Racing",
+      "k": 5,
+      "prop": "top5",
+      "label": "Top 5 finish",
+      "chance": 0.1451,
+      "card": 0.1275,
+      "last": [
+       10,
+       1
+      ],
+      "start": null,
+      "track": 0.114,
       "trackN": 70
      }
     ]
@@ -1590,14 +1591,14 @@
    "stage": "pre",
    "picks": [
     {
-     "driver_id": 4023,
-     "name": "Ryan Blaney",
-     "car": "12",
-     "team": "Team Penske",
+     "driver_id": 4065,
+     "name": "Tyler Reddick",
+     "car": "45",
+     "team": "23XI Racing",
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6468,
+     "chance": 0.6454,
      "last": [
       10,
       5
@@ -1607,20 +1608,20 @@
      "trackN": 111
     },
     {
-     "driver_id": 4065,
-     "name": "Tyler Reddick",
-     "car": "45",
-     "team": "23XI Racing",
+     "driver_id": 4023,
+     "name": "Ryan Blaney",
+     "car": "12",
+     "team": "Team Penske",
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6462,
+     "chance": 0.6446,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.574,
+     "track": 0.573,
      "trackN": 111
     },
     {
@@ -1631,7 +1632,7 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6101,
+     "chance": 0.6098,
      "last": [
       10,
       5
@@ -1652,15 +1653,15 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.4,
-      "card": 0.4077,
+      "chance": 0.3981,
+      "card": 0.407,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.394,
-      "trackN": 202
+      "track": 0.361,
+      "trackN": 230
      },
      {
       "driver_id": 4045,
@@ -1670,8 +1671,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3414,
-      "card": 0.2987,
+      "chance": 0.341,
+      "card": 0.2978,
       "last": [
        10,
        3
@@ -1688,8 +1689,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3143,
-      "card": 0.2746,
+      "chance": 0.3135,
+      "card": 0.2738,
       "last": [
        10,
        1
@@ -1708,14 +1709,14 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.2108,
-      "card": 0.1983,
+      "chance": 0.2117,
+      "card": 0.1991,
       "last": [
        10,
        0
       ],
       "start": null,
-      "track": 0.212,
+      "track": 0.213,
       "trackN": 459
      },
      {
@@ -1726,8 +1727,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.2089,
-      "card": 0.2035,
+      "chance": 0.2091,
+      "card": 0.2039,
       "last": [
        10,
        0
@@ -1744,8 +1745,8 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1923,
-      "card": 0.1739,
+      "chance": 0.1918,
+      "card": 0.173,
       "last": [
        10,
        0
