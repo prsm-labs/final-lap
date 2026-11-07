@@ -3,6 +3,7 @@ import ProfileLinks from './ProfileLinks.jsx'
 import { fx, ord, pct, useJson, useLive } from '../lib/data.js'
 import { closeDriver, isF1, seriesStore, slideStore } from '../lib/stores.js'
 import { Avatar, PickButton, RaceCtx, Tags } from './ui.jsx'
+import { rolling, TrendKey, TrendProj, TrendSeg } from './Trend.jsx'
 
 // Driver slideout (Slap Shot's global slideout): this race's chances, finishing spread, loop-data rating by track type,
 // last 10 finishes, this-track history and the season line.
@@ -15,8 +16,12 @@ const monYr = (s) => `${MON[+s.slice(5, 7) - 1]} '${s.slice(2, 4)}`          // 
 const longDate = (s) => `${MON[+s.slice(5, 7) - 1]} ${+s.slice(8, 10)}, ${s.slice(0, 4)}`
 
 // dates[i] = 'YYYY-MM-DD' or ['YYYY-MM-DD', track] (older data files have no dates: bars show without labels)
-function FinishBars({ list, dates, label, title, note, floor = 40, liveLast = null }) {
+// 2026-11-07 trend (Trend.jsx): last-5 average finish through the bars + proj = this race's average simulated finish (dashed),
+// on the bars' own scale (higher bar = better finish); Last 10 chart only
+function FinishBars({ list, dates, label, title, note, floor = 40, liveLast = null, trend = false, proj = null }) {
   if (!list?.length) return null
+  const yOf = (f) => Math.max(4, ((floor + 1 - Math.min(f, floor)) / floor) * 80)
+  const tr = trend ? rolling(list, list.map((_, i) => liveLast === 'live' && i === list.length - 1)) : []
   const at = (i) => { const v = dates?.[i]; return Array.isArray(v) ? v : v ? [v, null] : [null, null] }
   return (
     <div className="stat-chart">
@@ -26,6 +31,8 @@ function FinishBars({ list, dates, label, title, note, floor = 40, liveLast = nu
           const [dt, trk] = at(i)
           return (
             <div key={i} className="bar" title={`${liveLast && i === list.length - 1 ? (liveLast === 'live' ? 'Running' : 'Finished') : 'Finished'} ${ord(f)}${trk ? ` · ${trk}` : ''}${dt ? ` · ${longDate(dt)}` : ''}`}>
+              <TrendSeg y={tr[i] != null ? yOf(tr[i]) : null} next={tr[i + 1] != null ? yOf(tr[i + 1]) : null} gap={3} title={tr[i] != null ? `Last-5 average finish: ${fx(tr[i])}` : undefined} />
+              {trend && proj != null && <TrendProj y={yOf(proj)} gap={3} title={`This race, average simulated finish: ${fx(proj)}`} />}
               <span className={`bar-v ${liveLast && i === list.length - 1 ? 'today' : ''}`}>{f}</span>
               <span className={`bar-fill ${f <= 10 ? 'hit' : ''} ${liveLast && i === list.length - 1 ? `today ${liveLast}` : ''}`} style={{ height: `${Math.max(4, ((floor + 1 - Math.min(f, floor)) / floor) * 80)}%` }} />
             </div>
@@ -35,6 +42,7 @@ function FinishBars({ list, dates, label, title, note, floor = 40, liveLast = nu
       {dates?.length === list.length && (
         <div className="bar-dates">{list.map((_, i) => <span key={i}>{at(i)[0] ? label(at(i)[0]) : ''}</span>)}</div>
       )}
+      {trend && <TrendKey avgLabel="last-5-race average finish" projLabel="this race, average simulated finish" proj={proj != null} />}
     </div>
   )
 }
@@ -153,7 +161,7 @@ export default function DriverSlideout() {
               const list = add ? [...(d.last10 || []), run.v.pos].slice(-10) : d.last10
               const dates = add && d.last10_d ? [...d.last10_d, ctx.date].slice(-10) : d.last10_d
               return (
-                <FinishBars floor={f1 ? 22 : 40} list={list} dates={dates} label={md} title={add ? 'Last 10 races + this one' : 'Last 10 races'} liveLast={add ? (run.done ? 'final' : 'live') : null}
+                <FinishBars floor={f1 ? 22 : 40} list={list} dates={dates} label={md} title={add ? 'Last 10 races + this one' : 'Last 10 races'} liveLast={add ? (run.done ? 'final' : 'live') : null} trend proj={d.avg ?? null}
                   note={list?.length ? `${span(dates)}${dates ? ' · ' : ''}avg ${fx(list.reduce((a, b) => a + b, 0) / list.length)}` : ''} />
               )
             })()}
