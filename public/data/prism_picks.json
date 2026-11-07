@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-06T22:02+00:00",
+ "generated_at": "2026-11-07T11:03+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -195,8 +195,8 @@
     ]
    },
    "live": {
-    "n": 16,
-    "hits": 5
+    "n": 18,
+    "hits": 6
    }
   },
   "long": {
@@ -283,14 +283,14 @@
     ]
    },
    "live": {
-    "n": 18,
-    "hits": 3
+    "n": 21,
+    "hits": 4
    }
   }
  },
  "live": {
   "nascar": {
-   "n": 8,
+   "n": 9,
    "hits": 5
   },
   "f1": {
@@ -306,10 +306,6 @@
   "oreilly": [
    "oreilly",
    5639
-  ],
-  "truck": [
-   "truck",
-   5670
   ],
   "f1": [
    "f1",
@@ -1320,7 +1316,9 @@
      ],
      "start": 1.0,
      "track": 0.574,
-     "trackN": 111
+     "trackN": 111,
+     "actual": 35,
+     "result": "miss"
     }
    ],
    "series": "truck",
@@ -1342,7 +1340,9 @@
       ],
       "start": 13.0,
       "track": 0.401,
-      "trackN": 202
+      "trackN": 202,
+      "actual": 9,
+      "result": "hit"
      },
      {
       "driver_id": 4342,
@@ -1360,7 +1360,9 @@
       ],
       "start": 8.0,
       "track": 0.256,
-      "trackN": 143
+      "trackN": 143,
+      "actual": 27,
+      "result": "miss"
      }
     ],
     "long": [
@@ -1380,7 +1382,9 @@
       ],
       "start": 23.0,
       "track": 0.213,
-      "trackN": 459
+      "trackN": 459,
+      "actual": 15,
+      "result": "miss"
      },
      {
       "driver_id": 4503,
@@ -1398,7 +1402,9 @@
       ],
       "start": 7.0,
       "track": 0.173,
-      "trackN": 257
+      "trackN": 257,
+      "actual": 11,
+      "result": "miss"
      },
      {
       "driver_id": 4093,
@@ -1416,11 +1422,13 @@
       ],
       "start": 16.0,
       "track": 0.169,
-      "trackN": 257
+      "trackN": 257,
+      "actual": 3,
+      "result": "hit"
      }
     ]
    },
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 5639,
@@ -1438,14 +1446,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6339,
+     "chance": 0.6347,
      "last": [
       10,
       4
      ],
      "start": null,
-     "track": 0.571,
-     "trackN": 111
+     "track": 0.567,
+     "trackN": 112
     },
     {
      "driver_id": 4463,
@@ -1455,14 +1463,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6276,
+     "chance": 0.628,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.569,
-     "trackN": 111
+     "track": 0.565,
+     "trackN": 112
     }
    ],
    "series": "oreilly",
@@ -1476,15 +1484,15 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.4199,
-      "card": 0.4136,
+      "chance": 0.4257,
+      "card": 0.4158,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.398,
-      "trackN": 202
+      "track": 0.401,
+      "trackN": 203
      },
      {
       "driver_id": 4422,
@@ -1494,15 +1502,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.4184,
-      "card": 0.3765,
+      "chance": 0.4186,
+      "card": 0.3769,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.397,
-      "trackN": 202
+      "track": 0.4,
+      "trackN": 203
      },
      {
       "driver_id": 34,
@@ -1512,14 +1520,14 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3651,
-      "card": 0.3928,
+      "chance": 0.3583,
+      "card": 0.3902,
       "last": [
        10,
        2
       ],
       "start": null,
-      "track": 0.356,
+      "track": 0.355,
       "trackN": 230
      }
     ],
@@ -1532,15 +1540,15 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1865,
-      "card": 0.163,
+      "chance": 0.1886,
+      "card": 0.164,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.172,
-      "trackN": 257
+      "track": 0.175,
+      "trackN": 259
      },
      {
       "driver_id": 4406,
@@ -1550,15 +1558,15 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.1486,
-      "card": 0.1569,
+      "chance": 0.1517,
+      "card": 0.1582,
       "last": [
        10,
        0
       ],
       "start": null,
-      "track": 0.115,
-      "trackN": 70
+      "track": 0.17,
+      "trackN": 259
      },
      {
       "driver_id": 3884,
@@ -1568,8 +1576,8 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.1451,
-      "card": 0.1275,
+      "chance": 0.1456,
+      "card": 0.128,
       "last": [
        10,
        1
@@ -1591,23 +1599,6 @@
    "stage": "pre",
    "picks": [
     {
-     "driver_id": 4065,
-     "name": "Tyler Reddick",
-     "car": "45",
-     "team": "23XI Racing",
-     "k": 10,
-     "prop": "top10",
-     "label": "Top 10 finish",
-     "chance": 0.6454,
-     "last": [
-      10,
-      5
-     ],
-     "start": null,
-     "track": 0.574,
-     "trackN": 111
-    },
-    {
      "driver_id": 4023,
      "name": "Ryan Blaney",
      "car": "12",
@@ -1615,14 +1606,14 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6446,
+     "chance": 0.7179,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.573,
-     "trackN": 111
+     "track": 0.683,
+     "trackN": 79
     },
     {
      "driver_id": 4228,
@@ -1632,14 +1623,31 @@
      "k": 10,
      "prop": "top10",
      "label": "Top 10 finish",
-     "chance": 0.6098,
+     "chance": 0.708,
      "last": [
       10,
       5
      ],
      "start": null,
-     "track": 0.565,
-     "trackN": 111
+     "track": 0.68,
+     "trackN": 79
+    },
+    {
+     "driver_id": 4065,
+     "name": "Tyler Reddick",
+     "car": "45",
+     "team": "23XI Racing",
+     "k": 10,
+     "prop": "top10",
+     "label": "Top 10 finish",
+     "chance": 0.6035,
+     "last": [
+      10,
+      5
+     ],
+     "start": null,
+     "track": 0.559,
+     "trackN": 112
     }
    ],
    "series": "cup",
@@ -1653,15 +1661,15 @@
       "k": 3,
       "prop": "top3",
       "label": "Top 3 finish",
-      "chance": 0.3981,
-      "card": 0.407,
+      "chance": 0.4468,
+      "card": 0.4785,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.361,
-      "trackN": 230
+      "track": 0.404,
+      "trackN": 203
      },
      {
       "driver_id": 4045,
@@ -1671,16 +1679,18 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.341,
-      "card": 0.2978,
+      "chance": 0.3132,
+      "card": 0.2622,
       "last": [
        10,
        3
       ],
       "start": null,
-      "track": 0.258,
-      "trackN": 143
-     },
+      "track": 0.251,
+      "trackN": 144
+     }
+    ],
+    "long": [
      {
       "driver_id": 3989,
       "name": "Chris Buescher",
@@ -1689,18 +1699,16 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.3135,
-      "card": 0.2738,
+      "chance": 0.242,
+      "card": 0.2203,
       "last": [
        10,
        1
       ],
       "start": null,
-      "track": 0.252,
-      "trackN": 143
-     }
-    ],
-    "long": [
+      "track": 0.214,
+      "trackN": 460
+     },
      {
       "driver_id": 4025,
       "name": "Bubba Wallace",
@@ -1709,33 +1717,15 @@
       "k": 5,
       "prop": "top5",
       "label": "Top 5 finish",
-      "chance": 0.2117,
-      "card": 0.1991,
+      "chance": 0.2198,
+      "card": 0.2064,
       "last": [
        10,
        0
       ],
       "start": null,
       "track": 0.213,
-      "trackN": 459
-     },
-     {
-      "driver_id": 1816,
-      "name": "Brad Keselowski",
-      "car": "6",
-      "team": "RFK Racing",
-      "k": 10,
-      "prop": "top10",
-      "label": "Top 10 finish",
-      "chance": 0.2091,
-      "card": 0.2039,
-      "last": [
-       10,
-       0
-      ],
-      "start": null,
-      "track": 0.212,
-      "trackN": 459
+      "trackN": 460
      },
      {
       "driver_id": 3774,
@@ -1745,15 +1735,15 @@
       "k": 10,
       "prop": "top10",
       "label": "Top 10 finish",
-      "chance": 0.1918,
-      "card": 0.173,
+      "chance": 0.1906,
+      "card": 0.171,
       "last": [
        10,
        0
       ],
       "start": null,
-      "track": 0.173,
-      "trackN": 257
+      "track": 0.175,
+      "trackN": 259
      }
     ]
    },
