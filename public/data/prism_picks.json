@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-07T22:02+00:00",
+ "generated_at": "2026-11-08T11:02+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -195,7 +195,7 @@
     ]
    },
    "live": {
-    "n": 18,
+    "n": 21,
     "hits": 6
    }
   },
@@ -283,15 +283,15 @@
     ]
    },
    "live": {
-    "n": 21,
+    "n": 24,
     "hits": 4
    }
   }
  },
  "live": {
   "nascar": {
-   "n": 9,
-   "hits": 5
+   "n": 11,
+   "hits": 7
   },
   "f1": {
    "n": 1,
@@ -302,10 +302,6 @@
   "cup": [
    "cup",
    5601
-  ],
-  "oreilly": [
-   "oreilly",
-   5639
   ],
   "f1": [
    "f1",
@@ -1453,7 +1449,9 @@
      ],
      "start": 2.0,
      "track": 0.652,
-     "trackN": 87
+     "trackN": 87,
+     "actual": 8,
+     "result": "hit"
     },
     {
      "driver_id": 4463,
@@ -1470,7 +1468,9 @@
      ],
      "start": 4.0,
      "track": 0.569,
-     "trackN": 112
+     "trackN": 112,
+     "actual": 4,
+     "result": "hit"
     }
    ],
    "series": "oreilly",
@@ -1492,7 +1492,9 @@
       ],
       "start": 13.0,
       "track": 0.399,
-      "trackN": 203
+      "trackN": 203,
+      "actual": 18,
+      "result": "miss"
      },
      {
       "driver_id": 4327,
@@ -1510,7 +1512,9 @@
       ],
       "start": 12.0,
       "track": 0.354,
-      "trackN": 230
+      "trackN": 230,
+      "actual": 9,
+      "result": "miss"
      },
      {
       "driver_id": 34,
@@ -1528,7 +1532,9 @@
       ],
       "start": 11.0,
       "track": 0.354,
-      "trackN": 230
+      "trackN": 230,
+      "actual": 7,
+      "result": "miss"
      }
     ],
     "long": [
@@ -1548,7 +1554,9 @@
       ],
       "start": 20.0,
       "track": 0.17,
-      "trackN": 259
+      "trackN": 259,
+      "actual": 19,
+      "result": "miss"
      },
      {
       "driver_id": 4416,
@@ -1566,7 +1574,9 @@
       ],
       "start": 10.0,
       "track": 0.113,
-      "trackN": 70
+      "trackN": 70,
+      "actual": 16,
+      "result": "miss"
      },
      {
       "driver_id": 3884,
@@ -1584,7 +1594,9 @@
       ],
       "start": 16.0,
       "track": 0.112,
-      "trackN": 70
+      "trackN": 70,
+      "actual": 12,
+      "result": "miss"
      }
     ]
    },
@@ -1629,8 +1641,8 @@
       5
      ],
      "start": 9.0,
-     "track": 0.652,
-     "trackN": 87
+     "track": 0.655,
+     "trackN": 88
     },
     {
      "driver_id": 1361,
@@ -1646,7 +1658,7 @@
       2
      ],
      "start": 2.0,
-     "track": 0.568,
+     "track": 0.569,
      "trackN": 151
     }
    ],
@@ -1668,8 +1680,8 @@
        2
       ],
       "start": 1.0,
-      "track": 0.402,
-      "trackN": 203
+      "track": 0.4,
+      "trackN": 204
      },
      {
       "driver_id": 4045,
@@ -1742,8 +1754,8 @@
        0
       ],
       "start": 18.0,
-      "track": 0.173,
-      "trackN": 259
+      "track": 0.172,
+      "trackN": 260
      },
      {
       "driver_id": 3774,
@@ -1760,8 +1772,8 @@
        0
       ],
       "start": 29.0,
-      "track": 0.116,
-      "trackN": 70
+      "track": 0.113,
+      "trackN": 72
      }
     ]
    },
@@ -1783,7 +1795,7 @@
      "k": 3,
      "prop": "top3",
      "label": "Top 3 finish",
-     "chance": 0.6757,
+     "chance": 0.6755,
      "last": [
       10,
       3
