@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-08T11:02+00:00",
+ "generated_at": "2026-11-08T16:08+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1795,7 +1795,7 @@
      "k": 3,
      "prop": "top3",
      "label": "Top 3 finish",
-     "chance": 0.6755,
+     "chance": 0.6752,
      "last": [
       10,
       3

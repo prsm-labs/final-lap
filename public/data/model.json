@@ -32,56 +32,56 @@
   },
   "oreilly": {
    "pre": {
-    "rate": 0.679,
-    "type": 0.7047,
-    "trk": 0.219,
-    "team": 0.5926,
-    "rate_ss": -0.3309,
-    "up1": 0.2932,
-    "up1_flag": 0.3902,
-    "prac": 0.3394,
-    "prac_m": -0.1331
+    "rate": 0.6832,
+    "type": 0.7125,
+    "trk": 0.2131,
+    "team": 0.5974,
+    "rate_ss": -0.3379,
+    "up1": 0.2913,
+    "up1_flag": 0.3871,
+    "prac": 0.3339,
+    "prac_m": -0.1394
    },
-   "pre_front": 1.75,
+   "pre_front": 2.0,
    "pre_front3": 1.5,
    "post": {
-    "rate": 0.6447,
-    "type": 0.6351,
-    "trk": 0.2005,
-    "team": 0.5532,
-    "rate_ss": -0.3838,
-    "up1": 0.2806,
-    "up1_flag": 0.3766,
-    "prac": 0.3213,
-    "prac_m": -0.1151,
-    "start": -0.1133,
-    "start_ss": -0.071
+    "rate": 0.6466,
+    "type": 0.6406,
+    "trk": 0.1939,
+    "team": 0.5563,
+    "rate_ss": -0.3869,
+    "up1": 0.2772,
+    "up1_flag": 0.372,
+    "prac": 0.3145,
+    "prac_m": -0.1211,
+    "start": -0.12,
+    "start_ss": -0.0638
    },
    "post_front": 1.75,
    "post_front3": 1.5
   },
   "truck": {
    "pre": {
-    "rate": 0.9401,
-    "type": 0.7195,
-    "trk": 0.0436,
-    "team": 0.2576,
-    "rate_ss": -0.1326,
-    "prac": 0.3638,
-    "prac_m": -0.2584
+    "rate": 0.9428,
+    "type": 0.7291,
+    "trk": 0.0735,
+    "team": 0.2527,
+    "rate_ss": -0.1272,
+    "prac": 0.3639,
+    "prac_m": -0.2598
    },
    "pre_front": 2.0,
    "pre_front3": 1.5,
    "post": {
-    "rate": 0.8619,
-    "type": 0.6931,
-    "trk": 0.0455,
-    "team": 0.2142,
-    "rate_ss": -0.0829,
-    "prac": 0.3129,
-    "prac_m": -0.1986,
-    "start": -0.2073,
-    "start_ss": 0.0598
+    "rate": 0.8665,
+    "type": 0.702,
+    "trk": 0.0757,
+    "team": 0.2096,
+    "rate_ss": -0.0793,
+    "prac": 0.315,
+    "prac_m": -0.2019,
+    "start": -0.2013,
+    "start_ss": 0.0543
    },
    "post_front": 2.0,
    "post_front3": 1.5
@@ -170,77 +170,77 @@
    "pre": {
     "2024": {
      "races": 32,
-     "auc_win": 0.878,
-     "auc_top5": 0.856,
+     "auc_win": 0.875,
+     "auc_top5": 0.855,
      "auc_top10": 0.836,
      "fav_won": 0.062,
      "fav_said": 0.135,
-     "top3_hits": 1.16,
+     "top3_hits": 1.19,
      "top5_hits": 2.19,
-     "top10_hits": 5.75,
-     "win_logloss": 2.729
+     "top10_hits": 5.72,
+     "win_logloss": 2.741
     },
     "2025": {
      "races": 33,
-     "auc_win": 0.942,
-     "auc_top5": 0.869,
-     "auc_top10": 0.823,
+     "auc_win": 0.943,
+     "auc_top5": 0.868,
+     "auc_top10": 0.822,
      "fav_won": 0.364,
-     "fav_said": 0.217,
+     "fav_said": 0.216,
      "top3_hits": 1.24,
-     "top5_hits": 2.48,
-     "top10_hits": 5.48,
-     "win_logloss": 2.154
+     "top5_hits": 2.52,
+     "top10_hits": 5.52,
+     "win_logloss": 2.141
     },
     "2026": {
-     "races": 32,
-     "auc_win": 0.899,
-     "auc_top5": 0.874,
-     "auc_top10": 0.858,
-     "fav_won": 0.125,
-     "fav_said": 0.36,
-     "top3_hits": 1.19,
-     "top5_hits": 2.09,
-     "top10_hits": 6.22,
-     "win_logloss": 2.523
+     "races": 33,
+     "auc_win": 0.895,
+     "auc_top5": 0.873,
+     "auc_top10": 0.861,
+     "fav_won": 0.152,
+     "fav_said": 0.355,
+     "top3_hits": 1.12,
+     "top5_hits": 2.06,
+     "top10_hits": 6.27,
+     "win_logloss": 2.557
     }
    },
    "post": {
     "2024": {
      "races": 32,
-     "auc_win": 0.882,
-     "auc_top5": 0.855,
-     "auc_top10": 0.835,
+     "auc_win": 0.885,
+     "auc_top5": 0.856,
+     "auc_top10": 0.836,
      "fav_won": 0.094,
      "fav_said": 0.142,
      "top3_hits": 1.09,
-     "top5_hits": 2.19,
-     "top10_hits": 5.66,
-     "win_logloss": 2.708
+     "top5_hits": 2.22,
+     "top10_hits": 5.69,
+     "win_logloss": 2.69
     },
     "2025": {
      "races": 33,
-     "auc_win": 0.945,
+     "auc_win": 0.947,
      "auc_top5": 0.873,
-     "auc_top10": 0.825,
+     "auc_top10": 0.824,
      "fav_won": 0.333,
-     "fav_said": 0.278,
+     "fav_said": 0.332,
      "top3_hits": 1.3,
-     "top5_hits": 2.61,
-     "top10_hits": 5.61,
-     "win_logloss": 1.988
+     "top5_hits": 2.58,
+     "top10_hits": 5.55,
+     "win_logloss": 1.918
     },
     "2026": {
-     "races": 32,
-     "auc_win": 0.905,
-     "auc_top5": 0.874,
-     "auc_top10": 0.858,
-     "fav_won": 0.094,
-     "fav_said": 0.299,
-     "top3_hits": 1.22,
-     "top5_hits": 2.12,
-     "top10_hits": 6.16,
-     "win_logloss": 2.418
+     "races": 33,
+     "auc_win": 0.901,
+     "auc_top5": 0.872,
+     "auc_top10": 0.862,
+     "fav_won": 0.091,
+     "fav_said": 0.34,
+     "top3_hits": 1.18,
+     "top5_hits": 2.03,
+     "top10_hits": 6.18,
+     "win_logloss": 2.472
     }
    }
   },
@@ -248,77 +248,77 @@
    "pre": {
     "2024": {
      "races": 23,
-     "auc_win": 0.937,
-     "auc_top5": 0.862,
+     "auc_win": 0.94,
+     "auc_top5": 0.86,
      "auc_top10": 0.814,
      "fav_won": 0.391,
-     "fav_said": 0.178,
-     "top3_hits": 1.52,
-     "top5_hits": 2.52,
-     "top10_hits": 5.87,
-     "win_logloss": 2.279
+     "fav_said": 0.176,
+     "top3_hits": 1.48,
+     "top5_hits": 2.48,
+     "top10_hits": 6.04,
+     "win_logloss": 2.271
     },
     "2025": {
      "races": 25,
-     "auc_win": 0.935,
-     "auc_top5": 0.842,
-     "auc_top10": 0.82,
+     "auc_win": 0.934,
+     "auc_top5": 0.843,
+     "auc_top10": 0.821,
      "fav_won": 0.56,
-     "fav_said": 0.402,
-     "top3_hits": 1.4,
+     "fav_said": 0.463,
+     "top3_hits": 1.44,
      "top5_hits": 2.36,
      "top10_hits": 5.88,
-     "win_logloss": 1.853
+     "win_logloss": 1.836
     },
     "2026": {
-     "races": 24,
-     "auc_win": 0.938,
-     "auc_top5": 0.871,
-     "auc_top10": 0.815,
-     "fav_won": 0.417,
-     "fav_said": 0.354,
-     "top3_hits": 1.46,
-     "top5_hits": 2.67,
-     "top10_hits": 5.88,
-     "win_logloss": 1.979
+     "races": 25,
+     "auc_win": 0.937,
+     "auc_top5": 0.868,
+     "auc_top10": 0.817,
+     "fav_won": 0.4,
+     "fav_said": 0.351,
+     "top3_hits": 1.44,
+     "top5_hits": 2.64,
+     "top10_hits": 5.84,
+     "win_logloss": 1.976
     }
    },
    "post": {
     "2024": {
      "races": 23,
-     "auc_win": 0.941,
+     "auc_win": 0.94,
      "auc_top5": 0.865,
-     "auc_top10": 0.818,
+     "auc_top10": 0.817,
      "fav_won": 0.304,
-     "fav_said": 0.182,
+     "fav_said": 0.18,
      "top3_hits": 1.48,
      "top5_hits": 2.57,
-     "top10_hits": 5.83,
-     "win_logloss": 2.253
+     "top10_hits": 5.96,
+     "win_logloss": 2.262
     },
     "2025": {
      "races": 25,
-     "auc_win": 0.927,
-     "auc_top5": 0.85,
-     "auc_top10": 0.825,
+     "auc_win": 0.929,
+     "auc_top5": 0.847,
+     "auc_top10": 0.824,
      "fav_won": 0.44,
-     "fav_said": 0.45,
-     "top3_hits": 1.36,
+     "fav_said": 0.448,
+     "top3_hits": 1.4,
      "top5_hits": 2.4,
      "top10_hits": 6.04,
-     "win_logloss": 1.927
+     "win_logloss": 1.911
     },
     "2026": {
-     "races": 24,
+     "races": 25,
      "auc_win": 0.933,
-     "auc_top5": 0.872,
-     "auc_top10": 0.817,
-     "fav_won": 0.375,
-     "fav_said": 0.3,
-     "top3_hits": 1.25,
-     "top5_hits": 2.58,
-     "top10_hits": 5.83,
-     "win_logloss": 2.01
+     "auc_top5": 0.869,
+     "auc_top10": 0.818,
+     "fav_won": 0.4,
+     "fav_said": 0.301,
+     "top3_hits": 1.24,
+     "top5_hits": 2.52,
+     "top10_hits": 5.8,
+     "win_logloss": 2.019
     }
    }
   }
@@ -359,68 +359,68 @@
   "oreilly": [
    {
     "said": 0.005,
-    "won": 0.002,
-    "n": 2493
+    "won": 0.003,
+    "n": 2614
    },
    {
     "said": 0.033,
-    "won": 0.024,
-    "n": 661
+    "won": 0.025,
+    "n": 598
    },
    {
-    "said": 0.07,
-    "won": 0.106,
-    "n": 321
+    "said": 0.071,
+    "won": 0.111,
+    "n": 296
    },
    {
-    "said": 0.138,
-    "won": 0.149,
-    "n": 134
+    "said": 0.139,
+    "won": 0.142,
+    "n": 127
    },
    {
-    "said": 0.262,
-    "won": 0.314,
-    "n": 51
+    "said": 0.271,
+    "won": 0.273,
+    "n": 55
    },
    {
-    "said": 0.438,
-    "won": 0.389,
-    "n": 18
+    "said": 0.473,
+    "won": 0.385,
+    "n": 26
    }
   ],
   "truck": [
    {
     "said": 0.006,
     "won": 0.003,
-    "n": 1740
+    "n": 1763
    },
    {
-    "said": 0.032,
-    "won": 0.028,
-    "n": 432
+    "said": 0.031,
+    "won": 0.025,
+    "n": 436
    },
    {
-    "said": 0.07,
-    "won": 0.034,
-    "n": 178
+    "said": 0.072,
+    "won": 0.036,
+    "n": 193
    },
    {
-    "said": 0.138,
-    "won": 0.218,
-    "n": 110
+    "said": 0.142,
+    "won": 0.248,
+    "n": 101
    },
    {
-    "said": 0.261,
-    "won": 0.458,
-    "n": 24
+    "said": 0.268,
+    "won": 0.407,
+    "n": 27
    },
    {
-    "said": 0.496,
-    "won": 0.483,
-    "n": 29
+    "said": 0.498,
+    "won": 0.5,
+    "n": 28
    }
   ]
  },
  "fit_seasons": "2023-2026",
- "built": "2026-11-02T07:26-05:00"
+ "built": "2026-11-08T11:05-05:00"
 }
