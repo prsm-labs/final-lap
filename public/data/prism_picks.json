@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-08T16:08+00:00",
+ "generated_at": "2026-11-08T22:01+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -294,7 +294,7 @@
    "hits": 7
   },
   "f1": {
-   "n": 1,
+   "n": 2,
    "hits": 0
   }
  },
@@ -305,7 +305,7 @@
   ],
   "f1": [
    "f1",
-   202620
+   202621
   ]
  },
  "races": [
@@ -1777,7 +1777,7 @@
      }
     ]
    },
-   "locked": false
+   "locked": true
   },
   {
    "race_id": 202620,
@@ -1802,10 +1802,24 @@
      ],
      "start": 2,
      "track": 0.782,
-     "trackN": 17
+     "trackN": 17,
+     "actual": 4,
+     "result": "miss"
     }
    ],
    "series": "f1",
+   "locked": true
+  },
+  {
+   "race_id": 202621,
+   "name": "Las Vegas Grand Prix",
+   "track": "Las Vegas Strip Street Circuit",
+   "start": "2026-11-21T23:00:00",
+   "date": "2026-11-21",
+   "stage": "pre",
+   "picks": [],
+   "series": "f1",
+   "waiting": "until qualifying",
    "locked": false
   }
  ]
