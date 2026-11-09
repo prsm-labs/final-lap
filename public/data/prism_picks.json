@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-08T22:01+00:00",
+ "generated_at": "2026-11-09T11:07+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -195,8 +195,8 @@
     ]
    },
    "live": {
-    "n": 21,
-    "hits": 6
+    "n": 24,
+    "hits": 7
    }
   },
   "long": {
@@ -283,15 +283,15 @@
     ]
    },
    "live": {
-    "n": 24,
-    "hits": 4
+    "n": 27,
+    "hits": 5
    }
   }
  },
  "live": {
   "nascar": {
-   "n": 11,
-   "hits": 7
+   "n": 14,
+   "hits": 9
   },
   "f1": {
    "n": 2,
@@ -299,10 +299,6 @@
   }
  },
  "next": {
-  "cup": [
-   "cup",
-   5601
-  ],
   "f1": [
    "f1",
    202621
@@ -1625,7 +1621,9 @@
      ],
      "start": 3.0,
      "track": 0.682,
-     "trackN": 79
+     "trackN": 79,
+     "actual": 2,
+     "result": "hit"
     },
     {
      "driver_id": 4023,
@@ -1642,7 +1640,9 @@
      ],
      "start": 9.0,
      "track": 0.655,
-     "trackN": 88
+     "trackN": 88,
+     "actual": 1,
+     "result": "hit"
     },
     {
      "driver_id": 1361,
@@ -1659,7 +1659,9 @@
      ],
      "start": 2.0,
      "track": 0.569,
-     "trackN": 151
+     "trackN": 151,
+     "actual": 6,
+     "result": "miss"
     }
    ],
    "series": "cup",
@@ -1681,7 +1683,9 @@
       ],
       "start": 1.0,
       "track": 0.4,
-      "trackN": 204
+      "trackN": 204,
+      "actual": 39,
+      "result": "miss"
      },
      {
       "driver_id": 4045,
@@ -1699,7 +1703,9 @@
       ],
       "start": 13.0,
       "track": 0.252,
-      "trackN": 144
+      "trackN": 144,
+      "actual": 16,
+      "result": "miss"
      },
      {
       "driver_id": 4113,
@@ -1717,7 +1723,9 @@
       ],
       "start": 10.0,
       "track": 0.249,
-      "trackN": 144
+      "trackN": 144,
+      "actual": 8,
+      "result": "hit"
      }
     ],
     "long": [
@@ -1737,7 +1745,9 @@
       ],
       "start": 17.0,
       "track": 0.213,
-      "trackN": 460
+      "trackN": 460,
+      "actual": 24,
+      "result": "miss"
      },
      {
       "driver_id": 4025,
@@ -1755,7 +1765,9 @@
       ],
       "start": 18.0,
       "track": 0.172,
-      "trackN": 260
+      "trackN": 260,
+      "actual": 5,
+      "result": "hit"
      },
      {
       "driver_id": 3774,
@@ -1773,7 +1785,9 @@
       ],
       "start": 29.0,
       "track": 0.113,
-      "trackN": 72
+      "trackN": 72,
+      "actual": 23,
+      "result": "miss"
      }
     ]
    },
