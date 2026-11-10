@@ -16,6 +16,7 @@ import TrackRecord from './tabs/TrackRecord.jsx'
 import About from './tabs/About.jsx'
 import TabMenu from './components/TabMenu.jsx'
 import DataStamp from './components/DataStamp.jsx'
+import OffseasonNotice from './components/Offseason.jsx'
 import { OfflineBanner, OfflineMenuButton } from './components/Offline.jsx'
 import offlineConfig from './lib/offlineConfig.js'
 import AppRefresh from './components/AppRefresh.jsx'
@@ -83,6 +84,8 @@ export default function App() {
             ))}
           </div>
         )}
+        {/* 2026-11-10 (user): Going Yard-style offseason banner + one-time notice for the sport that's between seasons */}
+        <OffseasonNotice sport={isF1(series) ? 'f1' : 'nascar'} onSwitch={setSport} />
         <main className="content">
           {!card && <p className="muted">Loading…</p>}
           {card && T.needsCard && !hasCard && raceSel && <p className="muted">Couldn't load that race. Pick another one, or go back to the next race.</p>}
