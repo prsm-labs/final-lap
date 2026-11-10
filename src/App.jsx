@@ -15,6 +15,7 @@ import Drivers from './tabs/Drivers.jsx'
 import TrackRecord from './tabs/TrackRecord.jsx'
 import About from './tabs/About.jsx'
 import TabMenu from './components/TabMenu.jsx'
+import DataStamp from './components/DataStamp.jsx'
 import { OfflineBanner, OfflineMenuButton } from './components/Offline.jsx'
 import offlineConfig from './lib/offlineConfig.js'
 import AppRefresh from './components/AppRefresh.jsx'
@@ -88,7 +89,7 @@ export default function App() {
           {card && T.needsCard && !hasCard && !raceSel && <p className="muted">No upcoming {isF1(series) ? 'F1' : SERIES.find((s) => s.key === series)?.label} race on the schedule — the season is over. See the Schedule and Track Record tabs.</p>}
           {card && (!T.needsCard || hasCard) && <T.C card={hasCard ? card : null} series={series} />}
         </main>
-        <footer className="footer">Final Lap · a PRISM Labs app · projections, not guarantees · data: {isF1(series) ? 'Jolpica / OpenF1 / ESPN' : 'NASCAR'} · no sportsbook odds</footer>
+        <footer className="footer">Final Lap · a PRISM Labs app · projections, not guarantees · data: {isF1(series) ? 'Jolpica / OpenF1 / ESPN' : 'NASCAR'} · no sportsbook odds<DataStamp url={`/data/${series}/next.json`} pick={(d) => d.built} /></footer>
         <DriverSlideout />
       </div>
     </RaceCtx.Provider>

@@ -351,3 +351,6 @@ td.fins { white-space: nowrap; }
 @media (min-width: 2613px) { :root { --z: 1.95; } }
 @media (min-width: 2680px) { :root { --z: 2.00; } }
 html { zoom: var(--z); }
+
+/* 2026-11-10: footer 'Data updated' stamp (DataStamp.jsx) */
+.footer .data-stamp { display: block; margin-top: 4px; }
