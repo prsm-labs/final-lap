@@ -4,6 +4,8 @@ import { fx, ord, pct, useJson, useLive } from '../lib/data.js'
 import { closeDriver, isF1, seriesStore, slideStore } from '../lib/stores.js'
 import { Avatar, PickButton, RaceCtx, Tags } from './ui.jsx'
 import { rolling, TrendKey, TrendProj, TrendSeg } from './Trend.jsx'
+import QuickRead from './QuickRead.jsx' // 2026-11-11 short "why" box (lib/quickRead.js)
+import { quickReadDriver } from '../lib/quickRead.js'
 
 // Driver slideout (Slap Shot's global slideout): this race's chances, finishing spread, loop-data rating by track type,
 // last 10 finishes, this-track history and the season line.
@@ -129,6 +131,8 @@ export default function DriverSlideout() {
         </header>
         <div className="slide-body">
           {run && <><h3 style={{ marginTop: 0 }}>{run.isRace ? 'This race' : 'On track now'}</h3><LiveRun r={run} d={d} f1={f1} /><h3>Pre-race projection</h3></>}
+          {/* 2026-11-11 (user: shorter, data-backed slideout write-up): Quick read from the model's tested inputs */}
+          {d.win != null && (() => { const q = quickReadDriver(d, { f1, typeLabel: TYPES.find(([k]) => k === ctx?.ttype)?.[1], track: ctx?.track }); return q ? <QuickRead {...q} /> : null })()}
           {d.win != null && (
             <>
               <div className="stat-tiles">
