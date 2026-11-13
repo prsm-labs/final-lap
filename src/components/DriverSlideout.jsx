@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import ProfileLinks from './ProfileLinks.jsx'
 import { fx, ord, pct, useJson, useLive } from '../lib/data.js'
 import { closeDriver, isF1, seriesStore, slideStore } from '../lib/stores.js'
@@ -6,6 +6,9 @@ import { Avatar, PickButton, RaceCtx, Tags } from './ui.jsx'
 import { rolling, TrendKey, TrendProj, TrendSeg } from './Trend.jsx'
 import QuickRead from './QuickRead.jsx' // 2026-11-11 short "why" box (lib/quickRead.js)
 import { quickReadDriver } from '../lib/quickRead.js'
+import HitRateCard from './HitRateCard.jsx' // 2026-11-13 shared with CourtIQ / Slap Shot / Six Points
+import StatGrid from './StatGrid.jsx'       // 2026-11-13 one small chart per prop (shared with Slap Shot / Six Points)
+import { useDriverLogs } from '../lib/driverLogs.js'
 
 // Driver slideout (Slap Shot's global slideout): this race's chances, finishing spread, loop-data rating by track type,
 // last 10 finishes, this-track history and the season line.
@@ -47,6 +50,38 @@ function FinishBars({ list, dates, label, title, note, floor = 40, liveLast = nu
       {trend && <TrendKey avgLabel="last-5-race average finish" projLabel="this race, average simulated finish" proj={proj != null} />}
     </div>
   )
+}
+
+// 2026-11-13 Hit rates + per-prop charts. Finish / start: lower is better (a hit = at or better than the line, "Top 5").
+const TRK_SHORT = { 'Circuit of The Americas': 'COTA', 'World Wide Technology Raceway': 'Gateway' }
+const shortTrk = (t) => TRK_SHORT[t] || String(t || '').replace(/ (International )?(Motor )?(Speedway|Raceway|Superspeedway|Motor Speedway|Circuit.*|Street Course|Road Course|GP)$/, '').split(/[\s-]/).slice(0, 2).reduce((o, w, i) => (i === 0 || /^(Las|New|World|Circuit|Mexico|San|St\.?|Abu|Red|Yas)$/.test(o) ? (i ? `${o} ${w}` : w) : o), '')
+const topN = (n) => (n === 1 ? 'Win' : `Top ${n}`)
+const hrStats = (f1) => [
+  { k: 'FIN', label: 'Finish', unit: '', step: 1, min: 1, max: f1 ? 22 : 40, lower: true, lineLabel: topN },
+  { k: 'ST', label: f1 ? 'Grid' : 'Start', unit: '', step: 1, min: 1, max: f1 ? 22 : 40, lower: true, lineLabel: (n) => (n === 1 ? 'Pole' : `Start top ${n}`) },
+  { k: 'GAIN', label: 'Positions gained', unit: 'spots gained', step: 1, min: -10, def: 1 },
+  ...(f1 ? [] : [{ k: 'LED', label: 'Laps led', unit: 'laps led', step: 1, min: 1, def: 1 }]),
+  { k: 'PTS', label: 'Points', unit: 'pts', step: f1 ? 1 : 5, min: 1, def: f1 ? 1 : 30 },
+]
+const raceSplits = (f1, TYPES) => [
+  ['Track type', TYPES.map(([k, l]) => [l, (g) => g.tt === k])],
+  ['Started', f1 ? [['Front (1-5)', (g) => g.st <= 5], ['6-10', (g) => g.st > 5 && g.st <= 10], ['11+', (g) => g.st > 10]]
+    : [['Front (1-10)', (g) => g.st <= 10], ['11-20', (g) => g.st > 10 && g.st <= 20], ['21+', (g) => g.st > 20]]],
+  ['Last race', [['After a top 10', (g) => g.prevFin != null && g.prevFin <= 10], ['After 11th or worse', (g) => g.prevFin != null && g.prevFin > 10]]],
+]
+const PICK_CHART = { FIN: 'FIN', ST: 'ST', GAIN: 'GAIN', LED: 'LED', PTS: 'PTS' }
+function chartsFor(f1, d, pick) {
+  const span = f1 ? 22 : 40
+  let cs = [
+    { k: 'FIN', label: 'Finish', get: (g) => g.fin, line: 10, lower: true, span, proj: d.avg ?? null },
+    { k: 'ST', label: f1 ? 'Grid' : 'Start', get: (g) => g.st, line: 10, lower: true, span, proj: null },
+    { k: 'GAIN', label: 'Positions gained', get: (g) => g.gain, line: 1, proj: null },
+    ...(f1 ? [] : [{ k: 'LED', label: 'Laps led', get: (g) => g.led, line: 1, proj: null }]),
+    { k: 'PTS', label: 'Points', get: (g) => g.pts, line: f1 ? 1 : 30, proj: null },
+  ]
+  const c = pick && cs.find((x) => x.k === PICK_CHART[pick.k])
+  if (c) cs = [{ ...c, line: pick.line, mine: true }, ...cs.filter((x) => x !== c)]
+  return cs
 }
 
 const span = (dates) => {   // "Apr – Oct 2026" / "Sep 2025 – Oct 2026"
@@ -104,6 +139,9 @@ export default function DriverSlideout() {
   const ctx = useContext(RaceCtx)
   const run = useLiveRun(d, ctx, isF1(series))
   const table = useJson(`${series}/drivers.json`)
+  const logs = useDriverLogs(series, d?.driver_id, ctx?.date)
+  const [pick, setPick] = useState(null)
+  const [view, setView] = useState('l10')
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && closeDriver()
     document.addEventListener('keydown', onKey)
@@ -157,7 +195,36 @@ export default function DriverSlideout() {
             ))}
           </div>
           <p className="muted small">{f1 ? 'Rating 0-100: where he qualified and finished against the field (100 = pole and the win every time).' : 'Driver rating sums speed, running position, laps led and finish every lap (max 150; ~100 = a top-5 car).'}</p>
-          <div className="chart-grid">
+          {/* 2026-11-13 (user: the same slideout setup as CourtIQ / Slap Shot / Six Points): Hit rates card + one small chart per prop,
+              last 10 races (driver_logs.json); the prop picked in Hit rates comes first on the picked line. Context only. */}
+          <h3>Hit rates</h3>
+          <HitRateCard games={logs.games} ready={logs.ready} stats={hrStats(f1)} opp={ctx?.track} oppLabel={f1 ? 'This circuit' : ctx?.track ? `At ${shortTrk(ctx.track)}` : 'This track'}
+            splits={() => raceSplits(f1, TYPES)} onPick={setPick}
+            note="This season + last season together. Green / red = well above / below his own rate at this line over every race shown. Context only — none of this changes a projection." />
+          {(() => {
+            // this race's running / final position joins the charts until the pipeline's results include it
+            const add = run?.isRace && ctx?.date && !logs.rows.some((g) => g.date === ctx.date)
+            const st = run?.v.start ?? d.start ?? run?.v.pos
+            const rows = add ? [...logs.rows, { date: ctx.date, trk: ctx.track, fin: run.v.pos, st, gain: st - run.v.pos, led: run.v.led ?? 0, pts: 0, today: true, live: !run.done }] : logs.rows
+            const trk = view === 'trk' && d.trk_fins?.length
+            return (
+              <>
+                <h3>{trk ? 'This track' : add ? 'Last 10 races + this one' : 'Last 10 races'}</h3>
+                {d.trk_fins?.length > 0 && (
+                  <div className="pill-row">
+                    <button className={`pill ${!trk ? 'active' : ''}`} onClick={() => setView('l10')}>Last 10</button>
+                    <button className={`pill ${trk ? 'active' : ''}`} onClick={() => setView('trk')}>🏁 This track ({d.trk_fins.length})</button>
+                  </div>
+                )}
+                {trk ? (
+                  <div className="chart-grid">
+                    <FinishBars floor={f1 ? 22 : 40} list={d.trk_fins} dates={d.trk_d} label={monYr} title="Finish" note={`${d.trk_fins.length} starts since ${f1 ? 2021 : 2022}`} />
+                  </div>
+                ) : rows.length ? (
+                  <StatGrid charts={chartsFor(f1, d, pick)} games={rows.slice(-10)} all={rows} trend projLabel="this race, average simulated finish"
+                    labels={(g) => [g.today ? (g.live ? 'LIVE' : 'Final') : md(g.date), g.lab || shortTrk(g.trk)]} />
+                ) : (
+                  <div className="chart-grid">
             {(() => {
               // this race's running / final position joins the chart until the pipeline's results include it
               const lastD = d.last10_d?.length ? (Array.isArray(d.last10_d.at(-1)) ? d.last10_d.at(-1)[0] : d.last10_d.at(-1)) : null
@@ -169,8 +236,11 @@ export default function DriverSlideout() {
                   note={list?.length ? `${span(dates)}${dates ? ' · ' : ''}avg ${fx(list.reduce((a, b) => a + b, 0) / list.length)}` : ''} />
               )
             })()}
-            <FinishBars floor={f1 ? 22 : 40} list={d.trk_fins} dates={d.trk_d} label={monYr} title="This track" note={d.trk_fins?.length ? `${d.trk_fins.length} starts since ${f1 ? 2021 : 2022}` : 'no starts here'} />
           </div>
+                )}
+              </>
+            )
+          })()}
           {d.chaos?.n > 0 && d.chaos.calm_n > 0 && (
             <p className="muted small" title="Chaos race = the series' top third of races by cautions + cars out in accidents (2022-26). Context only: tested as a model input and it added nothing.">
               🌪️ Chaos races: avg finish {fx(d.chaos.avg)} in {d.chaos.n} vs {fx(d.chaos.calm_avg)} in {d.chaos.calm_n} calm races ·{' '}
