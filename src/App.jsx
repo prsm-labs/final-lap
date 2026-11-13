@@ -20,6 +20,7 @@ import OffseasonNotice from './components/Offseason.jsx'
 import { OfflineBanner, OfflineMenuButton } from './components/Offline.jsx'
 import offlineConfig from './lib/offlineConfig.js'
 import AppRefresh from './components/AppRefresh.jsx'
+import OddsCalc from './components/OddsCalc.jsx'
 import RaceBar from './components/RaceBar.jsx'
 
 // Final Lap 2.0 -- Slap Shot / CourtIQ layout for NASCAR: a series switcher, then Race Card (Top Picks + cheat sheets),
@@ -62,7 +63,7 @@ export default function App() {
             <span className="brand-name">Final <b>Lap</b></span>
           </div>
           {/* 2026-10-25 (user): app refresh button -- reloads the page with fresh data */}
-          <div className="hdr-right"><AppRefresh /><span className="badge">PRISM LABS</span></div>
+          <div className="hdr-right">{/* 2026-11-13 (user): 🧮 odds calculator + bankroll basics, Going Yard's math */}<OddsCalc /><AppRefresh /><span className="badge">PRISM LABS</span></div>
         </header>
         {/* 2026-11-02 (user): ☰ > 📦 Offline & data (save a time-stamped offline copy, download the numbers); banner while on the copy */}
         <OfflineBanner />
