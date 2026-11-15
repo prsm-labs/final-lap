@@ -1,25 +1,25 @@
 {
  "stages": {
   "early": {
-   "team_s": 0.1842,
-   "rate_s": 0.9103,
-   "q_rate_s": 0.5465
+   "team_s": 0.1858,
+   "rate_s": 0.9132,
+   "q_rate_s": 0.5429
   },
   "early_front": 2.0,
-  "early_t10": 0.742,
+  "early_t10": 0.741,
   "pre": {
-   "team_s": 0.0891,
-   "rate_s": 0.8329,
-   "q_rate_s": 0.4581,
-   "prac_l": 0.3649
+   "team_s": 0.0901,
+   "rate_s": 0.8358,
+   "q_rate_s": 0.4545,
+   "prac_l": 0.3656
   },
   "pre_front": 1.75,
-  "pre_t10": 0.744,
+  "pre_t10": 0.743,
   "post": {
-   "grid_l": 0.9053,
-   "team_s": 0.2089,
-   "rate_s": 0.9169,
-   "prac_l": 0.1096
+   "grid_l": 0.9057,
+   "team_s": 0.2087,
+   "rate_s": 0.9163,
+   "prac_l": 0.1097
   },
   "post_front": 1.75,
   "post_t10": 0.721
@@ -62,17 +62,17 @@
     "races": 20,
     "auc_win": 0.916,
     "auc_top5": 0.924,
-    "auc_top10": 0.85,
+    "auc_top10": 0.849,
     "fav_won": 0.2,
     "fav_said": 0.305,
     "top3_hits": 1.4,
     "top5_hits": 3.4,
-    "top10_hits": 7.75,
-    "win_logloss": 1.802,
+    "top10_hits": 7.7,
+    "win_logloss": 1.801,
     "ll_win": 0.1225,
-    "ll_top3": 0.2556,
-    "ll_top5": 0.3082,
-    "ll_top10": 0.4946
+    "ll_top3": 0.2555,
+    "ll_top5": 0.308,
+    "ll_top10": 0.4951
    }
   },
   "pre": {
@@ -117,12 +117,12 @@
     "fav_said": 0.343,
     "top3_hits": 1.5,
     "top5_hits": 3.5,
-    "top10_hits": 7.65,
-    "win_logloss": 1.647,
+    "top10_hits": 7.6,
+    "win_logloss": 1.646,
     "ll_win": 0.1137,
     "ll_top3": 0.237,
-    "ll_top5": 0.2891,
-    "ll_top10": 0.4867
+    "ll_top5": 0.289,
+    "ll_top10": 0.4871
    }
   },
   "post": {
@@ -161,18 +161,18 @@
    "2026": {
     "races": 20,
     "auc_win": 0.97,
-    "auc_top5": 0.942,
-    "auc_top10": 0.867,
+    "auc_top5": 0.943,
+    "auc_top10": 0.866,
     "fav_won": 0.7,
-    "fav_said": 0.629,
+    "fav_said": 0.63,
     "top3_hits": 1.8,
     "top5_hits": 3.65,
     "top10_hits": 7.8,
-    "win_logloss": 1.05,
-    "ll_win": 0.0762,
-    "ll_top3": 0.218,
-    "ll_top5": 0.2833,
-    "ll_top10": 0.505
+    "win_logloss": 1.049,
+    "ll_win": 0.0761,
+    "ll_top3": 0.2177,
+    "ll_top5": 0.283,
+    "ll_top10": 0.5051
    }
   }
  },
@@ -209,5 +209,5 @@
   }
  ],
  "fit_seasons": "2023-2026",
- "built": "2026-11-09T06:07-05:00"
+ "built": "2026-11-15T07:08-05:00"
 }
