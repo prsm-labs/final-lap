@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-20T22:01+00:00",
+ "generated_at": "2026-11-21T12:02+00:00",
  "rule": {
   "floor": 0.55,
   "cap": 0.75,
@@ -1830,10 +1830,27 @@
    "track": "Las Vegas Strip Street Circuit",
    "start": "2026-11-21T23:00:00",
    "date": "2026-11-21",
-   "stage": "pre",
-   "picks": [],
+   "stage": "post",
+   "picks": [
+    {
+     "driver_id": "russell",
+     "name": "George Russell",
+     "car": "63",
+     "team": "Mercedes",
+     "k": 5,
+     "prop": "top5",
+     "label": "Top 5 finish",
+     "chance": 0.7204,
+     "last": [
+      10,
+      5
+     ],
+     "start": 3,
+     "track": 0.762,
+     "trackN": 14
+    }
+   ],
    "series": "f1",
-   "waiting": "until qualifying",
    "locked": false
   }
  ]
